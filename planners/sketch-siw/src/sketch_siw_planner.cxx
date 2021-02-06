@@ -1,4 +1,4 @@
-#include <ssiw_planner.hxx>
+#include <sketch_siw_planner.hxx>
 #include <strips_state.hxx>
 #include <landmark_graph.hxx>
 #include <landmark_graph_generator.hxx>
@@ -29,20 +29,20 @@ typedef		IW< Fwd_Search_Problem, H_Novel_Fwd >	          	IW_Fwd;
 
 //typedef		Serialized_Search< Fwd_Search_Problem, IW_Fwd, IW_Node >        SIW_Fwd;
 
-SSIW_Planner::SSIW_Planner()
+Sketch_SIW_Planner::Sketch_SIW_Planner()
 	: STRIPS_Problem( ), m_iw_bound(2), m_log_filename( "iw.log"), m_plan_filename( "plan.ipc" ) {
 }
 
-SSIW_Planner::SSIW_Planner( std::string domain_file, std::string instance_file, std::string sketch_file )
+Sketch_SIW_Planner::Sketch_SIW_Planner( std::string domain_file, std::string instance_file, std::string sketch_file )
 	: STRIPS_Problem( domain_file, instance_file, sketch_file ), m_iw_bound(2), m_log_filename( "iw.log" ), m_plan_filename( "plan.ipc" ) {
 }
 
-SSIW_Planner::~SSIW_Planner() {
+Sketch_SIW_Planner::~Sketch_SIW_Planner() {
 }
 
 
 void
-SSIW_Planner::setup() {
+Sketch_SIW_Planner::setup() {
 	// MRJ: Call superclass method, then do you own thing here
 	STRIPS_Problem::setup();
 	std::cout << "PDDL problem description loaded: " << std::endl;
@@ -50,11 +50,11 @@ SSIW_Planner::setup() {
 	std::cout << "\tProblem: " << instance()->problem_name() << std::endl;
 	std::cout << "\t#Actions: " << instance()->num_actions() << std::endl;
 	std::cout << "\t#Fluents: " << instance()->num_fluents() << std::endl;
-
+	instance()->print_fluents(std::cout);
 }
 
 float
-SSIW_Planner::do_search( SIW_Fwd& engine ) {
+Sketch_SIW_Planner::do_search( Sketch_SIW_Fwd& engine ) {
 
 	engine.set_bound(1);
 	engine.set_max_bound(m_iw_bound-1);
@@ -105,7 +105,7 @@ SSIW_Planner::do_search( SIW_Fwd& engine ) {
 }
 
 void
-SSIW_Planner::solve() {
+Sketch_SIW_Planner::solve() {
 
 	Fwd_Search_Problem	search_prob( instance() );
 
@@ -127,7 +127,7 @@ SSIW_Planner::solve() {
 
 	std::cout << "Starting search with IW (time budget is 60 secs)..." << std::endl;
 
-	SIW_Fwd siw_engine( search_prob );
+	Sketch_SIW_Fwd siw_engine( search_prob );
 	siw_engine.set_goal_agenda( &graph );
 
 	float iw_t = do_search( siw_engine );

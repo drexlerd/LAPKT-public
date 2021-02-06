@@ -2,12 +2,12 @@
 import fd.grounding
 import sys
 import os
-from libsiw import SSIW_Planner
+from libsiw import Sketch_SIW_Planner
 # MRJ: Profiler imports
 #from prof import profiler_start, profiler_stop
 
 def main( domain_file, problem_file, sketch_file, plan_file ) :
-	task = SSIW_Planner( )
+	task = Sketch_SIW_Planner( )
 
 	fd.grounding.default( domain_file, problem_file, task )
 
