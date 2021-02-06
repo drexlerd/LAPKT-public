@@ -11,7 +11,7 @@
 class STRIPS_Problem {
 public:
 	STRIPS_Problem(  );
-	STRIPS_Problem( std::string, std::string );
+	STRIPS_Problem( std::string, std::string, std::string );
 	virtual ~STRIPS_Problem();
 
 	aptk::STRIPS_Problem*	instance() {
@@ -25,7 +25,7 @@ public:
 	void	add_effect( int index, boost::python::list& list );
 	void	set_cost( int index, float v );
 
-	virtual 
+	virtual
 	void	add_mutex_group( boost::python::list& list );
 	void	notify_negated_conditions( boost::python::list& list );
 	void	create_negated_fluents();

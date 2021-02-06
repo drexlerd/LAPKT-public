@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace aptk
 {
 
-	STRIPS_Problem::STRIPS_Problem( std::string dom_name, std::string prob_name )
-		: m_domain_name(dom_name), m_problem_name( prob_name ), 
+	STRIPS_Problem::STRIPS_Problem( std::string dom_name, std::string prob_name, std::string sketch_name )
+		: m_domain_name(dom_name), m_problem_name( prob_name ), m_sketch_name( sketch_name ),
 		  m_num_fluents( 0 ), m_num_actions( 0 ), m_end_operator_id( no_such_index ), m_dummy_goal_id( no_such_index ),
 		  m_succ_gen( *this ), m_succ_gen_v2( *this ), m_has_cond_effs(false), m_verbose(true),  m_mutexes( *this )
 	{
@@ -46,10 +46,10 @@ namespace aptk
 		m_edeleting.resize( fluents().size() );
 		m_adding.resize( fluents().size() );
 		m_ceffs_adding.resize( fluents().size() );
-		
+
 		for ( unsigned k = 0; k < actions().size(); k++ )
 			register_action_in_tables( actions()[k] );
-		
+
 		//m_succ_gen.build();
 		if(generate_match_tree){
 			m_succ_gen_v2.build();
@@ -75,10 +75,10 @@ namespace aptk
 				ceffs_adding( a->ceff_vec()[k]->add_vec()[i] ).push_back( std::make_pair( k, a ) );
 
 		for ( unsigned k = 0; k < a->del_vec().size(); k++ )
-			actions_deleting(a->del_vec()[k]).push_back(a);	
-		
+			actions_deleting(a->del_vec()[k]).push_back(a);
+
 		//register conditional effects
-		
+
 		for ( unsigned i = 0; i < a->ceff_vec().size(); i++ )
 		{
 			for ( unsigned k = 0; k < a->ceff_vec()[i]->prec_vec().size(); k++ )
@@ -86,11 +86,11 @@ namespace aptk
 			for ( unsigned k = 0; k < a->ceff_vec()[i]->add_vec().size(); k++ )
 				actions_adding(a->ceff_vec()[i]->add_vec()[k]).push_back(a);
 			for ( unsigned k = 0; k < a->ceff_vec()[i]->del_vec().size(); k++ )
-				actions_deleting(a->ceff_vec()[i]->del_vec()[k]).push_back(a);	
+				actions_deleting(a->ceff_vec()[i]->del_vec()[k]).push_back(a);
 		}
-		
+
 	}
-	
+
 	unsigned STRIPS_Problem::add_action( STRIPS_Problem& p, std::string signature,
 					     const Fluent_Vec& pre, const Fluent_Vec& add, const Fluent_Vec& del,
 					     const Conditional_Effect_Vec& ceffs, float cost )
@@ -127,7 +127,7 @@ namespace aptk
 #ifdef DEBUG
 		for ( unsigned k = 0; k < init_vec.size(); k++ )
 			assert( init_vec[k] < p.num_fluents() );
-#endif	
+#endif
 		if ( p.m_in_init.empty() )
 			p.m_in_init.resize( p.num_fluents(), false );
 		else
@@ -145,7 +145,7 @@ namespace aptk
 #ifdef DEBUG
 		for ( unsigned k = 0; k < goal_vec.size(); k++ )
 			assert( goal_vec[k] < p.num_fluents() );
-#endif		
+#endif
 		if ( create_end_op )
 		{
 
@@ -153,7 +153,7 @@ namespace aptk
 			if( p.m_end_operator_id != no_such_index ){
 
 			    unsigned dummy_f = p.m_actions[ p.m_end_operator_id ]->add_vec().front();
-			    
+
 			    Fluent_Ptr_Vec::iterator fit_pos;
 			    for( fit_pos = p.fluents().begin(); fit_pos != p.fluents().end(); fit_pos++ ){
 				if( (*fit_pos)->index() == dummy_f )
@@ -168,7 +168,7 @@ namespace aptk
 			    }
 			    p.m_const_fluents.erase( cfit_pos );
 			    p.m_num_fluents--;
-			    
+
 			    Action_Ptr_Vec::iterator it_pos;
 			    for( it_pos = p.actions().begin(); it_pos != p.actions().end(); it_pos++ ){
 				if( (*it_pos)->index() == p.m_end_operator_id )
@@ -183,31 +183,31 @@ namespace aptk
 			    }
 			    p.m_const_actions.erase( cit_pos );
 			    p.m_num_actions--;
-			   
+
 			}
-			
+
 			p.m_dummy_goal_id = STRIPS_Problem::add_fluent( p, "(goal-achieved)" );
-			
+
 			// MRJ: dummy goal action
 			Fluent_Vec dummy_goal_vec;
 			Fluent_Vec empty_vec;
 			Conditional_Effect_Vec	empty_ceff_vec;
 			dummy_goal_vec.push_back( p.m_dummy_goal_id );
 
-			
-			p.m_end_operator_id = STRIPS_Problem::add_action( 	p, std::string("(achieve-goal)"), 
+
+			p.m_end_operator_id = STRIPS_Problem::add_action( 	p, std::string("(achieve-goal)"),
 										goal_vec, dummy_goal_vec, empty_vec, empty_ceff_vec, 0.0f );
 
 			if( !keep_original_goal ){
-			
+
 			    if ( p.m_in_goal.empty() )
 				p.m_in_goal.resize( p.num_fluents(), false );
 			    else
 				for ( unsigned k = 0; k < p.num_fluents(); k++ )
 				    p.m_in_goal[k] = false;
-			    
+
 			    p.goal().push_back( p.m_dummy_goal_id );
-			    
+
 			    p.m_in_goal[ p.m_dummy_goal_id ] = true;
 			    return;
 			}
@@ -260,17 +260,17 @@ namespace aptk
 
 	void	STRIPS_Problem::print_fluent_vec( std::ostream& os, const Fluent_Vec& v ) const {
 		for ( unsigned k = 0; k < v.size(); k++ )
-		{	
+		{
 			unsigned p = v[k];
 			os << fluents()[p]->signature();
 			if ( k < v.size()-1 ) os << ", ";
-		}		
+		}
 	}
 
 	void	STRIPS_Problem::compute_edeletes() {
 
 		for ( auto p : fluents() ) {
-			for ( auto a : actions() ) 
+			for ( auto a : actions() )
 				if ( a->retracts( p->index() ) ) {
 					a->edel_vec().push_back( p->index() );
 					a->edel_set().set( p->index() );
@@ -281,11 +281,11 @@ namespace aptk
 	}
 
 	void 	STRIPS_Problem::make_delete_relaxation( const STRIPS_Problem& orig, STRIPS_Problem& relaxed ) {
-		// MRJ: Copy fluents 
+		// MRJ: Copy fluents
 
 		for ( auto f : orig.fluents() )
 			STRIPS_Problem::add_fluent( relaxed, f->signature() );
-		
+
 
 		// MRJ: Copy actions
 
@@ -313,13 +313,13 @@ namespace aptk
 		for ( unsigned i = 0; i < num_actions(); i++ ) {
 
 			const Action& a = *(actions()[i]);
-			
+
 			// Make action inconditional effect
 			if ( !a.add_vec().empty() ) {
 				Best_Supporter eff( i, no_such_index );
 				m_effects.push_back( eff );
 				m_triggers.push_back( Trigger( num_fluents(), a.prec_vec(), a.add_vec() ) );
-	
+
 				// Relevant if the fluent is in the precondition
 				for ( unsigned j = 0; j < a.prec_vec().size(); ++j ) {
 					m_relevant_effects[a.prec_vec()[j]].insert(m_effects.size()-1);
@@ -343,6 +343,6 @@ namespace aptk
 				}
 			}
 		}
-		
+
 	}
 }
