@@ -9,7 +9,7 @@ from libsiw import Sketch_SIW_Planner
 def main( domain_file, problem_file, sketch_file, plan_file ) :
 	task = Sketch_SIW_Planner( )
 
-	fd.grounding.default( domain_file, problem_file, task )
+	fd.grounding.sketch( domain_file, problem_file, task )
 
 	#MRJ: Uncomment to check what actions are being loaded
 	#for i in range( 0, task.num_actions() ) :
@@ -31,7 +31,7 @@ def main( domain_file, problem_file, sketch_file, plan_file ) :
 	task.setup()
 
 	# DD: find solution
-	task.solve()
+	# task.solve()
 
 def debug() :
 	main( "/home/bowman/Sandboxes/Fast-Downward/benchmarks/miconic-simpleadl/domain.pddl",

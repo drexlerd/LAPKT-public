@@ -50,7 +50,6 @@ Sketch_SIW_Planner::setup() {
 	std::cout << "\tProblem: " << instance()->problem_name() << std::endl;
 	std::cout << "\t#Actions: " << instance()->num_actions() << std::endl;
 	std::cout << "\t#Fluents: " << instance()->num_fluents() << std::endl;
-	instance()->print_fluents(std::cout);
 }
 
 float

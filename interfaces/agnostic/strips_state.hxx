@@ -41,7 +41,11 @@ public:
 	Fluent_Set& fluent_set() 		{ return m_fluent_set; }
 	const Fluent_Vec& fluent_vec() const	{ return m_fluent_vec; }
 	const Fluent_Set& fluent_set() const	{ return m_fluent_set; }
-	
+
+	// Sketch extension:
+	// Compute a state representation where fluents are indexed by the predicate type.
+	void fluent_vec_by_predicates(std::vector<Fluent_Vec> &out_result) const;
+
 	unsigned value_for_var( unsigned var ) const { return 0 == m_fluent_set.isset(var) ? 0 : 1; }
 
 	void	set( unsigned f );
@@ -67,7 +71,7 @@ public:
 	void    regress_lazy_state(const Action* a, Fluent_Vec* added = NULL, Fluent_Vec* deleted = NULL);
 
 	const STRIPS_Problem&		problem() const;
-  
+
         bool operator==(const State &a) const;
 
 	void	print( std::ostream& os ) const;
@@ -93,7 +97,7 @@ inline const STRIPS_Problem& State::problem() const
 	return m_problem;
 }
 
-inline	void State::set( unsigned f ) 
+inline	void State::set( unsigned f )
 {
 	if ( entails(f) ) return;
 	m_fluent_vec.push_back( f );
@@ -113,7 +117,7 @@ inline	void State::set( const Fluent_Vec& f )
 	}
 }
 
-inline	void State::unset( unsigned f ) 
+inline	void State::unset( unsigned f )
 {
 	if ( !entails(f) ) return;
 
@@ -178,7 +182,7 @@ inline bool	State::entails( const Fluent_Vec& fv, unsigned& num_unsat ) const
 	for ( unsigned i = 0; i < fv.size(); i++ )
 		if ( !fluent_set().isset(fv[i]) ) num_unsat++;
 	return num_unsat == 0;
-	
+
 }
 
 inline std::ostream& operator<<(std::ostream &os, State &s) {

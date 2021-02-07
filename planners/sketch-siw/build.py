@@ -5,13 +5,13 @@ import sys
 LWAPTK_ROOT = '../..'
 
 def main() :
-	
+
 	# 1. Copy FD python parsing files
-	os.system( 'rm -Rf fd' )
-	rv = os.system( 'cp -Ra %(LWAPTK_ROOT)s/external/fd .'%globals() )
-	if rv != 0 :
-		sys.stderr.write("Could not copy FD parser files!")
-		sys.exit(1)
+	#os.system( 'rm -Rf fd' )
+	#rv = os.system( 'cp -Ra %(LWAPTK_ROOT)s/external/fd .'%globals() )
+	#if rv != 0 :
+	#	sys.stderr.write("Could not copy FD parser files!")
+	#	sys.exit(1)
 
 	# 2. Call scons to build
 	if len(sys.argv) > 1:

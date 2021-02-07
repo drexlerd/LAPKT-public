@@ -36,8 +36,10 @@ namespace aptk
 {
 
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
-private:
+protected:
     std::string m_sketch_name;
+
+
 
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
