@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <aptk/search_prob.hxx>
 #include <aptk/resources_control.hxx>
 #include <aptk/closed_list.hxx>
-#include <aptk/sketch_iw.hxx>
+#include <aptk/iw.hxx>
 #include <aptk/sketch_serialized_search.hxx>
 #include <landmark_graph.hxx>
 #include <vector>
@@ -38,7 +38,7 @@ namespace search {
 
 template < typename Search_Model >
 class Sketch_SIW : public Sketch_Serialized_Search<Search_Model,
-				     brfs::Sketch_IW<Search_Model,
+				     brfs::IW<Search_Model,
 					      aptk::agnostic::Novelty<Search_Model, aptk::search::brfs::Node< aptk::State >>>,
 				     aptk::search::brfs::Node< aptk::State >> {
 
@@ -48,7 +48,7 @@ public:
 	typedef          aptk::agnostic::Landmarks_Graph                                                Landmarks_Graph;
 
 	Sketch_SIW( const Search_Model& search_problem )
-		: Sketch_Serialized_Search<Search_Model, brfs::Sketch_IW<Search_Model, aptk::agnostic::Novelty<Search_Model, Search_Node>>, Search_Node>( search_problem ), m_pruned_sum_B_count(0), m_sum_B_count(0), m_max_B_count(0), m_iw_calls(0), m_max_bound( std::numeric_limits<unsigned>::max() ) {
+		: Sketch_Serialized_Search<Search_Model, brfs::IW<Search_Model, aptk::agnostic::Novelty<Search_Model, Search_Node>>, Search_Node>( search_problem ), m_pruned_sum_B_count(0), m_sum_B_count(0), m_max_B_count(0), m_iw_calls(0), m_max_bound( std::numeric_limits<unsigned>::max() ) {
 		m_goal_agenda = NULL;
 	}
 

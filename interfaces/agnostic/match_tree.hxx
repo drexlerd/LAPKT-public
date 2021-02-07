@@ -36,7 +36,7 @@ class Action;
 namespace agnostic {
 
 // Match tree data structure from PRP ( https://bitbucket.org/haz/planner-for-relevant-policies )
-	
+
 
 class BaseNode {
 public:
@@ -44,7 +44,7 @@ public:
 	virtual void dump( std::string indent, const STRIPS_Problem& prob ) const = 0;
 	virtual void generate_applicable_items( const State& s, std::vector<int>& actions ) = 0;
 	virtual int count() const = 0;
-	
+
 	BaseNode *create_tree( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob );
 	int get_best_var( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob );
 	bool action_done( int action_id, std::vector<bool> &vars_seen, const STRIPS_Problem& prob );
@@ -56,7 +56,7 @@ class SwitchNode : public BaseNode {
 	std::vector<int> immediate_items;
 	std::vector<BaseNode *> children;
 	BaseNode * default_child;
-	
+
 public:
 	SwitchNode( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob );
 	virtual void generate_applicable_items( const State& s, std::vector<int>& actions );
@@ -87,7 +87,8 @@ class Match_Tree {
 
 public:
 
-	Match_Tree ( const STRIPS_Problem& prob ) : m_problem( prob ) {}
+	Match_Tree ( const STRIPS_Problem& prob ) : m_problem( prob ) {
+	}
 
 	~Match_Tree() { delete root_node; };
 

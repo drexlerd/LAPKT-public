@@ -1,20 +1,20 @@
 #ifndef __PY_FOD_PROBLEM__
 #define __PY_FOD_PROBLEM__
 
-#include <strips_prob.hxx>
+#include <sketch_strips_prob.hxx>
 #include <fluent.hxx>
 #include <action.hxx>
 #include <boost/python.hpp>
 #include <string>
 #include <set>
 
-class STRIPS_Problem {
+class Sketch_STRIPS_Problem {
 public:
-	STRIPS_Problem(  );
-	STRIPS_Problem( std::string, std::string );
-	virtual ~STRIPS_Problem();
+	Sketch_STRIPS_Problem(  );
+	Sketch_STRIPS_Problem( std::string, std::string, std::string );
+	virtual ~Sketch_STRIPS_Problem();
 
-	aptk::STRIPS_Problem*	instance() {
+	aptk::Sketch_STRIPS_Problem*	instance() {
 		return m_problem;
 	}
 
@@ -55,9 +55,9 @@ public:
 	bool	m_ignore_action_costs;
 
 protected:
-	aptk::STRIPS_Problem*	m_problem;
+	aptk::Sketch_STRIPS_Problem*	m_problem;
 	std::set<int>		m_negated_conditions;
 	aptk::Fluent_Ptr_Vec	m_negated;
 };
 
-#endif // py_strips_problem.hxx
+#endif // py_Sketch_strips_problem.hxx

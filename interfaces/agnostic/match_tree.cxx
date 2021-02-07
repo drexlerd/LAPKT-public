@@ -33,10 +33,10 @@ namespace agnostic {
 void Match_Tree::build() {
 	std::vector<bool> vars_seen(m_problem.fluents().size(), false);
 	std::vector<int> actions;
-	
+
 	for (unsigned i = 0; i < m_problem.num_actions(); ++i)
 	    actions.push_back(i);
-	
+
 	root_node = new SwitchNode( actions, vars_seen, m_problem );
 }
 
@@ -47,10 +47,10 @@ void Match_Tree::retrieve_applicable( const State& s, std::vector<int>& actions 
 /********************/
 
 BaseNode * BaseNode::create_tree( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob ) {
-	
+
 	if (actions.empty())
 		return new EmptyNode;
-	
+
 	// If every item is done, then we create a leaf node
 	bool all_done = true;
 	for (unsigned i = 0; all_done && (i < actions.size()); ++i) {
@@ -58,7 +58,7 @@ BaseNode * BaseNode::create_tree( std::vector<int>& actions, std::vector<bool> &
 			all_done = false;
 		}
 	}
-	
+
 	if (all_done) {
 		return new LeafNode(actions);
 	} else {
@@ -68,7 +68,7 @@ BaseNode * BaseNode::create_tree( std::vector<int>& actions, std::vector<bool> &
 }
 
 int BaseNode::get_best_var( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob ) {
-	
+
 	// TODO: This fluents.size() stuff needs to change to the number of mutexes once they're computed
 	static std::vector< int > var_count = std::vector< int >(prob.fluents().size(), 0);
 	std::fill(var_count.begin(), var_count.end(), 0);
@@ -92,14 +92,14 @@ int BaseNode::get_best_var( std::vector<int>& actions, std::vector<bool> &vars_s
 }
 
 bool BaseNode::action_done( int action_id, std::vector<bool> &vars_seen, const STRIPS_Problem& prob ) {
-	
+
 	const Action* act = prob.actions()[action_id];
-	
+
 	for (unsigned i = 0; i < act->prec_varval().size(); ++i) {
 		if (vars_seen[act->prec_varval()[i].first] == false)
 			return false;
 	}
-	
+
 	return true;
 }
 
@@ -128,30 +128,30 @@ void LeafNode::generate_applicable_items( const State&, std::vector<int>& action
 
 void SwitchNode::generate_applicable_items( const State& s, std::vector<int>& actions ) {
     actions.insert( actions.end(), immediate_items.begin(), immediate_items.end() );
-    
+
     // TODO: Change this when mutex's are done proper
     //children[s.value_for_var(switch_var)]->generate_applicable_items( s, actions );
     if (1 == s.value_for_var(switch_var))
         children[0]->generate_applicable_items( s, actions );
-    
+
     default_child->generate_applicable_items( s, actions );
 }
 
 SwitchNode::SwitchNode( std::vector<int>& actions, std::vector<bool> &vars_seen, const STRIPS_Problem& prob ) {
 
     switch_var = get_best_var(actions, vars_seen, prob);
-    
+
     std::vector< std::vector<int> > value_items;
     std::vector<int> default_items;
-    
+
     // TODO: This should change when the mutex's are computed
     //        Ditto for the "1 == s.value..." and "value_items[0]..." lines below
     int num_of_var_values = 1;
-    
+
     // Initialize the value_items
     for (int i = 0; i < num_of_var_values; ++i)
         value_items.push_back( std::vector<int>() );
-    
+
     // Sort out the regression items
     for (unsigned i = 0; i < actions.size(); ++i) {
         if (action_done(actions[i], vars_seen, prob)) {
@@ -162,17 +162,17 @@ SwitchNode::SwitchNode( std::vector<int>& actions, std::vector<bool> &vars_seen,
             default_items.push_back(actions[i]);
         }
     }
-    
+
     vars_seen[switch_var] = true;
-    
+
     // Create the switch generators
     for (unsigned i = 0; i < value_items.size(); i++) {
         children.push_back(create_tree(value_items[i], vars_seen, prob));
     }
-    
+
     // Create the default generator
     default_child = create_tree(default_items, vars_seen, prob);
-    
+
     vars_seen[switch_var] = false;
 }
 

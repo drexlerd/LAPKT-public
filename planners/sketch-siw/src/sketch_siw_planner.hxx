@@ -1,14 +1,14 @@
 #ifndef __SKETCH_SIW_Planner__
 #define __SKETCH_SIW_Planner__
 
-#include <py_strips_prob.hxx>
+#include <py_sketch_strips_prob.hxx>
 #include <fwd_search_prob.hxx>
 #include <novelty.hxx>
 #include <aptk/sketch_siw.hxx>
 
 typedef	aptk::search::Sketch_SIW< aptk::agnostic::Fwd_Search_Problem >  Sketch_SIW_Fwd;
 
-class	Sketch_SIW_Planner : public STRIPS_Problem
+class	Sketch_SIW_Planner : public Sketch_STRIPS_Problem
 {
 public:
 

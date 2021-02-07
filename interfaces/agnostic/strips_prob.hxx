@@ -144,7 +144,7 @@ namespace aptk
 
 		};
 
-		STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
+		STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ");
 		virtual ~STRIPS_Problem();
 
 		void			set_domain_name( std::string name ) { m_domain_name = name; }
@@ -277,7 +277,6 @@ namespace aptk
 
 		std::string								m_domain_name;
 		std::string								m_problem_name;
-		std::string								m_sketch_name;
 		unsigned		 						m_num_fluents;
 		unsigned		 						m_num_actions;
 		Action_Ptr_Vec		 						m_actions;

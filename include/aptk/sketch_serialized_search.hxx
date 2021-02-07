@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <aptk/search_prob.hxx>
 #include <aptk/resources_control.hxx>
 #include <aptk/closed_list.hxx>
-//#include <aptk/iw.hxx>
+// #include <aptk/iw.hxx>
 #include <reachability.hxx>
 #include <vector>
 #include <algorithm>
@@ -149,7 +149,11 @@ public:
 
 	}
 
-	virtual bool  is_goal( Search_Node* n ){
+    /**
+	 * TODO: change this goal check to work with sketches
+	 */
+	virtual bool  is_goal( Search_Node* n ) {
+		std::cout << "goal check\n";
 
 		const bool has_state = n->has_state();
 		static Fluent_Vec added_fluents;

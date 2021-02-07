@@ -30,11 +30,11 @@ typedef		IW< Fwd_Search_Problem, H_Novel_Fwd >	          	IW_Fwd;
 //typedef		Serialized_Search< Fwd_Search_Problem, IW_Fwd, IW_Node >        SIW_Fwd;
 
 Sketch_SIW_Planner::Sketch_SIW_Planner()
-	: STRIPS_Problem( ), m_iw_bound(2), m_log_filename( "iw.log"), m_plan_filename( "plan.ipc" ) {
+	: Sketch_STRIPS_Problem( ), m_iw_bound(2), m_log_filename( "iw.log"), m_plan_filename( "plan.ipc" ) {
 }
 
 Sketch_SIW_Planner::Sketch_SIW_Planner( std::string domain_file, std::string instance_file, std::string sketch_file )
-	: STRIPS_Problem( domain_file, instance_file, sketch_file ), m_iw_bound(2), m_log_filename( "iw.log" ), m_plan_filename( "plan.ipc" ) {
+	: Sketch_STRIPS_Problem( domain_file, instance_file, sketch_file ), m_iw_bound(2), m_log_filename( "iw.log" ), m_plan_filename( "plan.ipc" ) {
 }
 
 Sketch_SIW_Planner::~Sketch_SIW_Planner() {
@@ -44,7 +44,7 @@ Sketch_SIW_Planner::~Sketch_SIW_Planner() {
 void
 Sketch_SIW_Planner::setup() {
 	// MRJ: Call superclass method, then do you own thing here
-	STRIPS_Problem::setup();
+	Sketch_STRIPS_Problem::setup();
 	std::cout << "PDDL problem description loaded: " << std::endl;
 	std::cout << "\tDomain: " << instance()->domain_name() << std::endl;
 	std::cout << "\tProblem: " << instance()->problem_name() << std::endl;
