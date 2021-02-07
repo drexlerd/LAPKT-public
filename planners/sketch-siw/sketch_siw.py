@@ -31,7 +31,7 @@ def main( domain_file, problem_file, sketch_file, plan_file ) :
 	task.setup()
 
 	# DD: find solution
-	# task.solve()
+	task.solve()
 
 def debug() :
 	main( "/home/bowman/Sandboxes/Fast-Downward/benchmarks/miconic-simpleadl/domain.pddl",

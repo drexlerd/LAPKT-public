@@ -33,12 +33,13 @@ namespace aptk
 	class Action;
 	class Fluent;
 	class Conditional_Effect;
-	
-	
+
+
 	typedef		std::vector<bool>				Bool_Vec;
 	typedef		std::vector<bool*>				Bool_Vec_Ptr;
 	typedef		std::vector<unsigned>				Fluent_Vec;
 	typedef		std::vector<unsigned>				Index_Vec;
+	typedef		std::vector<std::string>			Name_Vec;
 	typedef		std::vector<float>				Value_Vec;
 	typedef		std::pair<unsigned, unsigned>			Fluent_Pair;
 	typedef		Bit_Set						Fluent_Set;
@@ -85,7 +86,7 @@ namespace aptk
 					return;
 				}
 				it->second = value;
-		
+
 			}
 	};
 

@@ -307,7 +307,6 @@ def parse_task(domain_pddl, task_pddl):
     domain_name, domain_requirements, types, type_dict, constants, predicates, predicate_dict, functions, actions, axioms \
                  = parse_domain_pddl(domain_pddl)
     task_name, task_domain_name, task_requirements, objects, init, goal, use_metric = parse_task_pddl(task_pddl, type_dict, predicate_dict)
-
     assert domain_name == task_domain_name
     requirements = pddl.Requirements(sorted(set(
                 domain_requirements.requirements +
@@ -366,9 +365,10 @@ def parse_domain_pddl(domain_pddl):
         elif field == ":predicates":
             the_predicates = [parse_predicate(entry)
                               for entry in opt[1:]]
-            the_predicates += [pddl.Predicate("=",
-                                 [pddl.TypedObject("?x", "object"),
-                                  pddl.TypedObject("?y", "object")])]
+            # TODO: is there a reason why we need this "special" predicate?
+            #the_predicates += [pddl.Predicate("=",
+            #                     [pddl.TypedObject("?x", "object"),
+            #                      pddl.TypedObject("?y", "object")])]
         elif field == ":functions":
             the_functions = parse_typed_list(
                 opt[1:],

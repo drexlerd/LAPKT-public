@@ -6,6 +6,7 @@ BOOST_PYTHON_MODULE( libsiw )
 	class_<Sketch_SIW_Planner>("Sketch_SIW_Planner")
 		.def( init< std::string, std::string, std::string >() )
 		.def( "add_atom", &Sketch_SIW_Planner::add_atom )
+		.def( "add_atom_ext", &Sketch_SIW_Planner::add_atom_ext )  // for adding fol information
 		.def( "add_action", &Sketch_SIW_Planner::add_action )
 		.def( "add_mutex_group", &Sketch_SIW_Planner::add_mutex_group )
 		.def( "num_atoms", &Sketch_SIW_Planner::n_atoms )

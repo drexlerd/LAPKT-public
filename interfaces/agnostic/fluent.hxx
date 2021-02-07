@@ -35,20 +35,37 @@ public:
 	~Fluent();
 
 	unsigned	index() const;
-	std::string	signature() const;
-	Index_Vec&	pddl_objs_idx();
-	Index_Vec&	pddl_types_idx();
+
+    unsigned	pddl_predicate_type();
+	const Index_Vec&	pddl_objs_idx();
+
+	const std::string&	signature() const;
+	const std::string&	pddl_predicate_name();
+	const Name_Vec&   pddl_object_names();
 
 	void		set_index( unsigned idx );
 	void		set_signature( std::string signature );
+	void		set_predicate_type( unsigned predicate_type );
+	void		set_objs_idx( Index_Vec &&objs_idx );
+	void		set_predicate_name ( std::string predicate_name );
+	void		set_objs_names ( Name_Vec &&objs_names );
 
 	STRIPS_Problem& problem();
 
 protected:
-
 	STRIPS_Problem&			m_problem;
+
+	// grounded information
 	unsigned			m_index;
-	std::string			m_signature;
+
+    // fol information
+	unsigned			m_predicate_type;
+	Index_Vec			m_objs_idx;
+
+    // human readable information
+    std::string			m_signature;
+	std::string			m_predicate_name;
+    Name_Vec			m_objs_names;
 };
 
 inline unsigned		Fluent::index() const
@@ -56,12 +73,28 @@ inline unsigned		Fluent::index() const
 	return m_index;
 }
 
-inline	std::string	Fluent::signature() const
+inline unsigned	Fluent::pddl_predicate_type() {
+    return m_predicate_type;
+}
+
+inline const Index_Vec& Fluent::pddl_objs_idx() {
+    return m_objs_idx;
+}
+
+inline const std::string& Fluent::signature() const
 {
 	return m_signature;
 }
 
-inline void	Fluent::set_index( unsigned idx ) 
+inline const std::string& Fluent::pddl_predicate_name() {
+    return m_predicate_name;
+}
+
+inline const Name_Vec& Fluent::pddl_object_names() {
+    return m_objs_names;
+}
+
+inline void	Fluent::set_index( unsigned idx )
 {
 	m_index = idx;
 }
@@ -69,6 +102,26 @@ inline void	Fluent::set_index( unsigned idx )
 inline void	Fluent::set_signature( std::string sig )
 {
 	m_signature = sig;
+}
+
+inline void Fluent::set_predicate_type( unsigned predicate_type)
+{
+    m_predicate_type = predicate_type;
+}
+
+inline void Fluent::set_objs_idx( Index_Vec &&objs_idx)
+{
+    m_objs_idx = move(objs_idx);
+}
+
+inline void Fluent::set_predicate_name ( std::string predicate_name )
+{
+    m_predicate_name = predicate_name;
+}
+
+inline void Fluent::set_objs_names ( Name_Vec &&objs_names)
+{
+    m_objs_names = move(objs_names);
 }
 
 }

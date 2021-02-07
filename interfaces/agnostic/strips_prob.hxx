@@ -163,6 +163,9 @@ namespace aptk
 						    const Conditional_Effect_Vec& ceffs, float cost = 1.0f );
 
 		static unsigned 	add_fluent( STRIPS_Problem& p, std::string signature );
+		static unsigned		add_fluent( STRIPS_Problem& p, std::string signature,
+							unsigned predicate_type, std::string predicate_name,
+							Index_Vec &&objs_idx, Name_Vec &&objs_names );
 
 		static void		set_init( STRIPS_Problem& p, const Fluent_Vec& init );
 		static void		set_goal( STRIPS_Problem& p, const Fluent_Vec& goal, bool createEndOp = false, bool keep_original_goal = false );

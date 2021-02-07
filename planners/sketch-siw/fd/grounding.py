@@ -405,21 +405,31 @@ def sketch(domain_file, problem_file, output_task):
     index = 0
     atom_table = {}
 
-    # Sketch: parse FOL predicates
+    # Sketch: reparse atoms to obtain relevant fol information
+    atoms = sorted(atoms, key=lambda x : x.text())
+    atom_names = []
+    predicates_idx = dict()
+    objects_idx = dict()
     for atom in atoms:
-        print(atom.predicate)
-        print(atom.args)
-
-    print(task.predicates)
-    print(task.objects)
-
-    atom_names = [atom.text() for atom in atoms]
-    atom_names.sort()
-
-    for atom in atom_names:
-        atom_table[atom] = index
-        output_task.add_atom(atom.encode('utf-8'))
-        index += 1
+        p_signature = atom.text()
+        atom_names.append(p_signature)
+        p_name = atom.predicate
+        objects = []
+        try:
+            p_idx = predicates_idx[p_name]
+        except KeyError:
+            p_idx = len(predicates_idx)
+            predicates_idx[p_name] = p_idx
+        for object_name in atom.args:
+            try:
+                o_idx = objects_idx[object_name]
+            except KeyError:
+                o_idx = len(objects_idx)
+                objects_idx[object_name] = o_idx
+            objects.append((o_idx, object_name))
+        atom_table[p_signature] = p_idx
+        output_task.add_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
+        # output_task.add_atom(p_signature.encode('utf-8'))
 
     print("Axioms %d" % len(axioms))
 

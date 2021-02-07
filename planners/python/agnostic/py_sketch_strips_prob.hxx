@@ -19,6 +19,7 @@ public:
 	}
 
 	void	add_atom( std::string name );
+	void    add_atom_ext( std::string name, int predicate_type, std::string predicate_name, boost::python::list &objects);
 	void	add_action( std::string name );
 	void	add_precondition( int index, boost::python::list& lits );
 	void	add_cond_effect( int index, boost::python::list& cond_lits, boost::python::list& eff_lits );

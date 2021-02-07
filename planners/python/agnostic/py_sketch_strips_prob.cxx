@@ -29,6 +29,22 @@ using namespace boost::python;
 	}
 
 	void
+	Sketch_STRIPS_Problem::add_atom_ext( std::string name, int predicate_type, std::string predicate_name, boost::python::list &objects) {
+		aptk::Index_Vec objs_idx;
+		aptk::Name_Vec objs_names;
+		objs_idx.reserve(len(objects));
+		objs_names.reserve(len(objects));
+		for ( int i = 0; i < len(objects); i++ ) {
+			boost::python::tuple li = extract< tuple >( objects[i] );
+            int obj_idx = extract<int>(li[0]);
+			std::string obj_name = extract<std::string>(li[1]);
+			objs_idx.emplace_back(obj_idx);
+			objs_names.emplace_back(obj_name);
+		}
+        aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
+	}
+
+	void
 	Sketch_STRIPS_Problem::add_action( std::string name ) {
 		aptk::Fluent_Vec empty;
 		aptk::Conditional_Effect_Vec dummy_ceffs;

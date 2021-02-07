@@ -122,6 +122,23 @@ namespace aptk
 		return p.fluents().size()-1;
 	}
 
+	unsigned STRIPS_Problem::add_fluent( STRIPS_Problem& p, std::string signature,
+		unsigned predicate_type, std::string predicate_name, Index_Vec &&objs_idx, Name_Vec &&objs_names )
+	{
+		Fluent* new_fluent = new Fluent( p );
+		new_fluent->set_index( p.fluents().size() );
+		new_fluent->set_signature( signature );
+		new_fluent->set_predicate_type(predicate_type);
+		new_fluent->set_predicate_name(predicate_name);
+		new_fluent->set_objs_idx(move(objs_idx));
+		new_fluent->set_objs_names(move(objs_names));
+		p.m_fluents_map[signature] = new_fluent->index();
+		p.increase_num_fluents();
+		p.fluents().push_back( new_fluent );
+		p.m_const_fluents.push_back( new_fluent );
+		return p.fluents().size()-1;
+	}
+
 	void	STRIPS_Problem::set_init( STRIPS_Problem& p, const Fluent_Vec& init_vec )
 	{
 #ifdef DEBUG

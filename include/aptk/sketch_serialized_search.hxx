@@ -153,8 +153,6 @@ public:
 	 * TODO: change this goal check to work with sketches
 	 */
 	virtual bool  is_goal( Search_Node* n ) {
-		std::cout << "goal check\n";
-
 		const bool has_state = n->has_state();
 		static Fluent_Vec added_fluents;
 		static Fluent_Vec deleted_fluents;
