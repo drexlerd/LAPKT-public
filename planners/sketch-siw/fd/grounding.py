@@ -405,7 +405,7 @@ def sketch(domain_file, problem_file, output_task):
     index = 0
     atom_table = {}
 
-    # Sketch: reparse atoms to obtain relevant fol information
+    # Sketch: add fol information for state feature evaluation
     atoms = sorted(atoms, key=lambda x : x.text())
     atom_names = []
     predicates_idx = dict()
