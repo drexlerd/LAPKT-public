@@ -35,6 +35,7 @@ using namespace boost::python;
 			objs_idx.emplace_back(obj_idx);
 			objs_names.emplace_back(obj_name);
 		}
+		assert(objs_idx.size() == objs_names.size());
         aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
 	}
 
@@ -51,6 +52,7 @@ using namespace boost::python;
 			objs_idx.emplace_back(obj_idx);
 			objs_names.emplace_back(obj_name);
 		}
+		assert(objs_idx.size() == objs_names.size());
         aptk::Sketch_STRIPS_Problem::add_other_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
 	}
 
@@ -64,6 +66,6 @@ using namespace boost::python;
         aptk::Sketch_STRIPS_Problem::set_num_objects(*instance(), num_objects);
 	}
 
-	void Sketch_STRIPS_Problem::initialize_first_order_state() {
-		aptk::Sketch_STRIPS_Problem::initialize_first_order_state(*instance());
+	void Sketch_STRIPS_Problem::initialize_first_order_state_information() {
+		aptk::Sketch_STRIPS_Problem::initialize_first_order_state_information(*instance());
 	}

@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <match_tree.hxx>
 #include <algorithm>
 #include <mutex_set.hxx>
+#include <sketch.hxx>
+#include <memory>
 
 namespace aptk
 {
@@ -51,6 +53,9 @@ protected:
 
 	// preallocated memory to store state information ordered by predicate types
 	std::vector<std::vector<const Fluent*>> m_first_order_state;
+
+    // sketch
+	std::unique_ptr<BaseSketch> m_sketch;
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
 	virtual ~Sketch_STRIPS_Problem();
@@ -74,10 +79,11 @@ public:
 	static void set_num_objects(Sketch_STRIPS_Problem& p, unsigned num_objects);
 
 	/**
-	 * Initialize the first order state with initial state fluents
-	 * and num_predicates.
+	 * Initialize the first order state information.
+	 * This should be called after adding fluents
+	 * and num_predicates and num_objects
 	 */
-	static void initialize_first_order_state(Sketch_STRIPS_Problem& p);
+	static void initialize_first_order_state_information(Sketch_STRIPS_Problem& p);
 
     /**
 	 * Compute sorted first order state information in the preallocated memory
@@ -97,8 +103,6 @@ public:
 	 */
 	void print_init_fluents( std::ostream& os ) const;
 };
-
-
 
 }
 

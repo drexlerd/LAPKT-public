@@ -33,7 +33,7 @@ public:
 
 	void set_num_objects(int num_objects);
 
-	void initialize_first_order_state();
+	void initialize_first_order_state_information();
 };
 
 #endif // py_sketch_strips_problem.hxx

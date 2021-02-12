@@ -454,7 +454,7 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
     # initialize state
     output_task.set_num_predicates(len(predicates_idx))
     output_task.set_num_objects(len(objects_idx))
-    output_task.initialize_first_order_state()
+    output_task.initialize_first_order_state_information()
 
     print("Axioms %d" % len(axioms))
 
