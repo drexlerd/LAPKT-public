@@ -359,7 +359,6 @@ def parse_sketch_pddl(sketch_pddl):
 
 
 def parse_domain_pddl(domain_pddl):
-    print(domain_pddl)
     iterator = iter(domain_pddl)
 
     define_tag = next(iterator)

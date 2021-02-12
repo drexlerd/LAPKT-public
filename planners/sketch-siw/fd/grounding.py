@@ -451,6 +451,11 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
         index += 1
         output_task.add_init_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
 
+    # initialize state
+    output_task.set_num_predicates(len(predicates_idx))
+    output_task.set_num_objects(len(objects_idx))
+    output_task.initialize_first_order_state()
+
     print("Axioms %d" % len(axioms))
 
     print("Deterministic %d actions" % len(actions))

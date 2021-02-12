@@ -24,12 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cassert>
 #include <map>
 #include <iostream>
+#include <unordered_set>
 
 namespace aptk
 {
 	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string dom_name, std::string prob_name, std::string sketch_name )
 		: STRIPS_Problem(dom_name, prob_name),
-		m_sketch_name(sketch_name)
+		m_sketch_name(sketch_name),
+		m_num_objects(-1),
+		m_num_predicates(-1)
 	{
 	}
 
@@ -74,6 +77,33 @@ namespace aptk
 	}
 	void Sketch_STRIPS_Problem::set_num_objects(Sketch_STRIPS_Problem& p, unsigned num_objects) {
         p.m_num_objects = num_objects;
+	}
+
+	void Sketch_STRIPS_Problem::initialize_first_order_state(Sketch_STRIPS_Problem& p) {
+		// 1. fill init fluents
+        p.m_first_order_state.resize(p.m_num_predicates);
+		for (const Fluent *x : p.init_fluents()) {
+            p.m_first_order_state[x->pddl_predicate_type()].push_back(x);
+		}
+		// 2. store predicate indices that may occur in fluents.
+		std::unordered_set<int> indices;
+		for (const Fluent *x : p.fluents()) {
+            indices.insert(x->pddl_predicate_type());
+		}
+		p.m_state_predicate_idx = std::vector<int>(indices.begin(), indices.end());
+	}
+
+	const std::vector<std::vector<const Fluent*>>
+	&Sketch_STRIPS_Problem::get_first_order_state(const Fluent_Vec &state_fluents) {
+		// 1. clear old state fluents
+		for (int predicate_idx : m_state_predicate_idx) {
+			m_first_order_state[predicate_idx].clear();
+		}
+		// 2. fill new state fluents
+		for (const Fluent *x : init_fluents()) {
+            m_first_order_state[x->pddl_predicate_type()].push_back(x);
+		}
+        return m_first_order_state;
 	}
 
 	void Sketch_STRIPS_Problem::print_init_fluents( std::ostream& os ) const {

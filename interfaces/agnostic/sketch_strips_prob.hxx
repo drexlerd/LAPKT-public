@@ -38,9 +38,9 @@ namespace aptk
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
 protected:
     std::string m_sketch_name;
-
-    // fluents that do not change when applying actions
-	// these fluents are needed for feature evaluation
+    // predicate indices that occur in state_fluents
+	std::vector<int> m_state_predicate_idx;
+    // init_fluents
 	Fluent_Ptr_Vec									m_init_fluents;
 	std::vector<const Fluent*>						m_init_const_fluents;
 
@@ -50,7 +50,7 @@ protected:
 	unsigned m_num_objects;
 
 	// preallocated memory to store state information ordered by predicate types
-	std::vector<std::vector<const Fluent*>> first_order_state;
+	std::vector<std::vector<const Fluent*>> m_first_order_state;
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
 	virtual ~Sketch_STRIPS_Problem();
@@ -72,6 +72,12 @@ public:
 	 */
 	static void set_num_predicates(Sketch_STRIPS_Problem& p, unsigned num_predicates);
 	static void set_num_objects(Sketch_STRIPS_Problem& p, unsigned num_objects);
+
+	/**
+	 * Initialize the first order state with initial state fluents
+	 * and num_predicates.
+	 */
+	static void initialize_first_order_state(Sketch_STRIPS_Problem& p);
 
     /**
 	 * Compute sorted first order state information in the preallocated memory

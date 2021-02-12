@@ -36,12 +36,12 @@ public:
 
 	unsigned	index() const;
 
-    unsigned	pddl_predicate_type();
-	const Index_Vec&	pddl_objs_idx();
+    unsigned	pddl_predicate_type() const;
+	const Index_Vec&	pddl_objs_idx() const;
 
 	const std::string&	signature() const;
-	const std::string&	pddl_predicate_name();
-	const Name_Vec&   pddl_object_names();
+	const std::string&	pddl_predicate_name() const;
+	const Name_Vec&   pddl_object_names() const;
 
 	void		set_index( unsigned idx );
 	void		set_signature( std::string signature );
@@ -73,11 +73,11 @@ inline unsigned		Fluent::index() const
 	return m_index;
 }
 
-inline unsigned	Fluent::pddl_predicate_type() {
+inline unsigned	Fluent::pddl_predicate_type() const {
     return m_predicate_type;
 }
 
-inline const Index_Vec& Fluent::pddl_objs_idx() {
+inline const Index_Vec& Fluent::pddl_objs_idx() const {
     return m_objs_idx;
 }
 
@@ -86,11 +86,11 @@ inline const std::string& Fluent::signature() const
 	return m_signature;
 }
 
-inline const std::string& Fluent::pddl_predicate_name() {
+inline const std::string& Fluent::pddl_predicate_name() const {
     return m_predicate_name;
 }
 
-inline const Name_Vec& Fluent::pddl_object_names() {
+inline const Name_Vec& Fluent::pddl_object_names() const {
     return m_objs_names;
 }
 
