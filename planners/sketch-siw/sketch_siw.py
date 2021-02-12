@@ -9,7 +9,8 @@ from libsiw import Sketch_SIW_Planner
 def main( domain_file, problem_file, sketch_file, plan_file ) :
 	task = Sketch_SIW_Planner( )
 
-	fd.grounding.sketch( domain_file, problem_file, task )
+	# fd.grounding.default(domain_file, problem_file, task)
+	fd.grounding.sketch( domain_file, problem_file, sketch_file, task )
 
 	#MRJ: Uncomment to check what actions are being loaded
 	#for i in range( 0, task.num_actions() ) :

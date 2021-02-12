@@ -1,5 +1,5 @@
-#ifndef __PY_FOD_PROBLEM__
-#define __PY_FOD_PROBLEM__
+#ifndef __PY_STRIPS_PROBLEM__
+#define __PY_STRIPS_PROBLEM__
 
 #include <strips_prob.hxx>
 #include <fluent.hxx>

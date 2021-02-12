@@ -6,6 +6,7 @@ import sys
 
 from . import graph
 from . import pddl
+from . import sketch
 
 
 def parse_typed_list(alist, only_variables=False,
@@ -317,13 +318,48 @@ def parse_task(domain_pddl, task_pddl):
         errmsg="error: duplicate object %r",
         finalmsg="please check :constants and :objects definitions")
     init += [pddl.Atom("=", (obj.name, obj.name)) for obj in objects]
-
     return pddl.Task(
         domain_name, task_name, requirements, types, objects,
         predicates, functions, init, goal, actions, axioms, use_metric)
 
 
+def parse_sketch(sketch_pddl):
+    sketch_name, features, rules = parse_sketch_pddl(sketch_pddl)
+    return sketch.Sketch(sketch_name, features, rules)
+
+
+
+def parse_sketch_pddl(sketch_pddl):
+    iterator = iter(sketch_pddl)
+
+    define_tag = next(iterator)
+    assert define_tag == "define"
+    sketch_line = next(iterator)
+    assert sketch_line[0] == "sketch" and len(sketch_line) == 2
+    yield sketch_line[1]
+
+    # parse features
+    features = []
+    feature_block = next(iterator)
+    assert feature_block[0] == ":features"
+    for feature in feature_block[1:]:
+        features.append(sketch.Feature(feature[0], feature[1]))
+    yield features
+
+    # parse rules
+    rule_sentences = []
+    rule_sentences.extend(iterator)
+    rules = []
+    for rule in rule_sentences:
+        assert rule[0] == ":rule"
+        assert len(rule) == 6
+        rules.append(sketch.Rule(rule[1], rule[3], rule[5]))
+    yield rules
+
+
+
 def parse_domain_pddl(domain_pddl):
+    print(domain_pddl)
     iterator = iter(domain_pddl)
 
     define_tag = next(iterator)
@@ -365,10 +401,9 @@ def parse_domain_pddl(domain_pddl):
         elif field == ":predicates":
             the_predicates = [parse_predicate(entry)
                               for entry in opt[1:]]
-            # TODO: is there a reason why we need this "special" predicate?
-            #the_predicates += [pddl.Predicate("=",
-            #                     [pddl.TypedObject("?x", "object"),
-            #                      pddl.TypedObject("?y", "object")])]
+            the_predicates += [pddl.Predicate("=",
+                                 [pddl.TypedObject("?x", "object"),
+                                  pddl.TypedObject("?y", "object")])]
         elif field == ":functions":
             the_functions = parse_typed_list(
                 opt[1:],

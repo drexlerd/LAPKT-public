@@ -12,6 +12,7 @@ import sys
 
 from . import normalize
 from . import pddl_file
+from . import pddl_sketch
 
 
 def get_fluent_facts(task, model):
@@ -75,8 +76,7 @@ def instantiate(task, model):
                 instantiated_axioms.append(inst_axiom)
         elif atom.predicate == "@goal-reachable":
             relaxed_reachable = True
-
-    return (relaxed_reachable, fluent_facts, instantiated_actions,
+    return (relaxed_reachable, init_facts, fluent_facts, instantiated_actions,
             sorted(instantiated_axioms), reachable_action_parameters)
 
 
@@ -305,7 +305,7 @@ def default(domain_file, problem_file, output_task):
 
     normalize.normalize(task)
 
-    relaxed_reachable, atoms, actions, axioms, reachable_action_params = explore(
+    relaxed_reachable, init_facts, atoms, actions, axioms, reachable_action_params = explore(
         task)
     print("goal relaxed reachable: %s" % relaxed_reachable)
     if not relaxed_reachable:
@@ -320,7 +320,6 @@ def default(domain_file, problem_file, output_task):
 
     index = 0
     atom_table = {}
-
     atom_names = [atom.text() for atom in atoms]
     atom_names.sort()
 
@@ -379,7 +378,7 @@ def default(domain_file, problem_file, output_task):
     output_task.parsing_time = parsing_timer.report()
 
 
-def sketch(domain_file, problem_file, output_task):
+def sketch(domain_file, problem_file, sketch_file, output_task):
     parsing_timer = timers.Timer()
     print("Domain: %s Problem: %s" % (domain_file, problem_file))
 
@@ -389,7 +388,7 @@ def sketch(domain_file, problem_file, output_task):
 
     normalize.normalize(task)
 
-    relaxed_reachable, atoms, actions, axioms, reachable_action_params = explore(
+    relaxed_reachable, init_facts, atoms, actions, axioms, reachable_action_params = explore(
         task)
     print("goal relaxed reachable: %s" % relaxed_reachable)
     if not relaxed_reachable:
@@ -402,12 +401,12 @@ def sketch(domain_file, problem_file, output_task):
         groups, mutex_groups, translation_key = fact_groups.compute_groups(
             task, atoms, reachable_action_params)
 
-    index = 0
-    atom_table = {}
 
     # Sketch: add fol information for state feature evaluation
     atoms = sorted(atoms, key=lambda x : x.text())
     atom_names = []
+    atom_table = {}
+    index = 0
     predicates_idx = dict()
     objects_idx = dict()
     for atom in atoms:
@@ -427,9 +426,30 @@ def sketch(domain_file, problem_file, output_task):
                 o_idx = len(objects_idx)
                 objects_idx[object_name] = o_idx
             objects.append((o_idx, object_name))
-        atom_table[p_signature] = p_idx
+        atom_table[p_signature] = index
+        index += 1
         output_task.add_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
-        # output_task.add_atom(p_signature.encode('utf-8'))
+
+    # add init_facts
+    for atom in init_facts:
+        p_signature = atom.text()
+        atom_names.append(p_signature)
+        p_name = atom.predicate
+        objects = []
+        try:
+            p_idx = predicates_idx[p_name]
+        except KeyError:
+            p_idx = len(predicates_idx)
+            predicates_idx[p_name] = p_idx
+        for object_name in atom.args:
+            try:
+                o_idx = objects_idx[object_name]
+            except KeyError:
+                o_idx = len(objects_idx)
+                objects_idx[object_name] = o_idx
+            objects.append((o_idx, object_name))
+        index += 1
+        output_task.add_init_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
 
     print("Axioms %d" % len(axioms))
 
@@ -479,3 +499,28 @@ def sketch(domain_file, problem_file, output_task):
     output_task.set_init(encode(task.init, atom_table))
     output_task.set_goal(encode(task.goal, atom_table))
     output_task.parsing_time = parsing_timer.report()
+
+    # Sketch: parse file
+    with timers.timing("Parsing", True):
+        sketch = pddl_sketch.open(
+            sketch_filename=sketch_file)
+
+    # print(predicates_idx)
+    # in depth first manner, push dl elements into the output_task
+    for feature in sketch.features:
+        # print(feature)
+        for dl_element in feature.dl_tree:
+            if dl_element.is_leaf():
+                # task predicates are located at leafs
+                predicate = dl_element.predicate
+                name = dl_element.name
+                require_goal_evaluation = dl_element.goal
+            else:
+                # complex concept/role constructor are located at inner nodes
+                pass
+
+
+    # push rules into the output_task
+    for rule in sketch.rules:
+        #print(rule)
+        pass

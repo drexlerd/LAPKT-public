@@ -163,9 +163,6 @@ namespace aptk
 						    const Conditional_Effect_Vec& ceffs, float cost = 1.0f );
 
 		static unsigned 	add_fluent( STRIPS_Problem& p, std::string signature );
-		static unsigned		add_fluent( STRIPS_Problem& p, std::string signature,
-							unsigned predicate_type, std::string predicate_name,
-							Index_Vec &&objs_idx, Name_Vec &&objs_names );
 
 		static void		set_init( STRIPS_Problem& p, const Fluent_Vec& init );
 		static void		set_goal( STRIPS_Problem& p, const Fluent_Vec& goal, bool createEndOp = false, bool keep_original_goal = false );
@@ -284,6 +281,8 @@ namespace aptk
 		unsigned		 						m_num_actions;
 		Action_Ptr_Vec		 						m_actions;
 		std::vector<const Action*>						m_const_actions;
+		// fluents that change when applying actions
+		// these fluents are needed for state space search
 		Fluent_Ptr_Vec		 						m_fluents;
 		std::vector<const Fluent*>						m_const_fluents;
 		Fluent_Vec		 						m_init;

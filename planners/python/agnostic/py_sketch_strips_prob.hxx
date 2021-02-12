@@ -1,6 +1,7 @@
 #ifndef __PY_FOD_PROBLEM__
 #define __PY_FOD_PROBLEM__
 
+#include <py_strips_prob.hxx>
 #include <sketch_strips_prob.hxx>
 #include <fluent.hxx>
 #include <action.hxx>
@@ -8,57 +9,29 @@
 #include <string>
 #include <set>
 
-class Sketch_STRIPS_Problem {
+
+class Sketch_STRIPS_Problem : public STRIPS_Problem {
 public:
 	Sketch_STRIPS_Problem(  );
 	Sketch_STRIPS_Problem( std::string, std::string, std::string );
 	virtual ~Sketch_STRIPS_Problem();
 
 	aptk::Sketch_STRIPS_Problem*	instance() {
-		return m_problem;
+		return static_cast<aptk::Sketch_STRIPS_Problem*>(m_problem);
 	}
 
-	void	add_atom( std::string name );
-	void    add_atom_ext( std::string name, int predicate_type, std::string predicate_name, boost::python::list &objects);
-	void	add_action( std::string name );
-	void	add_precondition( int index, boost::python::list& lits );
-	void	add_cond_effect( int index, boost::python::list& cond_lits, boost::python::list& eff_lits );
-	void	add_effect( int index, boost::python::list& list );
-	void	set_cost( int index, float v );
+    // add atoms that occur in effects of operators.
+	void add_atom_ext(
+		std::string name, int predicate_type,
+	    std::string predicate_name, boost::python::list &objects);
+    // add atoms that do not occur in effects of operators.
+	void add_init_atom_ext(
+		std::string name, int predicate_type,
+		std::string predicate_name, boost::python::list &objects);
 
-	virtual
-	void	add_mutex_group( boost::python::list& list );
-	void	notify_negated_conditions( boost::python::list& list );
-	void	create_negated_fluents();
+	void set_num_predicates(int num_predicates);
 
-	void	set_init( boost::python::list& list );
-	void	set_goal( boost::python::list& list );
-	void	set_domain_name( std::string name );
-	void	set_problem_name( std::string name );
-
-	virtual	void	setup();
-
-	void	print_action( int index );
-
-	void	print_fluents();
-	void	print_actions();
-
-	std::string	get_atom_name( int idx ) const { return m_problem->fluents()[idx]->signature(); }
-	std::string	get_domain_name() const { return m_problem->domain_name(); }
-	std::string	get_problem_name() const { return m_problem->problem_name(); }
-
-	size_t	n_atoms() 	const { return m_problem->num_fluents(); }
-	size_t	n_actions()	const { return m_problem->num_actions(); }
-
-	void	write_ground_pddl( std::string domain, std::string instance );
-
-	float	m_parsing_time;
-	bool	m_ignore_action_costs;
-
-protected:
-	aptk::Sketch_STRIPS_Problem*	m_problem;
-	std::set<int>		m_negated_conditions;
-	aptk::Fluent_Ptr_Vec	m_negated;
+	void set_num_objects(int num_objects);
 };
 
-#endif // py_Sketch_strips_problem.hxx
+#endif // py_sketch_strips_problem.hxx
