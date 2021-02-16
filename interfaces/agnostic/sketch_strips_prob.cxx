@@ -109,12 +109,13 @@ namespace aptk
 		// 3. Initialize sketch
 		std::unordered_map<std::string, int> predicate_name_to_index;
 		std::unordered_map<std::string, int> object_name_to_index;
+		// initialize mapping of predicate and object names
 		add_predicate_information(p.fluents(), predicate_name_to_index, object_name_to_index);
 		add_predicate_information(p.init_fluents(), predicate_name_to_index, object_name_to_index);
         if (p.m_sketch_name == "grid.sketch") {
 
 		} else {
-			// empty sketch, plain IW search
+			// goal serialization, plain SIW search
 			p.m_sketch = std::unique_ptr<BaseSketch>(
 			 	new BaseSketch(std::move(predicate_name_to_index), std::move(object_name_to_index)));
 		}
@@ -127,8 +128,9 @@ namespace aptk
 			m_first_order_state[predicate_idx].clear();
 		}
 		// 2. fill new state fluents
-		for (const Fluent *x : init_fluents()) {
-            m_first_order_state[x->pddl_predicate_type()].push_back(x);
+		for (unsigned i : state_fluents) {
+			const Fluent *fluent = fluents()[i];
+            m_first_order_state[fluent->pddl_predicate_type()].push_back(fluent);
 		}
         return m_first_order_state;
 	}
