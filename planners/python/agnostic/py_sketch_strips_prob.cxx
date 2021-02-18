@@ -66,6 +66,6 @@ using namespace boost::python;
         aptk::Sketch_STRIPS_Problem::set_num_objects(*instance(), num_objects);
 	}
 
-	void Sketch_STRIPS_Problem::initialize_first_order_state_information() {
-		aptk::Sketch_STRIPS_Problem::initialize_first_order_state_information(*instance());
+	void Sketch_STRIPS_Problem::initialize_sketch() {
+		aptk::Sketch_STRIPS_Problem::initialize_sketch(*instance());
 	}

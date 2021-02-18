@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <iostream>
 #include <unordered_set>
+#include <unordered_map>
 
 namespace aptk
 {
@@ -94,7 +95,7 @@ namespace aptk
         p.m_num_objects = num_objects;
 	}
 
-	void Sketch_STRIPS_Problem::initialize_first_order_state_information(Sketch_STRIPS_Problem& p) {
+	void Sketch_STRIPS_Problem::initialize_sketch(Sketch_STRIPS_Problem& p) {
 		// 1. fill init fluents
         p.m_first_order_state.resize(p.m_num_predicates);
 		for (const Fluent *x : p.init_fluents()) {
@@ -107,18 +108,16 @@ namespace aptk
 		}
 		p.m_state_predicate_idx = std::vector<int>(indices.begin(), indices.end());
 		// 3. Initialize sketch
-		std::unordered_map<std::string, int> predicate_name_to_index;
-		std::unordered_map<std::string, int> object_name_to_index;
 		// initialize mapping of predicate and object names
-		add_predicate_information(p.fluents(), predicate_name_to_index, object_name_to_index);
-		add_predicate_information(p.init_fluents(), predicate_name_to_index, object_name_to_index);
-        if (p.m_sketch_name == "grid.sketch") {
+		add_predicate_information(p.fluents(), p.m_predicate_name_to_index, p.m_object_name_to_index);
+		add_predicate_information(p.init_fluents(), p.m_predicate_name_to_index, p.m_object_name_to_index);
+        /*if (p.m_sketch_name == "grid.sketch") {
 
 		} else {
 			// goal serialization, plain SIW search
 			p.m_sketch = std::unique_ptr<BaseSketch>(
 			 	new BaseSketch(std::move(predicate_name_to_index), std::move(object_name_to_index)));
-		}
+		}*/
 	}
 
 	const std::vector<std::vector<const Fluent*>>

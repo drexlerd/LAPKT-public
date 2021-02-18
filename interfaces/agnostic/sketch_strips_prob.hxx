@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef __SKETCH_STRIPS_PROBLEM__
 #define __SKETCH_STRIPS_PROBLEM__
 
-#include "strips_prob.hxx"
+#include <strips_prob.hxx>
+#include <strips_state.hxx>
 #include <string>
 #include <map>
 #include <iosfwd>
@@ -30,11 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <match_tree.hxx>
 #include <algorithm>
 #include <mutex_set.hxx>
-#include <sketch.hxx>
 #include <memory>
 
 namespace aptk
 {
+
+
 
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
 protected:
@@ -53,8 +55,9 @@ protected:
 	// preallocated memory to store state information ordered by predicate types
 	std::vector<std::vector<const Fluent*>> m_first_order_state;
 
-    // sketch
-	std::unique_ptr<BaseSketch> m_sketch;
+	std::unordered_map<std::string, int> m_predicate_name_to_index;
+	std::unordered_map<std::string, int> m_object_name_to_index;
+
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
 	virtual ~Sketch_STRIPS_Problem();
@@ -78,11 +81,11 @@ public:
 	static void set_num_objects(Sketch_STRIPS_Problem& p, unsigned num_objects);
 
 	/**
-	 * Initialize the first order state information.
+	 * Initialize the sketch.
 	 * This should be called after adding fluents
 	 * and num_predicates and num_objects
 	 */
-	static void initialize_first_order_state_information(Sketch_STRIPS_Problem& p);
+	static void initialize_sketch(Sketch_STRIPS_Problem& p);
 
     /**
 	 * Compute sorted first order state information in the preallocated memory

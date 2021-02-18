@@ -2,23 +2,18 @@
 #include <types.hxx>
 #include <vector>
 #include <unordered_map>
+#include <sketch_strips_prob.hxx>
 
 namespace aptk
 {
 
-
 class BaseFeature {
 protected:
     // access to predicate mappings
-    const std::unordered_map<std::string, int> &m_predicate_name_to_idx;
-    const std::unordered_map<std::string, int> &m_object_name_to_idx;
+    const Sketch_STRIPS_Problem &m_problem;
 
 public:
-    BaseFeature(
-        const std::unordered_map<std::string, int> &predicate_name_to_idx,
-        const std::unordered_map<std::string, int> &object_name_to_idx)
-        : m_predicate_name_to_idx(predicate_name_to_idx),
-          m_object_name_to_idx(m_object_name_to_idx) { }
+    BaseFeature(const Sketch_STRIPS_Problem &problem) : m_problem(problem) { }
     virtual ~BaseFeature() = default;
 
     virtual void backup_evaluation() = 0;
@@ -30,20 +25,13 @@ protected:
     bool old_eval;
     bool new_eval;
 public:
-    BooleanFeature(
-        const std::unordered_map<std::string, int> &predicate_name_to_idx,
-        const std::unordered_map<std::string, int> &object_name_to_idx)
-        : BaseFeature(predicate_name_to_idx, object_name_to_idx) { }
+    BooleanFeature(const Sketch_STRIPS_Problem &problem) : BaseFeature(problem) { }
     virtual ~BooleanFeature() = default;
 
     /**
      * Evaluate the feature for a given state.
      */
-    virtual bool evaluate(
-        const std::vector<std::vector<const Fluent*>> &state_description,
-        const std::vector<std::vector<const Fluent*>> &goal_description,
-        const Fluent_Vec &state,
-        const Fluent_Vec &goal) const = 0;
+    virtual bool evaluate() const = 0;
 
     virtual void backup_evaluation() override {
         old_eval = new_eval;
@@ -64,13 +52,10 @@ protected:
     int old_eval;
     int new_eval;
 public:
-    NumericalFeature(
-        const std::unordered_map<std::string, int> &predicate_name_to_idx,
-        const std::unordered_map<std::string, int> &object_name_to_idx)
-        : BaseFeature(predicate_name_to_idx, object_name_to_idx) { }
+    NumericalFeature(const Sketch_STRIPS_Problem &problem) : BaseFeature(problem) { }
     virtual ~NumericalFeature() = default;
 
-    virtual int evaluate(const std::vector<std::vector<const Fluent*>> &state_description, const std::vector<std::vector<const Fluent*>> &goal_description) const = 0;
+    virtual int evaluate(const Sketch_STRIPS_Problem &problem) const = 0;
 
     virtual void backup_evaluation() override {
         old_eval = new_eval;
