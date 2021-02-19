@@ -54,7 +54,7 @@ private:
     // predicate indices that occur in state_fluents
 	const std::vector<unsigned> m_state_predicate_idx;
     // (2) state information
-    Fluent_Vec m_state;
+    const State* m_state;
     // (3) additional view for fast access of fluents by predicate type.
     std::vector<std::vector<const Fluent*>> m_state_by_predicate;
     // --- add more views here if necessary ---
@@ -73,17 +73,27 @@ public:
      */
     void set_state(const State* state) {
         // set state and reevaluate views.
-        m_state = state->fluent_vec();
+        m_state = state;
 		// 1. clear old state fluents
 		for (int predicate_idx : m_state_predicate_idx) {
 			m_state_by_predicate[predicate_idx].clear();
 		}
 		// 2. fill new state fluents
-		for (unsigned i : m_state) {
+		for (unsigned i : m_state->fluent_vec()) {
 			const Fluent *fluent = m_fluents[i];
             m_state_by_predicate[fluent->pddl_predicate_type()].push_back(fluent);
 		}
     }
+
+    /**
+     * Getters.
+     */
+    const Sketch_STRIPS_Problem* problem() const { return m_problem; }
+    const std::vector<const Fluent*>& fluents() const { return m_fluents; }
+    const Fluent_Vec& goal() const { return m_goal; }
+    const std::vector<unsigned>& state_predicate_idx() const { return m_state_predicate_idx; }
+    const State* state() const { return m_state; }
+    const std::vector<std::vector<const Fluent*>>& state_by_predicate() const { return m_state_by_predicate; }
 };
 
 }

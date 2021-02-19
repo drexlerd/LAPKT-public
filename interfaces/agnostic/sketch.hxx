@@ -15,14 +15,14 @@ class BaseSketch;
 
 class BaseFeature {
 protected:
-    // the sketch to which this feature belongs
-    const BaseSketch *m_sketch;
-
+    const BaseSketch* m_sketch;
 public:
-    BaseFeature(const BaseSketch *sketch) : m_sketch(sketch) { }
+    BaseFeature(const BaseSketch* sketch) : m_sketch(sketch) { }
     virtual ~BaseFeature() = default;
 
     virtual void backup_evaluation() const = 0;
+
+    const BaseSketch* sketch() const { return m_sketch; }
 };
 
 
@@ -31,14 +31,14 @@ protected:
     mutable bool old_eval;
     bool new_eval;
 public:
-    BooleanFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
+    BooleanFeature(const BaseSketch* sketch) : BaseFeature(sketch) { }
     virtual ~BooleanFeature() = default;
 
     /**
      * Evaluate the feature for a given state.
      * The problem provides additional information.
      */
-    virtual void evaluate(const SketchState &sketch_state) const = 0;
+    virtual void evaluate(const SketchState &sketch_state) = 0;
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -59,10 +59,10 @@ protected:
     mutable int old_eval;
     int new_eval;
 public:
-    NumericalFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
+    NumericalFeature(const BaseSketch* sketch) : BaseFeature(sketch) { }
     virtual ~NumericalFeature() = default;
 
-    virtual void evaluate(const SketchState &sketch_state) const = 0;
+    virtual void evaluate(const SketchState &sketch_state) = 0;
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -89,35 +89,35 @@ public:
     BooleanFeatureEvalProxy(const BooleanFeature* feature) : m_feature(feature) { }
     virtual bool evaluate() const = 0;
 };
-class PositiveBoolean : BooleanFeatureEvalProxy {
+class PositiveBoolean : public BooleanFeatureEvalProxy {
 public:
     PositiveBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval();
     }
 };
-class NegativeBoolean : BooleanFeatureEvalProxy {
+class NegativeBoolean : public BooleanFeatureEvalProxy {
 public:
     NegativeBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return !m_feature->get_old_eval();
     }
 };
-class ChangedPositiveBoolean : BooleanFeatureEvalProxy {
+class ChangedPositiveBoolean : public BooleanFeatureEvalProxy {
 public:
     ChangedPositiveBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return !m_feature->get_old_eval() && m_feature->get_new_eval();
     }
 };
-class ChangedNegativeBoolean : BooleanFeatureEvalProxy {
+class ChangedNegativeBoolean : public BooleanFeatureEvalProxy {
 public:
     ChangedNegativeBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval() && !m_feature->get_new_eval();
     }
 };
-class UnchangedBoolean : BooleanFeatureEvalProxy {
+class UnchangedBoolean : public BooleanFeatureEvalProxy {
 public:
     UnchangedBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
@@ -133,35 +133,35 @@ public:
     NumericalFeatureEvalProxy(const NumericalFeature* feature) : m_feature(feature) { }
     virtual bool evaluate() const = 0;
 };
-class ZeroNumerical : NumericalFeatureEvalProxy {
+class ZeroNumerical : public NumericalFeatureEvalProxy {
 public:
     ZeroNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval() == 0;
     }
 };
-class NonzeroNumerical : NumericalFeatureEvalProxy {
+class NonzeroNumerical : public NumericalFeatureEvalProxy {
 public:
     NonzeroNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval() > 0;
     }
 };
-class DecrementNumerical : NumericalFeatureEvalProxy {
+class DecrementNumerical : public NumericalFeatureEvalProxy {
 public:
     DecrementNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval() > m_feature->get_new_eval();
     }
 };
-class IncrementNumerical : NumericalFeatureEvalProxy {
+class IncrementNumerical : public NumericalFeatureEvalProxy {
 public:
     IncrementNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
         return m_feature->get_old_eval() < m_feature->get_new_eval();
     }
 };
-class UnchangedNumerical : NumericalFeatureEvalProxy {
+class UnchangedNumerical : public NumericalFeatureEvalProxy {
 public:
     UnchangedNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
@@ -171,9 +171,7 @@ public:
 
 class Rule {
 protected:
-    // the sketch to which this rule belongs
-    const BaseSketch *m_sketch;
-
+    const BaseSketch* m_sketch;
     // Preconditions
     std::vector<const BooleanFeatureEvalProxy*> m_boolean_preconditions;
     std::vector<const NumericalFeatureEvalProxy*> m_numerical_preconditions;
@@ -181,25 +179,17 @@ protected:
     std::vector<const BooleanFeatureEvalProxy*> m_boolean_effects;
     std::vector<const NumericalFeatureEvalProxy*> m_numerical_effects;
 
-protected:
-    void add_boolean_precondition(const BooleanFeatureEvalProxy *boolean_precondition) {
-        m_boolean_preconditions.push_back(boolean_precondition);
-    }
-
-    void add_numerial_precondition(const NumericalFeatureEvalProxy *numerical_precondition) {
-        m_numerical_preconditions.push_back(numerical_precondition);
-    }
-
-    void add_boolean_effect(const BooleanFeatureEvalProxy *boolean_effect) {
-        m_boolean_effects.push_back(boolean_effect);
-    }
-
-    void add_numerial_effect(const NumericalFeatureEvalProxy *numerical_effect) {
-        m_numerical_effects.push_back(numerical_effect);
-    }
-
 public:
-    Rule(const BaseSketch *sketch) : m_sketch(sketch) { }
+    Rule(const BaseSketch* sketch,
+        std::vector<const BooleanFeatureEvalProxy*> &&boolean_preconditions,
+        std::vector<const NumericalFeatureEvalProxy*> &&numerical_preconditions,
+        std::vector<const BooleanFeatureEvalProxy*> &&boolean_effects,
+        std::vector<const NumericalFeatureEvalProxy*> &&numerical_effects)
+        : m_sketch(sketch),
+          m_boolean_preconditions(std::move(boolean_preconditions)),
+          m_numerical_preconditions(std::move(numerical_preconditions)),
+          m_boolean_effects(std::move(boolean_effects)),
+          m_numerical_effects(std::move(numerical_effects)) { }
 
     /**
      * Returns true iff rule is applicable in the problems initial state's feature evaluation
@@ -227,6 +217,11 @@ public:
         }
         return true;
     }
+
+    /**
+     * Getters.
+     */
+    const BaseSketch* sketch() const { return m_sketch; }
 };
 
 /**
@@ -249,8 +244,8 @@ protected:
     std::unordered_map<std::string, unsigned> m_boolean_feature_name_to_idx;
 
     // features to be evaluated
-    std::vector<const NumericalFeature*> m_numerical_features;
-    std::vector<const BooleanFeature*> m_boolean_features;
+    std::vector<NumericalFeature*> m_numerical_features;
+    std::vector<BooleanFeature*> m_boolean_features;
     // rules to be evaluated
     std::vector<const Rule*> m_rules;
     // rules applicable in the subproblem's initial state.
@@ -259,23 +254,37 @@ protected:
     /**
      * Add features with respective names.
      */
-    void add_numerical_feature(const std::string &feature_name, const NumericalFeature *feature) {
+    void add_numerical_feature(const std::string &feature_name, NumericalFeature *feature) {
         m_numerical_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
         m_numerical_features.push_back(feature);
     }
-    void add_boolean_feature(const std::string &feature_name, const BooleanFeature *feature) {
+    void add_boolean_feature(const std::string &feature_name, BooleanFeature *feature) {
         m_boolean_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
         m_boolean_features.push_back(feature);
+    }
+    const NumericalFeature* get_numerical_feature(const std::string &feature_name) const {
+        return m_numerical_features[m_numerical_feature_name_to_idx.at(feature_name)];
+    }
+    const BooleanFeature* get_boolean_feature(const std::string &feature_name) const {
+        return m_boolean_features[m_boolean_feature_name_to_idx.at(feature_name)];
+    }
+
+
+    /**
+     * Add rule.
+     */
+    void add_rule(const Rule* rule) {
+        m_rules.push_back(rule);
     }
 
     /**
      * Evaluate features for a given state.
      */
     void evaluate_features() {
-        for (const NumericalFeature* nf : m_numerical_features) {
+        for (NumericalFeature* nf : m_numerical_features) {
             nf->evaluate(m_sketch_state);
         }
-        for (const BooleanFeature* bf : m_boolean_features) {
+        for (BooleanFeature* bf : m_boolean_features) {
             bf->evaluate(m_sketch_state);
         }
     }
@@ -316,7 +325,9 @@ protected:
     }
 
 public:
-    BaseSketch(const Sketch_STRIPS_Problem *problem) : m_problem(problem), m_sketch_state(problem) { }
+    BaseSketch(const Sketch_STRIPS_Problem *problem)
+    : m_problem(problem),
+      m_sketch_state(problem) { }
     virtual ~BaseSketch() = default;
 
     /**
@@ -328,6 +339,8 @@ public:
         // update view
         m_sketch_state.set_state(state);
         // 1. Evaluate features f(s').
+        // TODO: we assume that state are never checked twice
+        // because it would not be novel anyways.
         evaluate_features();
         // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
         if (exists_compatible_rule()) {
@@ -341,6 +354,11 @@ public:
         // 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
         return false;
     }
+
+    /**
+     * Getters
+     */
+    const Sketch_STRIPS_Problem* problem() const { return m_problem; }
 };
 
 

@@ -41,7 +41,7 @@ State::~State()
 void	State::update_hash() {
 	Hash_Key hasher;
 	hasher.add( fluent_set().bits() );
-	m_hash = (size_t)hasher;	
+	m_hash = (size_t)hasher;
 }
 
 State* State::progress_through_df( const Action& a ) const
@@ -59,12 +59,12 @@ State* State::progress_through_df( const Action& a ) const
 
 	//Add Conditional Effects
 	if( !a.ceff_vec().empty() )
-	{		
+	{
 		for( unsigned i = 0; i < a.ceff_vec().size(); i++ )
 		{
 			Conditional_Effect* ce = a.ceff_vec()[i];
 			if( ce->can_be_applied_on( *this ) ) {
-				for ( auto p : ce->add_vec() ) 
+				for ( auto p : ce->add_vec() )
 					if ( !succ->entails(p) )
 						succ->set(p);
 			}
@@ -83,14 +83,14 @@ State* State::progress_through( const Action& a, Fluent_Vec* added, Fluent_Vec* 
 	succ->fluent_vec().reserve( m_fluent_vec.size() );
 
 
-	for ( unsigned k = 0; k < m_fluent_vec.size(); k++ ) 
+	for ( unsigned k = 0; k < m_fluent_vec.size(); k++ )
 	{
 		if ( a.retracts(m_fluent_vec[k]) ){
 			if(deleted)
 				deleted->push_back( m_fluent_vec[k] );
 			continue;
 		}
-		
+
 		if ( a.ceff_vec().empty() ) // it's not deleted by un-conditional effects, and there are no c.effs
 			succ->set( m_fluent_vec[k] );
 		//Check Conditional Effects
@@ -124,7 +124,7 @@ State* State::progress_through( const Action& a, Fluent_Vec* added, Fluent_Vec* 
 			    added->push_back(p);
 		}
 	}
-	
+
 
 	//Add Conditional Effects
 	if( a.ceff_vec().empty() )
@@ -140,11 +140,11 @@ State* State::progress_through( const Action& a, Fluent_Vec* added, Fluent_Vec* 
 			if ( !succ->entails(p) )
 			{
 				succ->set( p );
-				if(added)				    
+				if(added)
 				    added->push_back(p);
 			}
 		}
-	}       	
+	}
 
 	return succ;
 }
@@ -175,12 +175,12 @@ State* State::regress_through( const Action& a ) const
 			else
 				succ->set( m_fluent_vec[k] );
 		}
-	
+
 	succ->set( a.prec_vec() );
 
 	//Add Conditional Effects
 	if( !a.ceff_vec().empty() )
-	{		
+	{
 		for( unsigned i = 0; i < a.ceff_vec().size(); i++ )
 		{
 			Conditional_Effect* ce = a.ceff_vec()[i];
@@ -193,8 +193,6 @@ State* State::regress_through( const Action& a ) const
 }
 
 void State::progress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* deleted){
-	
-	
 	/**
 	 * progress action
 	 */
@@ -222,11 +220,11 @@ void State::progress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* 
 			if( retracts ){
 				if(deleted)
 					deleted->push_back( *it );
-	
+
 				it = m_fluent_vec.erase( it );
 			}
 			else
-				it++;					
+				it++;
 		}
 	}
 
@@ -247,7 +245,7 @@ void State::progress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* 
 		}
 		cit++;
 	}
-			
+
 	for( unsigned i = 0; i < a->ceff_vec().size(); i++ ){
 		Conditional_Effect* ce = a->ceff_vec()[i];
 		if( !ce->can_be_applied_on( *this ) ) continue;
@@ -260,11 +258,11 @@ void State::progress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* 
 				m_fluent_vec.push_back(*cit);
 			}
 			cit++;
-		}	
-	}     
+		}
+	}
 
 
-	
+
 	/**
 	 * If given, update the inclusion set
 	 */
@@ -293,7 +291,7 @@ void State::regress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* d
 	 * regress action
 	 */
 	it = m_fluent_vec.begin();
-			
+
 	while(it != m_fluent_vec.end() ){
 		bool s_entails = this->entails( *it );
 		if( s_entails ){
@@ -316,10 +314,10 @@ void State::regress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* d
 			if(asserts)
 				it = m_fluent_vec.erase( it );
 			else
-				it++;					
+				it++;
 		}
 	}
-			
+
 	Fluent_Vec::const_iterator cit = a->del_vec().begin();
 	while(cit != a->del_vec().end() ){
 		if( this->entails( *cit ) )
@@ -336,12 +334,12 @@ void State::regress_lazy_state(const Action* a, Fluent_Vec* added, Fluent_Vec* d
 			if(  this->entails(*cit) )
 				m_fluent_vec.push_back(*cit);
 			cit++;
-		}	
+		}
 	}
-		
+
 
 }
-	
+
 
 void	State::print( std::ostream& os ) const {
 	os << "(:state ";
@@ -352,4 +350,3 @@ void	State::print( std::ostream& os ) const {
 }
 
 }
-

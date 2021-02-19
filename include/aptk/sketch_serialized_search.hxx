@@ -162,40 +162,33 @@ public:
 	 * TODO: change this goal check to work with sketches
 	 */
 	virtual bool  is_goal( Search_Node* n ) {
-		const bool has_state = n->has_state();
-		static Fluent_Vec added_fluents;
-		static Fluent_Vec deleted_fluents;
-
-		State* s = has_state ? n->state() : n->parent()->state();
-
-		// evaluate sketch!
-		m_sketch->process_state(s);
-
-		if( ! has_state ){
-			added_fluents.clear();
-			deleted_fluents.clear();
-			n->parent()->state()->progress_lazy_state(  this->problem().task().actions()[ n->action() ], &added_fluents, &deleted_fluents );
-		}
-
+		State* s = n->state();
+        // the state has to satisfy at least the previously satisfied goal atoms.
 
 		for(Fluent_Vec::iterator it =  m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
 			if(  ! s->entails( *it ) ){
-				if( ! has_state )
-					n->parent()->state()->regress_lazy_state( this->problem().task().actions()[ n->action() ], &added_fluents, &deleted_fluents );
-
 				return false;
 			}
-
 		}
 
-
+        // if goal state is closed then don't waste time with expensive computation
 		if( is_goal_state_closed( n ) )
 			return false;
+
+		// evaluate sketch!
+		/*if (m_sketch->process_state(s)) {
+			close_goal_state( n );
+			return true;
+		} else {
+			return false;
+		}*/
+
+        // check if there is an additional goal atom that becomes true in s.
 
 		bool new_goal_achieved = false;
 		Fluent_Vec unachieved;
 		for(Fluent_Vec::iterator it = m_goal_candidates.begin(); it != m_goal_candidates.end(); it++){
-			if(  s->entails( *it ) )
+			if(  s->entails( *it ) )  // goal atom satisfied in s
 				{
 					m_goals_achieved.push_back( *it );
 
@@ -224,21 +217,15 @@ public:
 			else
 				unachieved.push_back( *it );
 		}
-
-		if( ! has_state )
-			n->parent()->state()->regress_lazy_state( this->problem().task().actions()[ n->action() ], &added_fluents, &deleted_fluents );
-
 		if ( new_goal_achieved ){
 			m_goal_candidates = unachieved;
-
-			if( ! has_state )
-				n->set_state( n->parent()->state()->progress_through( *(this->problem().task().actions()[ n->action() ]) ));
 
 			close_goal_state( n );
 			return true;
 		}
 		else
 			return false;
+
 
 	}
 

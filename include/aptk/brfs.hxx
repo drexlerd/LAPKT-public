@@ -43,19 +43,18 @@ public:
 
 	typedef State State_Type;
 
-	Node( State* s, Action_Idx action, Node<State>* parent = nullptr, float cost = 1.0f, bool compute_hash = true) 
+	Node( State* s, Action_Idx action, Node<State>* parent = nullptr, float cost = 1.0f, bool compute_hash = true)
 	: m_state( s ), m_parent( parent ), m_action(action), m_g( 0 ) {
-		
 		m_g = ( parent ? parent->m_g + cost : 0.0f);
 		if( m_state == NULL )
 			update_hash();
 	}
-	
+
 	virtual ~Node() {
 		if ( m_state != NULL ) delete m_state;
 	}
 
-	unsigned&      		gn()		{ return m_g; }			
+	unsigned&      		gn()		{ return m_g; }
 	unsigned       		gn() const 	{ return m_g; }
 	Node<State>*		parent()   	{ return m_parent; }
 	Action_Idx		action() const 	{ return m_action; }
@@ -83,7 +82,7 @@ public:
 	}
 
 	bool   	operator==( const Node<State>& o ) const {
-		
+
 		if( &(o.state()) != NULL && &(state()) != NULL)
 			return (const State&)(o.state()) == (const State&)(state());
 		/**
@@ -93,9 +92,9 @@ public:
 			if ( o.m_parent == NULL ) return true;
 			return false;
 		}
-	
+
 		if ( o.m_parent == NULL ) return false;
-		
+
 		return (m_action == o.m_action) && ( *(m_parent->m_state) == *(o.m_parent->m_state) );
 	}
 
@@ -121,8 +120,8 @@ public:
 	typedef  	Node< State >					Search_Node;
 	typedef 	Closed_List< Search_Node >      		Closed_List_Type;
 
-	BRFS( 	const Search_Model& search_problem ) 
-		: m_problem( search_problem ), m_exp_count(0), m_gen_count(0), m_cl_count(0), m_max_depth(0), m_verbose(true) {		
+	BRFS( 	const Search_Model& search_problem )
+		: m_problem( search_problem ), m_exp_count(0), m_gen_count(0), m_cl_count(0), m_max_depth(0), m_verbose(true) {
 	}
 
 	virtual ~BRFS() {
@@ -130,14 +129,14 @@ public:
 			i != m_closed.end(); i++ ) {
 			delete i->second;
 		}
-		
-		while	(!m_open.empty() ) 
-		{	
+
+		while	(!m_open.empty() )
+		{
 			Search_Node* n = m_open.front();
 			m_open.pop();
 			delete n;
 		}
-		
+
 		m_closed.clear();
 		m_open_hash.clear();
 	}
@@ -152,44 +151,44 @@ public:
 			i != m_closed.end(); i++ ) {
 			delete i->second;
 		}
-		
-		while	(!m_open.empty() ) 
-		{	
+
+		while	(!m_open.empty() )
+		{
 			Search_Node* n = m_open.front();
 			m_open.pop();
 			delete n;
 		}
-		
+
 		m_closed.clear();
 		m_open_hash.clear();
 		m_max_depth=0;
 	}
-	
-	virtual bool    is_goal( Search_Node* n  ){ 
+
+	virtual bool    is_goal( Search_Node* n  ){
 		if( n->has_state() )
-			return m_problem.goal( *(n->state()) ); 
-		else{			
-			n->parent()->state()->progress_lazy_state(  m_problem.task().actions()[ n->action() ] );	
-			const bool is_goal = m_problem.goal( *( n->state() ) ); 
+			return m_problem.goal( *(n->state()) );
+		else{
+			n->parent()->state()->progress_lazy_state(  m_problem.task().actions()[ n->action() ] );
+			const bool is_goal = m_problem.goal( *( n->state() ) );
 			n->parent()->state()->regress_lazy_state( m_problem.task().actions()[ n->action() ] );
 			return is_goal;
 		}
-			
+
 	}
 
 	void	start( State *s = NULL ) {
-	
+
 		reset();
-		
+
 		if(!s)
-			m_root = new Search_Node( m_problem.init(), no_op, NULL );	
+			m_root = new Search_Node( m_problem.init(), no_op, NULL );
 		else
 			m_root = new Search_Node( s, no_op, NULL );
 #ifdef DEBUG
 		std::cout << "Initial search node: ";
 		m_root->print(std::cout);
 		std::cout << std::endl;
-#endif 
+#endif
 		m_open.push( m_root );
 		m_open_hash.put( m_root );
 		inc_gen();
@@ -198,8 +197,8 @@ public:
 	virtual bool	find_solution( float& cost, std::vector<Action_Idx>& plan ) {
 		Search_Node* end = do_search();
 		if ( end == NULL ) return false;
-		extract_plan( m_root, end, plan, cost );	
-		
+		extract_plan( m_root, end, plan, cost );
+
 		return true;
 	}
 
@@ -217,15 +216,15 @@ public:
 
 	const	Search_Model&	problem() const			{ return m_problem; }
 
-	bool 		is_closed( Search_Node* n ) 	{ 
+	bool 		is_closed( Search_Node* n ) 	{
 		Search_Node* n2 = this->closed().retrieve(n);
 
-		if ( n2 != NULL ) 
+		if ( n2 != NULL )
 			return true;
-		
+
 		return false;
 	}
-	
+
 	bool          search_exhausted(){ return m_open.empty(); }
 
 	Search_Node* 		get_node() {
@@ -238,15 +237,15 @@ public:
 		return next;
 	}
 
-	void	 	open_node( Search_Node *n ) {		
+	void	 	open_node( Search_Node *n ) {
 		m_open.push(n);
 		m_open_hash.put(n);
 		inc_gen();
 		if(n->gn() + 1 > m_max_depth){
-			//if( m_max_depth == 0 ) std::cout << std::endl;  
+			//if( m_max_depth == 0 ) std::cout << std::endl;
 			m_max_depth = n->gn() + 1 ;
-			if ( verbose() ) 
-				std::cout << "[" << m_max_depth  <<"]" << std::flush;			
+			if ( verbose() )
+				std::cout << "[" << m_max_depth  <<"]" << std::flush;
 		}
 
 	}
@@ -254,12 +253,12 @@ public:
 	virtual Search_Node*   process(  Search_Node *head ) {
 		typedef typename Search_Model::Action_Iterator Iterator;
 		Iterator it( this->problem() );
-		
+
 		int a = it.start( *(head->state()) );
-		while ( a != no_op ) {	
-			State *succ =  m_problem.next( *(head->state()), a ) ;			
+		while ( a != no_op ) {
+			State *succ =  m_problem.next( *(head->state()), a ) ;
 			Search_Node* n = new Search_Node( succ, a, head );
-			
+
 			if ( is_closed( n ) ) {
 				delete n;
 				a = it.next();
@@ -271,26 +270,26 @@ public:
 				delete n;
 			}
 			else{
-				open_node(n);			       
+				open_node(n);
 				if( is_goal( n ) )
 					return n;
-				
-			}
-			a = it.next();		
-		} 
 
-		
+			}
+			a = it.next();
+		}
+
+
 		return NULL;
 	}
-	
-	
+
+
 	virtual Search_Node*	 	do_search() {
 		Search_Node *head = get_node();
 		if( is_goal( head ) )
 			return head;
 
 		int counter = 0;
-		while(head) {	
+		while(head) {
 			if( ! head->has_state() )
 				head->set_state( m_problem.next(*(head->parent()->state()), head->action()) );
 
@@ -311,9 +310,9 @@ public:
 	virtual bool 			previously_hashed( Search_Node *n ) {
 		Search_Node *previous_copy = m_open_hash.retrieve(n);
 
-		if( previous_copy != NULL ) 
+		if( previous_copy != NULL )
 			return true;
-		
+
 		return false;
 	}
 
@@ -326,9 +325,9 @@ public:
 			plan.push_back(tmp->action());
 			tmp = tmp->parent();
 		}
-		
+
 		if(reverse)
-			std::reverse(plan.begin(), plan.end());		
+			std::reverse(plan.begin(), plan.end());
 	}
 
 
@@ -340,10 +339,10 @@ protected:
 			plan.push_back(tmp);
 			tmp = tmp->parent();
 		}
-		
-		std::reverse(plan.begin(), plan.end());				
+
+		std::reverse(plan.begin(), plan.end());
 	}
-	
+
 protected:
 
 	const Search_Model&			m_problem;
