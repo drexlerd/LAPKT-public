@@ -55,13 +55,3 @@ using namespace boost::python;
 		assert(objs_idx.size() == objs_names.size());
         aptk::Sketch_STRIPS_Problem::add_other_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
 	}
-
-	void
-	Sketch_STRIPS_Problem::set_num_predicates(int num_predicates) {
-        aptk::Sketch_STRIPS_Problem::set_num_predicates(*instance(), num_predicates);
-	}
-
-	void
-	Sketch_STRIPS_Problem::set_num_objects(int num_objects) {
-        aptk::Sketch_STRIPS_Problem::set_num_objects(*instance(), num_objects);
-	}

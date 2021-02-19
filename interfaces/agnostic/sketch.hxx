@@ -4,11 +4,13 @@
 
 #include <vector>
 #include <unordered_map>
+#include <iostream>
+#include <sketch_state.hxx>
 
 namespace aptk
 {
-class BaseSketch;
 class Sketch_STRIPS_Problem;
+class BaseSketch;
 
 
 class BaseFeature {
@@ -34,8 +36,9 @@ public:
 
     /**
      * Evaluate the feature for a given state.
+     * The problem provides additional information.
      */
-    virtual bool evaluate() const = 0;
+    virtual bool evaluate(const State* state, const Sketch_STRIPS_Problem* problem) const = 0;
 
     virtual void backup_evaluation() override {
         old_eval = new_eval;
@@ -226,8 +229,6 @@ public:
     }
 };
 
-
-
 /**
  * A BaseSketch provides an interface for sketches.
  * Concrete implementation depends on a specific domain
@@ -240,6 +241,8 @@ class BaseSketch {
 protected:
     // the problem to which this sketch belongs
     const Sketch_STRIPS_Problem *m_problem;
+    // the state information with different views
+    SketchState m_sketch_state;
 
     // mapping of feature names to indices used to define rules
     std::unordered_map<std::string, int> m_numerical_feature_name_to_idx;
@@ -262,7 +265,11 @@ protected:
     /**
      * Evaluate features for a given state.
      */
-    void evaluate_features();
+    void evaluate_features() {
+        for (const NumericalFeature* nf : m_numerical_features) {
+            nf->evaluate();
+        }
+    }
 
     /**
      * Return true iff there exists an applicable rule
@@ -281,7 +288,7 @@ protected:
     void set_generated_state_information_as_init();
 
 public:
-    BaseSketch(const Sketch_STRIPS_Problem *problem) : m_problem(problem) { }
+    BaseSketch(const Sketch_STRIPS_Problem *problem) : m_problem(problem), m_sketch_state(problem) { }
     virtual ~BaseSketch() = default;
 
     /**
@@ -303,7 +310,10 @@ public:
  */
 class GoalSketch : public BaseSketch {
 public:
-    GoalSketch(const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) { }
+    GoalSketch(const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
+        // TODO: create feature that counts unachieved goal atoms
+        std::cout << "Goal sketch initialized!\n";
+    }
 };
 
 }

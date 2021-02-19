@@ -53,6 +53,13 @@ public:
 	Sketch_SIW( const Search_Model& search_problem )
 		: Sketch_Serialized_Search<Search_Model, brfs::IW<Search_Model, aptk::agnostic::Novelty<Search_Model, Search_Node>>, Search_Node>( search_problem ), m_pruned_sum_B_count(0), m_sum_B_count(0), m_max_B_count(0), m_iw_calls(0), m_max_bound( std::numeric_limits<unsigned>::max() ) {
 		m_goal_agenda = NULL;
+		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
+		if (sketch_problem->sketch_name() == "grid.sketch") {
+
+		} else {
+			// default is goal sketch.
+			m_sketch = new aptk::GoalSketch(sketch_problem);
+		}
 	}
 
 	virtual ~Sketch_SIW() {

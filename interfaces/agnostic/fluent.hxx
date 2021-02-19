@@ -41,7 +41,7 @@ public:
 
 	const std::string&	signature() const;
 	const std::string&	pddl_predicate_name() const;
-	const Name_Vec&   pddl_object_names() const;
+	const Name_Vec&   pddl_obj_names() const;
 
 	void		set_index( unsigned idx );
 	void		set_signature( std::string signature );
@@ -90,7 +90,7 @@ inline const std::string& Fluent::pddl_predicate_name() const {
     return m_predicate_name;
 }
 
-inline const Name_Vec& Fluent::pddl_object_names() const {
+inline const Name_Vec& Fluent::pddl_obj_names() const {
     return m_objs_names;
 }
 

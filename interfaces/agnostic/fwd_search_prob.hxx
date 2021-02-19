@@ -47,7 +47,7 @@ public:
 	bool	                lazy_goal( const State& s, Action_Idx a  ) const;
 	virtual bool		is_applicable( const State& s, Action_Idx a ) const;
 	virtual void		applicable_set( const State& s, std::vector<Action_Idx>& app_set ) const;
-	virtual void		applicable_set_v2( const State& s, std::vector<Action_Idx>& app_set ) const;	
+	virtual void		applicable_set_v2( const State& s, std::vector<Action_Idx>& app_set ) const;
 	virtual float		cost( const State& s, Action_Idx a ) const;
         virtual State*		next( const State& s, Action_Idx a, Fluent_Vec* added, Fluent_Vec* deleted ) const;
     virtual State*		next( const State& s, Action_Idx a ) const;
@@ -61,7 +61,7 @@ public:
 		Action_Iterator( const Fwd_Search_Problem& p )
 		  :       m_problem(p) {
 		}
-        
+
 		~Action_Iterator() {
 		}
 
@@ -72,13 +72,13 @@ public:
 			if ( m_it == m_app_set.end() ) return no_op;
 			return *m_it;
 		}
-	
+
 		int	next() {
 			m_it++;
 			if ( m_it == m_app_set.end() ) return no_op;
 			return *m_it;
-		}	
-	
+		}
+
 	private:
 		const Fwd_Search_Problem& 		m_problem;
 		std::vector<Action_Idx>			m_app_set;
@@ -88,7 +88,7 @@ public:
 private:
 
 	STRIPS_Problem*		m_task;
-	
+
 };
 
 }
