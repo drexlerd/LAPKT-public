@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include "../../interfaces/agnostic/sketches/goal_counter.hxx"
 
 namespace aptk {
 
@@ -46,6 +47,13 @@ public:
 	Sketch_Serialized_Search( 	const Search_Model& search_problem )
 		: Search_Strategy( search_problem ), m_consistency_test(true), m_closed_goal_states( NULL )  {
 		m_reachability = new aptk::agnostic::Reachability_Test( this->problem().task() );
+		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
+		if (sketch_problem->sketch_name() == "grid.sketch") {
+
+		} else {
+			// default is goal sketch.
+			m_sketch = new aptk::GoalCounterSketch(sketch_problem);
+		}
 	}
 
 	virtual ~Sketch_Serialized_Search() {
@@ -160,6 +168,9 @@ public:
 
 		State* s = has_state ? n->state() : n->parent()->state();
 
+		// evaluate sketch!
+		m_sketch->process_state(s);
+
 		if( ! has_state ){
 			added_fluents.clear();
 			deleted_fluents.clear();
@@ -241,6 +252,7 @@ protected:
 	Fluent_Vec                              m_goal_candidates;
 	bool                                    m_consistency_test;
 	Closed_List_Type*			m_closed_goal_states;
+	BaseSketch*					m_sketch;
 };
 
 }

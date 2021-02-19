@@ -22,13 +22,13 @@ public:
     BaseFeature(const BaseSketch *sketch) : m_sketch(sketch) { }
     virtual ~BaseFeature() = default;
 
-    virtual void backup_evaluation() = 0;
+    virtual void backup_evaluation() const = 0;
 };
 
 
 class BooleanFeature : public BaseFeature {
 protected:
-    bool old_eval;
+    mutable bool old_eval;
     bool new_eval;
 public:
     BooleanFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
@@ -38,9 +38,9 @@ public:
      * Evaluate the feature for a given state.
      * The problem provides additional information.
      */
-    virtual bool evaluate(const State* state, const Sketch_STRIPS_Problem* problem) const = 0;
+    virtual void evaluate(const SketchState &sketch_state) const = 0;
 
-    virtual void backup_evaluation() override {
+    virtual void backup_evaluation() const override {
         old_eval = new_eval;
     }
 
@@ -56,15 +56,15 @@ public:
 
 class NumericalFeature : public BaseFeature {
 protected:
-    int old_eval;
+    mutable int old_eval;
     int new_eval;
 public:
     NumericalFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
     virtual ~NumericalFeature() = default;
 
-    virtual int evaluate() const = 0;
+    virtual void evaluate(const SketchState &sketch_state) const = 0;
 
-    virtual void backup_evaluation() override {
+    virtual void backup_evaluation() const override {
         old_eval = new_eval;
     }
 
@@ -245,8 +245,8 @@ protected:
     SketchState m_sketch_state;
 
     // mapping of feature names to indices used to define rules
-    std::unordered_map<std::string, int> m_numerical_feature_name_to_idx;
-    std::unordered_map<std::string, int> m_boolean_feature_name_to_idx;
+    std::unordered_map<std::string, unsigned> m_numerical_feature_name_to_idx;
+    std::unordered_map<std::string, unsigned> m_boolean_feature_name_to_idx;
 
     // features to be evaluated
     std::vector<const NumericalFeature*> m_numerical_features;
@@ -259,15 +259,24 @@ protected:
     /**
      * Add features with respective names.
      */
-    void add_numerical_feature(const std::string &feature_name, const NumericalFeature *feature);
-    void add_boolean_feature(const std::string &feature_name, const BooleanFeature *feature);
+    void add_numerical_feature(const std::string &feature_name, const NumericalFeature *feature) {
+        m_numerical_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
+        m_numerical_features.push_back(feature);
+    }
+    void add_boolean_feature(const std::string &feature_name, const BooleanFeature *feature) {
+        m_boolean_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
+        m_boolean_features.push_back(feature);
+    }
 
     /**
      * Evaluate features for a given state.
      */
     void evaluate_features() {
         for (const NumericalFeature* nf : m_numerical_features) {
-            nf->evaluate();
+            nf->evaluate(m_sketch_state);
+        }
+        for (const BooleanFeature* bf : m_boolean_features) {
+            bf->evaluate(m_sketch_state);
         }
     }
 
@@ -275,46 +284,65 @@ protected:
      * Return true iff there exists an applicable rule
      * between the initial and generated state information.
      */
-    bool exists_compatible_rule() const;
+    bool exists_compatible_rule() const {
+        for (const Rule* rule : m_init_applicable_rules) {
+            if (rule->is_compatible()) return true;
+        }
+        return false;
+    }
 
     /**
      * Compute applicable rules for the initial state.
      */
-    void compute_applicable_rules_for_init();
+    void compute_applicable_rules_for_init() {
+        m_init_applicable_rules.clear();
+        for (const Rule* rule : m_rules) {
+            if (rule->is_applicable()) {
+                m_init_applicable_rules.push_back(rule);
+            }
+        }
+    }
 
     /**
      * Set generated state information as the new initial state information
      */
-    void set_generated_state_information_as_init();
+    void set_generated_state_information_as_init() {
+        for (const NumericalFeature* nf : m_numerical_features) {
+            nf->backup_evaluation();
+        }
+        for (const BooleanFeature* bf : m_boolean_features) {
+            bf->backup_evaluation();
+        }
+    }
 
 public:
     BaseSketch(const Sketch_STRIPS_Problem *problem) : m_problem(problem), m_sketch_state(problem) { }
     virtual ~BaseSketch() = default;
 
     /**
-     * Given a generated state s' perform the following actions:
-     * 1. Evaluate features f(s').
-     * 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
-     *      where f(s) is the feature evaluation of
-     *      the initial state of the current subproblem then
-     *      (i) set the generate state information as the new initial state,
-     *      (ii) recompute applicable rules for the generated state, and
-     *      (iii) return true to indicate SIW that a new subproblem was found
-     * 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
+     * Try entering a new subproblem for a given state.
+     * Returns true if the given state defines the initial state
+     * of the next subproblem.
      */
-    bool process_state();
-};
-
-/**
- * Sketch with single rule that decreases the number of achieved goal atoms.
- */
-class GoalSketch : public BaseSketch {
-public:
-    GoalSketch(const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-        // TODO: create feature that counts unachieved goal atoms
-        std::cout << "Goal sketch initialized!\n";
+    bool process_state(const State* state) {
+        // update view
+        m_sketch_state.set_state(state);
+        // 1. Evaluate features f(s').
+        evaluate_features();
+        // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
+        if (exists_compatible_rule()) {
+            // (i) set the generate state information as the new initial state,
+            set_generated_state_information_as_init();
+            // (ii) recompute applicable rules for the generated state, and
+            compute_applicable_rules_for_init();
+            // (iii) return true to indicate SIW that a new subproblem was found
+            return true;
+        }
+        // 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
+        return false;
     }
 };
+
 
 }
 
