@@ -150,6 +150,7 @@ public:
 	}
 
     /**
+	 * Starts a new IW search if new subproblem is encountered.
 	 * TODO: change this goal check to work with sketches
 	 */
 	virtual bool  is_goal( Search_Node* n ) {
@@ -229,38 +230,6 @@ public:
 			return false;
 
 	}
-
-	virtual bool	find_solution( float& cost, std::vector<Action_Idx>& plan ) {
-
-		Search_Node* end = NULL;
-		State* new_init_state = NULL;
-		m_goals_achieved.clear();
-		m_goal_candidates.clear();
-		m_goal_candidates.insert( m_goal_candidates.begin(),
-					  this->problem().task().goal().begin(), this->problem().task().goal().end() );
-
-		do{
-			end = this->do_search();
-
-			if ( end == NULL ) return false;
-
-			std::vector<Action_Idx> partial_plan;
-			this->extract_plan( this->m_root, end, partial_plan, cost );
-			plan.insert( plan.end(), partial_plan.begin(), partial_plan.end() );
-
-			new_init_state = new State( this->problem().task() );
-			new_init_state->set( end->state()->fluent_vec() );
-			new_init_state->update_hash();
-			this->start( new_init_state );
-
-
-		}while( !this->problem().goal( *new_init_state ) );
-
-
-
-		return true;
-	}
-
 
 	Fluent_Vec&        goal_candidates(){ return m_goal_candidates; }
 	Fluent_Vec&        goals_achieved(){ return m_goals_achieved; }

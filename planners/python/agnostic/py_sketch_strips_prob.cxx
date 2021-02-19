@@ -65,7 +65,3 @@ using namespace boost::python;
 	Sketch_STRIPS_Problem::set_num_objects(int num_objects) {
         aptk::Sketch_STRIPS_Problem::set_num_objects(*instance(), num_objects);
 	}
-
-	void Sketch_STRIPS_Problem::initialize_sketch() {
-		aptk::Sketch_STRIPS_Problem::initialize_sketch(*instance());
-	}

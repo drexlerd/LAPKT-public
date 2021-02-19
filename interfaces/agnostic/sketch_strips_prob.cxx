@@ -38,7 +38,7 @@ namespace aptk
 			const Name_Vec &object_names = x->pddl_object_names();
 			const Index_Vec &object_idx = x->pddl_objs_idx();
 			assert(object_names.size() == object_idx.size());
-			for (int i = 0; i < object_idx.size(); ++i) {
+			for (int i = 0; i < static_cast<int>(object_idx.size()); ++i) {
 				out_object_name_to_idx[object_names[i]] = object_idx[i];
 			}
 		}
@@ -47,8 +47,9 @@ namespace aptk
 	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string dom_name, std::string prob_name, std::string sketch_name )
 		: STRIPS_Problem(dom_name, prob_name),
 		m_sketch_name(sketch_name),
-		m_num_objects(-1),
-		m_num_predicates(-1)
+		m_num_predicates(-1),
+		m_num_objects(-1)
+
 	{
 	}
 
@@ -95,33 +96,26 @@ namespace aptk
         p.m_num_objects = num_objects;
 	}
 
-	void Sketch_STRIPS_Problem::initialize_sketch(Sketch_STRIPS_Problem& p) {
+	void Sketch_STRIPS_Problem::initialize_sketch_information() {
 		// 1. fill init fluents
-        p.m_first_order_state.resize(p.m_num_predicates);
-		for (const Fluent *x : p.init_fluents()) {
-            p.m_first_order_state[x->pddl_predicate_type()].push_back(x);
+        m_first_order_state.resize(m_num_predicates);
+		for (const Fluent *x : init_fluents()) {
+            m_first_order_state[x->pddl_predicate_type()].push_back(x);
 		}
 		// 2. store predicate indices that may occur in fluents.
 		std::unordered_set<int> indices;
-		for (const Fluent *x : p.fluents()) {
+		for (const Fluent *x : fluents()) {
             indices.insert(x->pddl_predicate_type());
 		}
-		p.m_state_predicate_idx = std::vector<int>(indices.begin(), indices.end());
-		// 3. Initialize sketch
-		// initialize mapping of predicate and object names
-		add_predicate_information(p.fluents(), p.m_predicate_name_to_index, p.m_object_name_to_index);
-		add_predicate_information(p.init_fluents(), p.m_predicate_name_to_index, p.m_object_name_to_index);
-        /*if (p.m_sketch_name == "grid.sketch") {
-
-		} else {
-			// goal serialization, plain SIW search
-			p.m_sketch = std::unique_ptr<BaseSketch>(
-			 	new BaseSketch(std::move(predicate_name_to_index), std::move(object_name_to_index)));
-		}*/
+		m_state_predicate_idx = std::vector<int>(indices.begin(), indices.end());
+		// 3. initialize mapping of predicate and object names
+		add_predicate_information(fluents(), m_predicate_name_to_index, m_object_name_to_index);
+		add_predicate_information(init_fluents(), m_predicate_name_to_index, m_object_name_to_index);
 	}
 
 	const std::vector<std::vector<const Fluent*>>
-	&Sketch_STRIPS_Problem::get_first_order_state(const Fluent_Vec &state_fluents) {
+	&Sketch_STRIPS_Problem::get_first_order_state(const State *state) {
+		const Fluent_Vec &state_fluents = state->fluent_vec();
 		// 1. clear old state fluents
 		for (int predicate_idx : m_state_predicate_idx) {
 			m_first_order_state[predicate_idx].clear();
@@ -132,6 +126,11 @@ namespace aptk
             m_first_order_state[fluent->pddl_predicate_type()].push_back(fluent);
 		}
         return m_first_order_state;
+	}
+
+	const std::vector<std::vector<const Fluent*>>
+	&Sketch_STRIPS_Problem::get_first_order_goal() const {
+		return m_first_order_goal;
 	}
 
 	void Sketch_STRIPS_Problem::print_init_fluents( std::ostream& os ) const {

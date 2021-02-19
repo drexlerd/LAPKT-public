@@ -32,8 +32,6 @@ public:
 	void set_num_predicates(int num_predicates);
 
 	void set_num_objects(int num_objects);
-
-	void initialize_sketch();
 };
 
 #endif // py_sketch_strips_problem.hxx

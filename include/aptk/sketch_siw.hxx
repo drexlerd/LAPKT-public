@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <iostream>
 
+#include "../../interfaces/agnostic/sketch.hxx"
+
 namespace aptk {
 
 namespace search {
@@ -44,8 +46,9 @@ class Sketch_SIW : public Sketch_Serialized_Search<Search_Model,
 
 public:
 
-	typedef  	 aptk::search::brfs::Node< aptk::State >					Search_Node;
-	typedef          aptk::agnostic::Landmarks_Graph                                                Landmarks_Graph;
+	typedef		aptk::search::brfs::Node< aptk::State >		Search_Node;
+	typedef		aptk::agnostic::Landmarks_Graph				Landmarks_Graph;
+    typedef		aptk::BaseSketch							BaseSketch;
 
 	Sketch_SIW( const Search_Model& search_problem )
 		: Sketch_Serialized_Search<Search_Model, brfs::IW<Search_Model, aptk::agnostic::Novelty<Search_Model, Search_Node>>, Search_Node>( search_problem ), m_pruned_sum_B_count(0), m_sum_B_count(0), m_max_B_count(0), m_iw_calls(0), m_max_bound( std::numeric_limits<unsigned>::max() ) {
@@ -56,6 +59,9 @@ public:
 	}
 	void            set_goal_agenda( Landmarks_Graph* lg ) { m_goal_agenda = lg; }
 
+    /**
+	 * Calls IW for each subproblem encountered
+	 */
 	virtual bool	find_solution( float& cost, std::vector<Action_Idx>& plan ) {
 
 		unsigned gsize = this->problem().task().goal().size();
@@ -143,11 +149,7 @@ public:
 					m_goal_agenda->get_leafs( this->m_goal_candidates );
 
 				}
-
-
 				//this->debug_info( new_init_state, this->m_goal_candidates );
-
-
 			}
 
 
@@ -171,6 +173,7 @@ protected:
 	unsigned		m_iw_calls;
 	Landmarks_Graph*        m_goal_agenda;
 	unsigned		m_max_bound;
+	BaseSketch*     m_sketch;
 };
 
 }

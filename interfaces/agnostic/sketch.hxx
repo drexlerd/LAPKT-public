@@ -1,19 +1,23 @@
 
-#include <types.hxx>
+#ifndef __SKETCH__
+#define __SKETCH__
+
 #include <vector>
 #include <unordered_map>
-#include <sketch_strips_prob.hxx>
 
 namespace aptk
 {
+class BaseSketch;
+class Sketch_STRIPS_Problem;
+
 
 class BaseFeature {
 protected:
-    // access to predicate mappings
-    const Sketch_STRIPS_Problem &m_problem;
+    // the sketch to which this feature belongs
+    const BaseSketch *m_sketch;
 
 public:
-    BaseFeature(const Sketch_STRIPS_Problem &problem) : m_problem(problem) { }
+    BaseFeature(const BaseSketch *sketch) : m_sketch(sketch) { }
     virtual ~BaseFeature() = default;
 
     virtual void backup_evaluation() = 0;
@@ -25,7 +29,7 @@ protected:
     bool old_eval;
     bool new_eval;
 public:
-    BooleanFeature(const Sketch_STRIPS_Problem &problem) : BaseFeature(problem) { }
+    BooleanFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
     virtual ~BooleanFeature() = default;
 
     /**
@@ -52,10 +56,10 @@ protected:
     int old_eval;
     int new_eval;
 public:
-    NumericalFeature(const Sketch_STRIPS_Problem &problem) : BaseFeature(problem) { }
+    NumericalFeature(const BaseSketch *sketch) : BaseFeature(sketch) { }
     virtual ~NumericalFeature() = default;
 
-    virtual int evaluate(const Sketch_STRIPS_Problem &problem) const = 0;
+    virtual int evaluate() const = 0;
 
     virtual void backup_evaluation() override {
         old_eval = new_eval;
@@ -76,6 +80,7 @@ public:
  */
 class BooleanFeatureEvalProxy {
 protected:
+    // the underlying boolean feature
     const BooleanFeature* m_feature;
 public:
     BooleanFeatureEvalProxy(const BooleanFeature* feature) : m_feature(feature) { }
@@ -119,6 +124,7 @@ public:
 
 class NumericalFeatureEvalProxy {
 protected:
+    // the underlying numerical feature
     const NumericalFeature* m_feature;
 public:
     NumericalFeatureEvalProxy(const NumericalFeature* feature) : m_feature(feature) { }
@@ -135,7 +141,7 @@ class NonzeroNumerical : NumericalFeatureEvalProxy {
 public:
     NonzeroNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
     virtual bool evaluate() const override {
-        return !m_feature->get_old_eval() > 0;
+        return m_feature->get_old_eval() > 0;
     }
 };
 class DecrementNumerical : NumericalFeatureEvalProxy {
@@ -162,11 +168,8 @@ public:
 
 class Rule {
 protected:
-    // Access to feature mappings
-    // Note that the hash value should be computed in the constructor
-    // to make this as efficient as possible.
-    const std::unordered_map<std::string, int> &m_numerical_feature_name_to_idx;
-    const std::unordered_map<std::string, int> &m_boolean_feature_name_to_idx;
+    // the sketch to which this rule belongs
+    const BaseSketch *m_sketch;
 
     // Preconditions
     std::vector<const BooleanFeatureEvalProxy*> m_boolean_preconditions;
@@ -193,6 +196,8 @@ protected:
     }
 
 public:
+    Rule(const BaseSketch *sketch) : m_sketch(sketch) { }
+
     /**
      * Returns true iff rule is applicable in the problems initial state's feature evaluation
      */
@@ -233,9 +238,9 @@ public:
  */
 class BaseSketch {
 protected:
-    // mapping of fluent names to indices used to define features
-    const std::unordered_map<std::string, int> m_predicate_name_to_idx;
-    const std::unordered_map<std::string, int> m_object_name_to_idx;
+    // the problem to which this sketch belongs
+    const Sketch_STRIPS_Problem *m_problem;
+
     // mapping of feature names to indices used to define rules
     std::unordered_map<std::string, int> m_numerical_feature_name_to_idx;
     std::unordered_map<std::string, int> m_boolean_feature_name_to_idx;
@@ -276,11 +281,7 @@ protected:
     void set_generated_state_information_as_init();
 
 public:
-    BaseSketch(
-        std::unordered_map<std::string, int> &&predicate_name_to_idx,
-        std::unordered_map<std::string, int> &&object_name_to_idx) :
-        m_predicate_name_to_idx(std::move(predicate_name_to_idx)),
-        m_object_name_to_idx(std::move(object_name_to_idx)) { }
+    BaseSketch(const Sketch_STRIPS_Problem *problem) : m_problem(problem) { }
     virtual ~BaseSketch() = default;
 
     /**
@@ -294,7 +295,7 @@ public:
      *      (iii) return true to indicate SIW that a new subproblem was found
      * 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
      */
-    bool process_state(const std::vector<std::vector<const Fluent*>> &first_order_state);
+    bool process_state();
 };
 
 /**
@@ -302,10 +303,9 @@ public:
  */
 class GoalSketch : public BaseSketch {
 public:
-    GoalSketch(
-        std::unordered_map<std::string, int> &&predicate_name_to_idx,
-        std::unordered_map<std::string, int> &&object_name_to_idx)
-        : BaseSketch(std::move(predicate_name_to_idx), std::move(object_name_to_idx)) { }
+    GoalSketch(const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) { }
 };
 
 }
+
+#endif

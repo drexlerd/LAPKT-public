@@ -32,17 +32,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <mutex_set.hxx>
 #include <memory>
+#include <unordered_map>
 
 namespace aptk
 {
 
-
-
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
 protected:
     std::string m_sketch_name;
-    // predicate indices that occur in state_fluents
-	std::vector<int> m_state_predicate_idx;
     // init_fluents
 	Fluent_Ptr_Vec									m_init_fluents;
 	std::vector<const Fluent*>						m_init_const_fluents;
@@ -52,9 +49,16 @@ protected:
 	// the total number of objects occuring in the instance
 	unsigned m_num_objects;
 
-	// preallocated memory to store state information ordered by predicate types
-	std::vector<std::vector<const Fluent*>> m_first_order_state;
+	// predicate indices that occur in state_fluents
+	std::vector<int> m_state_predicate_idx;
 
+	// first-order logic state information
+	std::vector<std::vector<const Fluent*>> m_first_order_state;
+	const State *m_state;
+	// first-order logic goal information
+	std::vector<std::vector<const Fluent*>> m_first_order_goal;
+
+    // name to index mappings of predicates and objects
 	std::unordered_map<std::string, int> m_predicate_name_to_index;
 	std::unordered_map<std::string, int> m_object_name_to_index;
 
@@ -85,13 +89,17 @@ public:
 	 * This should be called after adding fluents
 	 * and num_predicates and num_objects
 	 */
-	static void initialize_sketch(Sketch_STRIPS_Problem& p);
+	void initialize_sketch_information();
 
     /**
-	 * Compute sorted first order state information in the preallocated memory
-	 * and return a const reference to it.
+	 * get extended state information, compute if necessary
 	 */
-    const std::vector<std::vector<const Fluent*>> &get_first_order_state(const Fluent_Vec &state_fluents);
+    const std::vector<std::vector<const Fluent*>> &get_first_order_state(const State *state);
+    /**
+	 * get extended goal information
+	 */
+    const std::vector<std::vector<const Fluent*>> &get_first_order_goal() const;
+
 
     /**
 	 * Getters.
