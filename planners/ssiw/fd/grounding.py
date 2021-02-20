@@ -432,6 +432,8 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
 
     # add init_facts
     for atom in init_facts:
+        # Note: we only consider atoms relevant for state features
+        if not isinstance(atom, pddl.Atom): continue
         p_signature = atom.text()
         atom_names.append(p_signature)
         p_name = atom.predicate
