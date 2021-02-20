@@ -65,21 +65,11 @@ public:
 		unsigned gsize = this->problem().task().goal().size();
 		Search_Node* end = NULL;
 		State* new_init_state = NULL;
-		this->m_goals_achieved.clear();
-		this->m_goal_candidates.clear();
 
 		cost = 0;
 
 		if ( this->verbose() )
 			std::cout << std::endl << "Caption\n{#goals, #UNnachieved,  #Achieved} -> IW(max_w)"<<std::endl;
-
-		//if( m_goal_agenda ){
-		//	m_goal_agenda->get_leafs( this->m_goal_candidates );
-		//}
-		//else{
-			this->m_goal_candidates.insert( this->m_goal_candidates.begin(),
-							this->problem().task().goal().begin(), this->problem().task().goal().end() );
-		//}
 
 		this->m_sketch->initialize_first_subproblem( new State( this->problem().task() ) );
 
@@ -139,17 +129,6 @@ public:
 
 				this->set_bound( 1 );
 				this->start( new_init_state );
-
-
-				//if( m_goal_agenda ){
-				//	for(Fluent_Vec::iterator it = this->m_goals_achieved.begin(); it != this->m_goals_achieved.end(); it++)
-				//		m_goal_agenda->consume_node( *it );
-
-				//	this->m_goal_candidates.clear();
-				//	m_goal_agenda->get_leafs( this->m_goal_candidates );
-
-				//}
-				//this->debug_info( new_init_state, this->m_goal_candidates );
 			}
 
 

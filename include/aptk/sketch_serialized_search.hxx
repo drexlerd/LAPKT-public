@@ -40,13 +40,11 @@ template < typename Search_Model, typename Search_Strategy, typename Search_Node
 class Sketch_Serialized_Search : public Search_Strategy {
 
 public:
-
 	typedef		typename Search_Model::State_Type		                          State;
 	typedef 	Closed_List< Search_Node >			                          Closed_List_Type;
 
 	Sketch_Serialized_Search( 	const Search_Model& search_problem )
-		: Search_Strategy( search_problem ), m_consistency_test(true), m_closed_goal_states( NULL )  {
-		m_reachability = new aptk::agnostic::Reachability_Test( this->problem().task() );
+		: Search_Strategy( search_problem ), m_closed_goal_states( NULL )  {
 		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
 		if (sketch_problem->sketch_name() == "grid.sketch") {
 
@@ -57,11 +55,9 @@ public:
 	}
 
 	virtual ~Sketch_Serialized_Search() {
-		delete m_reachability;
 		m_closed_goal_states = NULL;
 	}
 
-	void                    set_consistency_test( bool b )           { m_consistency_test = b; }
 	void            	set_closed_goal_states( Closed_List_Type* c ){ m_closed_goal_states = c; }
 	void 			close_goal_state( Search_Node* n ) 	 {
 			if( closed_goal_states() ){
@@ -101,22 +97,6 @@ public:
 		return false;
 	}
 
-	void debug_info( State*s, Fluent_Vec& unachieved ){
-		std::cout << std::endl;
-		std::cout << "Goals Achieved: ";
-		for(Fluent_Vec::iterator it = m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
-			std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
-		}
-		std::cout << std::endl;
-		std::cout << "Unachieved Goals: ";
-		for(Fluent_Vec::iterator it = unachieved.begin(); it != unachieved.end(); it++){
-			std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
-		}
-		std::cout << std::endl;
-		std::cout << "Current State: ";
-		s->print( std::cout );
-	}
-
     /**
 	 * Starts a new IW search if new subproblem is encountered.
 	 */
@@ -135,15 +115,7 @@ public:
 		}
 	}
 
-	Fluent_Vec&        goal_candidates(){ return m_goal_candidates; }
-	Fluent_Vec&        goals_achieved(){ return m_goals_achieved; }
-
 protected:
-	aptk::agnostic::Reachability_Test*      m_reachability;
-
-	Fluent_Vec                              m_goals_achieved;
-	Fluent_Vec                              m_goal_candidates;
-	bool                                    m_consistency_test;
 	Closed_List_Type*			m_closed_goal_states;
 	BaseSketch*					m_sketch;
 };
