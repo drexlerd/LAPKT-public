@@ -82,7 +82,6 @@ public:
 				{
 					m_goals_achieved.push_back( *it );
 
-
 					if(!m_consistency_test){
 						new_goal_achieved = true;
 						continue;

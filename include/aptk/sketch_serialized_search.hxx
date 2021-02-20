@@ -102,13 +102,14 @@ public:
 	 */
 	virtual bool  is_goal( Search_Node* n ) {
 		State* s = n->state();
+		assert(s != NULL);
         // if goal state is closed then don't waste time with expensive computation
 		if( is_goal_state_closed( n ) )
 			return false;
 
 		// evaluate sketch!
 		if (m_sketch->process_state(s)) {
-			 close_goal_state( n );
+			close_goal_state( n );
 			return true;
 		} else {
 			return false;
