@@ -2,7 +2,7 @@
 import fd.grounding
 import sys
 import os
-from libsiw import SIW_Planner 
+from libsiw import SIW_Planner
 # MRJ: Profiler imports
 #from prof import profiler_start, profiler_stop
 
@@ -17,7 +17,7 @@ def main( domain_file, problem_file, plan_file ) :
 
 	# MRJ: Setting planner parameters is as easy as setting the values
 	# of Python object attributes
-	
+
 	# MRJ: Maximum bound on width is set to 1
 	task.iw_bound = 2
 
@@ -37,7 +37,7 @@ def main( domain_file, problem_file, plan_file ) :
 	task.solve()
 
 	#MRJ: Comment lines below to deactivate profile
-	#profiler_stop()	
+	#profiler_stop()
 
 	#rv = os.system( 'google-pprof --pdf libsiw.so siw.prof > siw.pdf' )
 	#if rv != 0 :
@@ -50,4 +50,3 @@ def debug() :
 
 if __name__ == "__main__":
 	main( sys.argv[1], sys.argv[2], sys.argv[3] )
-

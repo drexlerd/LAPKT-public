@@ -1,7 +1,7 @@
 #include <sketch_siw_planner.hxx>
 using namespace boost::python;
 
-BOOST_PYTHON_MODULE( libsiw )
+BOOST_PYTHON_MODULE( libssiw )
 {
 	class_<Sketch_SIW_Planner>("Sketch_SIW_Planner")
 		.def( init< std::string, std::string, std::string >() )

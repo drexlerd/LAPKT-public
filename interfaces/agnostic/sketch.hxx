@@ -283,6 +283,7 @@ protected:
     void evaluate_features() {
         for (NumericalFeature* nf : m_numerical_features) {
             nf->evaluate(m_sketch_state);
+            // assert(nf->get_new_eval() > 0);
         }
         for (BooleanFeature* bf : m_boolean_features) {
             bf->evaluate(m_sketch_state);
@@ -329,6 +330,22 @@ public:
     : m_problem(problem),
       m_sketch_state(problem) { }
     virtual ~BaseSketch() = default;
+
+    /**
+     * Enter the first subproblem.
+     */
+    void initialize_first_subproblem(const State* state) {
+        // update view
+        m_sketch_state.set_state(state);
+        // 1. Evaluate features f(s').
+        // TODO: we assume that state are never checked twice
+        // because it would not be novel anyways.
+        evaluate_features();
+        // 2. set the generate state information as the new initial state,
+        set_generated_state_information_as_init();
+        // 3. recompute applicable rules for the generated state, and
+        compute_applicable_rules_for_init();
+    }
 
     /**
      * Try entering a new subproblem for a given state.

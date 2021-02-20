@@ -88,7 +88,7 @@ public:
 	}
 
 
-	bool 		        is_goal_state_closed( Search_Node* n ) 	 {
+	bool is_goal_state_closed( Search_Node* n ) {
 		if( !closed_goal_states() ) return false;
 
 		n->compare_only_state( true );
@@ -102,131 +102,37 @@ public:
 	}
 
 	void debug_info( State*s, Fluent_Vec& unachieved ){
-
-			std::cout << std::endl;
-			std::cout << "Goals Achieved: ";
-
-
-			for(Fluent_Vec::iterator it = m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
-				std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
-			}
-
-			std::cout << std::endl;
-			std::cout << "Unachieved Goals: ";
-			for(Fluent_Vec::iterator it = unachieved.begin(); it != unachieved.end(); it++){
-				std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
-			}
-			std::cout << std::endl;
-			std::cout << "Current State: ";
-			s->print( std::cout );
-
-	}
-
-	void exclude_actions( Bit_Set& excluded ){
-		std::vector< const Action*>::const_iterator it_a =  this->problem().task().actions().begin();
-		unsigned asize = this->problem().num_actions();
-		unsigned fsize = m_goals_achieved.size();
-		const bool has_ceff = this->problem().task().has_conditional_effects();
-
-		for ( unsigned i = 0; i < asize ; i++, it_a++ ) {
-
-			/**
-			 * If actions edel or adds fluent that has to persist, exclude action.
-			 */
-			unsigned p = 0;
-			for(; p < fsize; p++){
-				unsigned fl = m_goals_achieved.at(p);
-
-				if(has_ceff){
-					if( (*it_a)->consumes( fl ) ){
-						excluded.set( i );
-						break;
-					}
-				}
-				else if( (*it_a)->edeletes( fl ) ){
-					excluded.set( i );
-					break;
-				}
-
-			}
-			if( p == fsize )
-				excluded.unset( i );
-
+		std::cout << std::endl;
+		std::cout << "Goals Achieved: ";
+		for(Fluent_Vec::iterator it = m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
+			std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
 		}
-
-
+		std::cout << std::endl;
+		std::cout << "Unachieved Goals: ";
+		for(Fluent_Vec::iterator it = unachieved.begin(); it != unachieved.end(); it++){
+			std::cout << " " << this->problem().task().fluents()[ *it ]->signature();
+		}
+		std::cout << std::endl;
+		std::cout << "Current State: ";
+		s->print( std::cout );
 	}
 
     /**
 	 * Starts a new IW search if new subproblem is encountered.
-	 * TODO: change this goal check to work with sketches
 	 */
 	virtual bool  is_goal( Search_Node* n ) {
 		State* s = n->state();
-        // the state has to satisfy at least the previously satisfied goal atoms.
-
-		for(Fluent_Vec::iterator it =  m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
-			if(  ! s->entails( *it ) ){
-				return false;
-			}
-		}
-
         // if goal state is closed then don't waste time with expensive computation
 		if( is_goal_state_closed( n ) )
 			return false;
 
 		// evaluate sketch!
-		/*if (m_sketch->process_state(s)) {
-			close_goal_state( n );
+		if (m_sketch->process_state(s)) {
+			 close_goal_state( n );
 			return true;
 		} else {
 			return false;
-		}*/
-
-        // check if there is an additional goal atom that becomes true in s.
-
-		bool new_goal_achieved = false;
-		Fluent_Vec unachieved;
-		for(Fluent_Vec::iterator it = m_goal_candidates.begin(); it != m_goal_candidates.end(); it++){
-			if(  s->entails( *it ) )  // goal atom satisfied in s
-				{
-					m_goals_achieved.push_back( *it );
-
-
-					if(!m_consistency_test){
-						new_goal_achieved = true;
-						continue;
-					}
-
-					static Bit_Set excluded( this->problem().num_actions() );
-					exclude_actions( excluded );
-
-					#ifdef DEBUG
-						if ( this->verbose() )
-							debug_info( s, unachieved );
-					#endif
-
-					if(m_reachability->is_reachable( s->fluent_vec() , this->problem().task().goal() , excluded  ) )
-						new_goal_achieved = true;
-					else{
-						unachieved.push_back( *it );
-						m_goals_achieved.pop_back();
-					}
-
-				}
-			else
-				unachieved.push_back( *it );
 		}
-		if ( new_goal_achieved ){
-			m_goal_candidates = unachieved;
-
-			close_goal_state( n );
-			return true;
-		}
-		else
-			return false;
-
-
 	}
 
 	Fluent_Vec&        goal_candidates(){ return m_goal_candidates; }

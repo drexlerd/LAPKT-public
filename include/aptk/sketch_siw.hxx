@@ -73,17 +73,19 @@ public:
 		if ( this->verbose() )
 			std::cout << std::endl << "Caption\n{#goals, #UNnachieved,  #Achieved} -> IW(max_w)"<<std::endl;
 
-		if( m_goal_agenda ){
-			m_goal_agenda->get_leafs( this->m_goal_candidates );
-		}
-		else{
+		//if( m_goal_agenda ){
+		//	m_goal_agenda->get_leafs( this->m_goal_candidates );
+		//}
+		//else{
 			this->m_goal_candidates.insert( this->m_goal_candidates.begin(),
 							this->problem().task().goal().begin(), this->problem().task().goal().end() );
-		}
+		//}
+
+		this->m_sketch->initialize_first_subproblem( new State( this->problem().task() ) );
 
 		do{
 			if ( this->verbose() )
-				std::cout << std::endl << "{" << gsize << "/" << this->m_goal_candidates.size() << "/" << this->m_goals_achieved.size() << "}:IW(" << this->bound() << ") -> ";
+				//std::cout << std::endl << "{" << gsize << "/" << this->m_goal_candidates.size() << "/" << this->m_goals_achieved.size() << "}:IW(" << this->bound() << ") -> ";
 			end = this->do_search();
 			m_pruned_sum_B_count += this->pruned_by_bound();
 
@@ -139,14 +141,14 @@ public:
 				this->start( new_init_state );
 
 
-				if( m_goal_agenda ){
-					for(Fluent_Vec::iterator it = this->m_goals_achieved.begin(); it != this->m_goals_achieved.end(); it++)
-						m_goal_agenda->consume_node( *it );
+				//if( m_goal_agenda ){
+				//	for(Fluent_Vec::iterator it = this->m_goals_achieved.begin(); it != this->m_goals_achieved.end(); it++)
+				//		m_goal_agenda->consume_node( *it );
 
-					this->m_goal_candidates.clear();
-					m_goal_agenda->get_leafs( this->m_goal_candidates );
+				//	this->m_goal_candidates.clear();
+				//	m_goal_agenda->get_leafs( this->m_goal_candidates );
 
-				}
+				//}
 				//this->debug_info( new_init_state, this->m_goal_candidates );
 			}
 

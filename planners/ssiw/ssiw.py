@@ -2,7 +2,7 @@
 import fd.grounding
 import sys
 import os
-from libsiw import Sketch_SIW_Planner
+from libssiw import Sketch_SIW_Planner
 # MRJ: Profiler imports
 #from prof import profiler_start, profiler_stop
 
