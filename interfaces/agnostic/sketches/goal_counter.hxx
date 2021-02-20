@@ -91,11 +91,6 @@ public:
 					static Bit_Set excluded( sketch()->problem()->num_actions() );
 					exclude_actions( excluded );
 
-					/*#ifdef DEBUG
-						if ( this->verbose() )
-							debug_info( s, unachieved );
-					#endif*/
-
 					if(m_reachability->is_reachable( s->fluent_vec() , sketch()->problem()->goal() , excluded  ) )
 						new_goal_achieved = true;
 					else{
@@ -111,7 +106,6 @@ public:
 
         // set the result value
         new_eval = m_initial_num_goal_candidates - m_goals_achieved.size();
-        // assert(new_eval > 0);
     }
 };
 
