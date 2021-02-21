@@ -71,6 +71,7 @@ namespace aptk
 		new_fluent->set_predicate_name(predicate_name);
 		new_fluent->set_objs_idx(move(objs_idx));
 		new_fluent->set_objs_names(move(objs_names));
+		assert(predicate_name != "");
 		p.m_predicate_name_to_index[new_fluent->pddl_predicate_name()] = new_fluent->pddl_predicate_type();
 		p.m_num_predicates = p.m_predicate_name_to_index.size();
         for (int i = 0; i < static_cast<int>(new_fluent->pddl_objs_idx().size()); ++i) {

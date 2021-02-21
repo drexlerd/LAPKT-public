@@ -10,9 +10,11 @@ merge_fluents_ordered(const Sketch_STRIPS_Problem* problem) {
     std::vector< const Fluent*> result;
     result.reserve(problem->num_fluents() + problem->num_init_fluents());
     for (const Fluent* fluent : problem->fluents()) {
+        //std::cout << "[" << fluent->pddl_predicate_name() << "] [" << fluent->signature() << "] [" << fluent->index() << "]" << std::endl;
         result.push_back(fluent);
     }
     for (const Fluent* fluent : problem->init_fluents()) {
+        //std::cout << "[" << fluent->pddl_predicate_name() << "] [" << fluent->signature() << "] [" << fluent->index() << "]" << std::endl;
         result.push_back(fluent);
     }
     // sanity check

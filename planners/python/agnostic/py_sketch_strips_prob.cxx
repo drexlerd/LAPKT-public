@@ -55,3 +55,20 @@ using namespace boost::python;
 		assert(objs_idx.size() == objs_names.size());
         aptk::Sketch_STRIPS_Problem::add_other_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
 	}
+
+	void
+	Sketch_STRIPS_Problem::create_negated_fluents_ext() {
+		m_negated.resize( instance()->num_fluents() );
+		unsigned count = 0;
+		for ( auto fl_idx : m_negated_conditions ) {
+			aptk::Fluent* fl = instance()->fluents()[fl_idx];
+			assert( fl != nullptr );
+			std::string negated_signature = "(not " + fl->signature() + ")";
+			std::vector<unsigned> objs_idx = fl->pddl_objs_idx();
+			std::vector<std::string> objs_names = fl->pddl_obj_names();
+			unsigned neg_fl_idx = aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), negated_signature, fl->pddl_predicate_type(), fl->pddl_predicate_name(), move(objs_idx), move(objs_names) );
+			m_negated.at( fl_idx ) = instance()->fluents()[neg_fl_idx];
+			count++;
+		}
+		std::cout << count << " negated fluents created" << std::endl;
+	}

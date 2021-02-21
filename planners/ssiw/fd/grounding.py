@@ -410,9 +410,12 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
     predicates_idx = dict()
     objects_idx = dict()
     for atom in atoms:
+        # Note: we only consider atoms relevant for state features
+        if not isinstance(atom, pddl.Atom): continue
         p_signature = atom.text()
         atom_names.append(p_signature)
         p_name = atom.predicate
+        # print("[%s] [%s]" % (p_name, p_signature))
         objects = []
         try:
             p_idx = predicates_idx[p_name]
@@ -429,29 +432,6 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
         atom_table[p_signature] = index
         index += 1
         output_task.add_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
-
-    # add init_facts
-    for atom in init_facts:
-        # Note: we only consider atoms relevant for state features
-        if not isinstance(atom, pddl.Atom): continue
-        p_signature = atom.text()
-        atom_names.append(p_signature)
-        p_name = atom.predicate
-        objects = []
-        try:
-            p_idx = predicates_idx[p_name]
-        except KeyError:
-            p_idx = len(predicates_idx)
-            predicates_idx[p_name] = p_idx
-        for object_name in atom.args:
-            try:
-                o_idx = objects_idx[object_name]
-            except KeyError:
-                o_idx = len(objects_idx)
-                objects_idx[object_name] = o_idx
-            objects.append((o_idx, object_name))
-        index += 1
-        output_task.add_init_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
 
     print("Axioms %d" % len(axioms))
 
@@ -501,6 +481,30 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
     output_task.set_init(encode(task.init, atom_table))
     output_task.set_goal(encode(task.goal, atom_table))
     output_task.parsing_time = parsing_timer.report()
+
+    # add init_facts
+    for atom in init_facts:
+        # Note: we only consider atoms relevant for state features
+        if not isinstance(atom, pddl.Atom): continue
+        p_signature = atom.text()
+        atom_names.append(p_signature)
+        p_name = atom.predicate
+        # print("[%s] [%s]" % (p_name, p_signature))
+        objects = []
+        try:
+            p_idx = predicates_idx[p_name]
+        except KeyError:
+            p_idx = len(predicates_idx)
+            predicates_idx[p_name] = p_idx
+        for object_name in atom.args:
+            try:
+                o_idx = objects_idx[object_name]
+            except KeyError:
+                o_idx = len(objects_idx)
+                objects_idx[object_name] = o_idx
+            objects.append((o_idx, object_name))
+        index += 1
+        output_task.add_init_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
 
     # Sketch: parse file
     #with timers.timing("Parsing", True):

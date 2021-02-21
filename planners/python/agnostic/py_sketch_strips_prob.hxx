@@ -28,6 +28,8 @@ public:
 	void add_init_atom_ext(
 		std::string name, int predicate_type,
 		std::string predicate_name, boost::python::list &objects);
+
+	void create_negated_fluents_ext();
 };
 
 #endif // py_sketch_strips_problem.hxx
