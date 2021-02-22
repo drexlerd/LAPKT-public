@@ -18,7 +18,7 @@ else:
 env.Append( LIBS=libs)
 env.Append( LIBPATH=[ os.path.abspath(p) for p in lib_paths ] )
 
-cxx_sources = Glob('*.cxx')
+cxx_sources = Glob('*.cxx') + Glob('sketches/*.cxx')
 c_sources = Glob('*.c')
 
 objects = [ env.Object(s) for s in cxx_sources ] + [ env.Object(s) for s in c_sources ]

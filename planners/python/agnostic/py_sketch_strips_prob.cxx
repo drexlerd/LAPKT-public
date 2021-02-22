@@ -72,3 +72,8 @@ using namespace boost::python;
 		}
 		std::cout << count << " negated fluents created" << std::endl;
 	}
+
+	void
+	Sketch_STRIPS_Problem::set_sketch_name( std::string sketch_name ) {
+		instance()->set_sketch_name( sketch_name );
+	}

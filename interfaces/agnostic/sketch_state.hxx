@@ -96,6 +96,16 @@ public:
     const std::vector<unsigned>& state_predicate_idx() const { return m_state_predicate_idx; }
     const State* state() const { return m_state; }
     const std::vector<std::vector<const Fluent*>>& state_by_predicate() const { return m_state_by_predicate; }
+
+    /**
+     * Print nicely.
+     */
+    void print() const {
+        std::cout << "Merged fluents: \n";
+        for (const Fluent* f : fluents()) {
+            std::cout << "\t" << f->signature() << "\n";
+        }
+    }
 };
 
 }

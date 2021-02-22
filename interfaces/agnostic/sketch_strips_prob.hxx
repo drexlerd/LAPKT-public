@@ -65,13 +65,18 @@ public:
 	 * Fluents with more additional information about predicate index and object indices.
 	 */
 	// fluents that are changed by actions
-	static unsigned		add_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-							unsigned predicate_type, std::string predicate_name,
-							Index_Vec &&objs_idx, Name_Vec &&objs_names );
+	static unsigned	add_fluent( Sketch_STRIPS_Problem& p, std::string signature,
+		unsigned predicate_type, std::string predicate_name,
+		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 	// fluents that remain constant during planning
-	static unsigned		add_other_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-						unsigned predicate_type, std::string predicate_name,
-						Index_Vec &&objs_idx, Name_Vec &&objs_names );
+	static unsigned	add_other_fluent( Sketch_STRIPS_Problem& p, std::string signature,
+		unsigned predicate_type, std::string predicate_name,
+		Index_Vec &&objs_idx, Name_Vec &&objs_names );
+
+    /**
+	 * Setters
+	 */
+    void set_sketch_name( std::string sketch_name ) { m_sketch_name = sketch_name; }
 
     /**
 	 * Getters.

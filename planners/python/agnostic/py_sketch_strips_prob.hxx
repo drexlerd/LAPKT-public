@@ -30,6 +30,8 @@ public:
 		std::string predicate_name, boost::python::list &objects);
 
 	void create_negated_fluents_ext();
+
+	void set_sketch_name( std::string sketch_name );
 };
 
 #endif // py_sketch_strips_problem.hxx

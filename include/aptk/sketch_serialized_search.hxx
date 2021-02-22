@@ -30,11 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <iostream>
 #include "../../interfaces/agnostic/sketches/goal_counter.hxx"
+#include "../../interfaces/agnostic/sketches/childsnack.hxx"
 
 namespace aptk {
 
 namespace search {
-
 
 template < typename Search_Model, typename Search_Strategy, typename Search_Node >
 class Sketch_Serialized_Search : public Search_Strategy {
@@ -48,6 +48,8 @@ public:
 		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
 		if (sketch_problem->sketch_name() == "grid.sketch") {
 
+		} else if (sketch_problem->sketch_name() == "childsnack.sketch") {
+            m_sketch = new aptk::ChildsnackSketch(sketch_problem);
 		} else {
 			// default is goal sketch.
 			m_sketch = new aptk::GoalCounterSketch(sketch_problem);

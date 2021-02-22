@@ -378,9 +378,9 @@ def default(domain_file, problem_file, output_task):
     output_task.parsing_time = parsing_timer.report()
 
 
-def sketch(domain_file, problem_file, sketch_file, output_task):
+def sketch(domain_file, problem_file, sketch_name, output_task):
     parsing_timer = timers.Timer()
-    print("Domain: %s Problem: %s" % (domain_file, problem_file))
+    print("Domain: %s Problem: %s Sketch: %s" % (domain_file, problem_file, sketch_name))
 
     with timers.timing("Parsing", True):
         task = pddl_file.open(
@@ -507,6 +507,7 @@ def sketch(domain_file, problem_file, sketch_file, output_task):
         output_task.add_init_atom_ext(p_signature.encode('utf8'), p_idx, p_name.encode('utf8'), objects)
 
     # Sketch: parse file
+    output_task.set_sketch_name(sketch_name)
     #with timers.timing("Parsing", True):
     #    sketch = pddl_sketch.open(
     #        sketch_filename=sketch_file)

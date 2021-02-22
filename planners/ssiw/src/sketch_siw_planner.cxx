@@ -50,6 +50,9 @@ Sketch_SIW_Planner::setup() {
 	std::cout << "\tProblem: " << instance()->problem_name() << std::endl;
 	std::cout << "\t#Actions: " << instance()->num_actions() << std::endl;
 	std::cout << "\t#Fluents: " << instance()->num_fluents() << std::endl;
+	std::cout << instance()->sketch_name() << std::endl;
+	std::cout << instance()->problem_name() << std::endl;
+	std::cout << instance()->domain_name() << std::endl;
 	// instance()->print_fluents(std::cout);
 	// instance()->print_init_fluents(std::cout);
 }
