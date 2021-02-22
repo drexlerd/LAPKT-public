@@ -5,12 +5,13 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
-#include <sketch_state.hxx>
+#include <cassert>
 
 namespace aptk
 {
-class Sketch_STRIPS_Problem;
 class BaseSketch;
+class Sketch_STRIPS_Problem;
+class State;
 
 
 class BaseFeature {
@@ -38,7 +39,7 @@ public:
      * Evaluate the feature for a given state.
      * The problem provides additional information.
      */
-    virtual void evaluate(const SketchState &sketch_state) = 0;
+    virtual void evaluate(const State* state) = 0;
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -62,7 +63,7 @@ public:
     NumericalFeature(const BaseSketch* sketch) : BaseFeature(sketch) { }
     virtual ~NumericalFeature() = default;
 
-    virtual void evaluate(const SketchState &sketch_state) = 0;
+    virtual void evaluate(const State* state) = 0;
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -236,8 +237,6 @@ class BaseSketch {
 protected:
     // the problem to which this sketch belongs
     const Sketch_STRIPS_Problem *m_problem;
-    // the state information with different views
-    SketchState m_sketch_state;
 
     // mapping of feature names to indices used to define rules
     std::unordered_map<std::string, unsigned> m_numerical_feature_name_to_idx;
@@ -280,13 +279,13 @@ protected:
     /**
      * Evaluate features for a given state.
      */
-    void evaluate_features() {
+    void evaluate_features(const State* state) {
         for (NumericalFeature* nf : m_numerical_features) {
-            nf->evaluate(m_sketch_state);
+            nf->evaluate(state);
             // assert(nf->get_new_eval() > 0);
         }
         for (BooleanFeature* bf : m_boolean_features) {
-            bf->evaluate(m_sketch_state);
+            bf->evaluate(state);
         }
     }
 
@@ -327,20 +326,17 @@ protected:
 
 public:
     BaseSketch(const Sketch_STRIPS_Problem *problem)
-    : m_problem(problem),
-      m_sketch_state(problem) { }
+    : m_problem(problem) { }
     virtual ~BaseSketch() = default;
 
     /**
      * Enter the first subproblem.
      */
     void initialize_first_subproblem(const State* state) {
-        // update view
-        m_sketch_state.set_state(state);
         // 1. Evaluate features f(s').
         // TODO: we assume that state are never checked twice
         // because it would not be novel anyways.
-        evaluate_features();
+        evaluate_features(state);
         // 2. set the generate state information as the new initial state,
         set_generated_state_information_as_init();
         // 3. recompute applicable rules for the generated state, and
@@ -353,12 +349,10 @@ public:
      * of the next subproblem.
      */
     bool process_state(const State* state) {
-        // update view
-        m_sketch_state.set_state(state);
         // 1. Evaluate features f(s').
         // TODO: we assume that state are never checked twice
         // because it would not be novel anyways.
-        evaluate_features();
+        evaluate_features(state);
         // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
         if (exists_compatible_rule()) {
             // (i) set the generate state information as the new initial state,

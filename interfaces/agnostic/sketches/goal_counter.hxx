@@ -30,7 +30,7 @@ public:
     GoalCounterFeature(const BaseSketch* sketch);
     virtual ~GoalCounterFeature() = default;
 
-    virtual void evaluate(const SketchState &sketch_state) override;
+    virtual void evaluate(const State* state) override;
 };
 
 /**

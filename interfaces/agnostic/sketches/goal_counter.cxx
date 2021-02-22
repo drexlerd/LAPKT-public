@@ -1,6 +1,6 @@
 #include "goal_counter.hxx"
 #include "action.hxx"
-
+#include "sketch_strips_prob.hxx"
 
 namespace aptk {
 
@@ -44,11 +44,10 @@ GoalCounterFeature::GoalCounterFeature(const BaseSketch* sketch)
 }
 
 
-void GoalCounterFeature::evaluate(const SketchState &sketch_state) {
+void GoalCounterFeature::evaluate(const State* state) {
     // 1. the state has to satisfy at least the previously satisfied goal atoms.
-    const State* s = sketch_state.state();
     for(Fluent_Vec::iterator it = m_goals_achieved.begin(); it != m_goals_achieved.end(); it++){
-        if(! s->entails( *it )){
+        if(! state->entails( *it )){
             return;
         }
     }
@@ -56,7 +55,7 @@ void GoalCounterFeature::evaluate(const SketchState &sketch_state) {
     bool new_goal_achieved = false;
     Fluent_Vec unachieved;
     for(Fluent_Vec::iterator it = m_goal_candidates.begin(); it != m_goal_candidates.end(); it++){
-        if(  s->entails( *it ) )  // goal atom satisfied in s
+        if(  state->entails( *it ) )  // goal atom satisfied in s
             {
                 m_goals_achieved.push_back( *it );
 
@@ -68,7 +67,7 @@ void GoalCounterFeature::evaluate(const SketchState &sketch_state) {
                 static Bit_Set excluded( sketch()->problem()->num_actions() );
                 exclude_actions( excluded );
 
-                if(m_reachability->is_reachable( s->fluent_vec() , sketch()->problem()->goal() , excluded  ) )
+                if(m_reachability->is_reachable( state->fluent_vec() , sketch()->problem()->goal() , excluded  ) )
                     new_goal_achieved = true;
                 else{
                     unachieved.push_back( *it );

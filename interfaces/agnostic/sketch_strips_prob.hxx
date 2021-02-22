@@ -54,8 +54,8 @@ protected:
 	// the total number of objects occuring in the instance
 	unsigned m_num_objects;
     // name to index mappings of predicates and objects
-	std::unordered_map<std::string, int> m_predicate_name_to_index;
-	std::unordered_map<std::string, int> m_object_name_to_index;
+	std::unordered_map<std::string, unsigned> m_predicate_name_to_index;
+	std::unordered_map<std::string, unsigned> m_object_name_to_index;
 
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
@@ -88,8 +88,9 @@ public:
     unsigned num_init_fluents() const { return m_num_init_fluents; }
     unsigned num_predicates() const { return m_num_predicates; }
 	unsigned num_objects() const { return m_num_objects; }
-	std::unordered_map<std::string, int>& predicate_name_to_index() { return m_predicate_name_to_index; }
-	std::unordered_map<std::string, int>& object_name_to_index() { return m_object_name_to_index; }
+	unsigned predicate_index(const std::string &predicate_name) const { return predicate_name_to_index().at(predicate_name); }
+	const std::unordered_map<std::string, unsigned>& predicate_name_to_index() const { return m_predicate_name_to_index; }
+	const std::unordered_map<std::string, unsigned>& object_name_to_index() const { return m_object_name_to_index; }
 
     /**
 	 * Printers.

@@ -1,4 +1,5 @@
 #include "childsnack.hxx"
+#include "features/element_factory.hxx"
 
 namespace aptk {
 
@@ -6,11 +7,14 @@ GlutenAllergicChildrenToBeServed::GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch) : NumericalFeature(sketch) {
 }
 
-void GlutenAllergicChildrenToBeServed::evaluate(const SketchState &sketch_state) {
-    sketch_state.print();
+void GlutenAllergicChildrenToBeServed::evaluate(const State* state) {
     // number of children that still have to be served
     int num_children = 0;
-
+    BaseConceptElement* concept = ConceptFactory::make_leaf_concept(
+        m_sketch->problem(),
+        true,
+        "served",
+        0);
     assert(false);
 }
 
