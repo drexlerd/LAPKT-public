@@ -46,9 +46,7 @@ public:
 	Sketch_Serialized_Search( 	const Search_Model& search_problem )
 		: Search_Strategy( search_problem ), m_closed_goal_states( NULL )  {
 		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
-		if (sketch_problem->sketch_name() == "grid.sketch") {
-
-		} else if (sketch_problem->sketch_name() == "childsnack.sketch") {
+		if (sketch_problem->domain_name() == "child-snack") {
             m_sketch = new aptk::ChildsnackSketch(sketch_problem);
 		} else {
 			// default is goal sketch.

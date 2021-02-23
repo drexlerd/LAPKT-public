@@ -27,7 +27,7 @@ private:
     void exclude_actions( Bit_Set& excluded );
 
 public:
-    GoalCounterFeature(const BaseSketch* sketch);
+    GoalCounterFeature(const BaseSketch* sketch, const std::string &name);
     virtual ~GoalCounterFeature() = default;
 
     virtual void evaluate(const State* state) override;

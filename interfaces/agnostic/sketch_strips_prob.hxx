@@ -48,6 +48,10 @@ protected:
 	Fluent_Ptr_Vec m_init_fluents;
 	std::vector<const Fluent*> m_init_const_fluents;
 	unsigned m_num_init_fluents;
+	// all fluents that are ever added to the task
+	Fluent_Ptr_Vec m_total_fluents;
+	std::vector<const Fluent*> m_total_const_fluents;
+	unsigned m_num_total_fluents;
 
     // the total number of predicates occuring in the instance
 	unsigned m_num_predicates;
@@ -56,6 +60,9 @@ protected:
     // name to index mappings of predicates and objects
 	std::unordered_map<std::string, unsigned> m_predicate_name_to_index;
 	std::unordered_map<std::string, unsigned> m_object_name_to_index;
+	// index to name mappings of predicates and objects
+	std::unordered_map<unsigned, std::string> m_index_to_predicate_name;
+	std::unordered_map<unsigned, std::string> m_index_to_object_name;
 
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
@@ -74,6 +81,35 @@ public:
 		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 
     /**
+	 * Compute fluent sets for feature evaluation.
+	 * Fluent sets include fluents that remain constant.
+	 * TODO: if this becomes a bottleneck we can decide to
+	 * compute this only once for each problem instance or state.
+	 */
+	Fluent_Set init_fluents_set() const {
+        Bit_Set init_fluents_set(m_num_total_fluents);
+		for (const Fluent* fluent : m_init_const_fluents) {
+			init_fluents_set.set(fluent->index());
+		}
+		return init_fluents_set;
+	}
+	Fluent_Set goal_fluents_set() const {
+        Bit_Set goal_fluents_set = init_fluents_set();
+		for (unsigned i : m_goal) {
+			goal_fluents_set.set(i);
+		}
+		return goal_fluents_set;
+	}
+	Fluent_Set state_fluents_set(const State* state) const {
+        Bit_Set state_fluents_set = init_fluents_set();
+		for (unsigned i : state->fluent_vec()) {
+			state_fluents_set.set(i);
+		}
+		return state_fluents_set;
+	}
+
+
+    /**
 	 * Setters
 	 */
     void set_sketch_name( std::string sketch_name ) { m_sketch_name = sketch_name; }
@@ -84,13 +120,18 @@ public:
 	const std::string& sketch_name() const { return m_sketch_name; }
 	Fluent_Ptr_Vec& init_fluents() { return m_init_fluents; }
 	const std::vector< const Fluent*>& init_fluents() const { return m_init_const_fluents; }
+	Fluent_Ptr_Vec& total_fluents() { return m_total_fluents; }
+	const std::vector< const Fluent*>& total_fluents() const { return m_total_const_fluents; }
 
-    unsigned num_init_fluents() const { return m_num_init_fluents; }
+    unsigned num_total_fluents() const { return m_num_total_fluents; }
     unsigned num_predicates() const { return m_num_predicates; }
 	unsigned num_objects() const { return m_num_objects; }
 	unsigned predicate_index(const std::string &predicate_name) const { return predicate_name_to_index().at(predicate_name); }
 	const std::unordered_map<std::string, unsigned>& predicate_name_to_index() const { return m_predicate_name_to_index; }
 	const std::unordered_map<std::string, unsigned>& object_name_to_index() const { return m_object_name_to_index; }
+    const std::unordered_map<unsigned, std::string>& index_to_predicate_name() const { return m_index_to_predicate_name; }
+	const std::unordered_map<unsigned, std::string>& index_to_object_name() const { return m_index_to_object_name; }
+
 
     /**
 	 * Printers.

@@ -34,8 +34,8 @@ void GoalCounterFeature::exclude_actions( Bit_Set& excluded ){
     }
 }
 
-GoalCounterFeature::GoalCounterFeature(const BaseSketch* sketch)
-    : NumericalFeature(sketch),
+GoalCounterFeature::GoalCounterFeature(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name),
     m_consistency_test(true),
     m_reachability(new aptk::agnostic::Reachability_Test( *(this->sketch()->problem()) )) {
     // initialize goal candidates
@@ -86,8 +86,8 @@ void GoalCounterFeature::evaluate(const State* state) {
 
 
 GoalCounterSketch::GoalCounterSketch(const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-    add_numerical_feature("goal_counter", new GoalCounterFeature(this));
-    add_rule(new Rule(this,
+    add_numerical_feature(new GoalCounterFeature(this, "goal_counter"));
+    add_rule(new Rule(this, "decrement_unsatisified_goals",
         {},
         { new NonzeroNumerical(get_numerical_feature("goal_counter")), },
         {},

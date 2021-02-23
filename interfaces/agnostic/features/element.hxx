@@ -43,6 +43,11 @@ public:
      */
     bool goal() const { return m_goal; }
     bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
+
+    /**
+     * Pretty printer.
+     */
+    virtual void print_result() const = 0;
 };
 
 class BaseConceptElement : public BaseElement<ObjectsResult> {
@@ -53,6 +58,16 @@ public:
     virtual ~BaseConceptElement() = default;
 
     virtual const ObjectsResult& evaluate(const State* state) = 0;
+
+    void print_result() const {
+        std::cout << "{ ";
+        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
+            if (m_result.isset(i)) {
+                std::cout << m_problem->index_to_object_name().at(i) << ", ";
+            }
+        }
+        std::cout << "}" << std::endl;
+    }
 };
 
 class LeafConceptElement : public BaseConceptElement {
@@ -60,11 +75,12 @@ protected:
     const unsigned m_predicate_type;
     const unsigned m_position;
 
-    void set_result(const Fluent_Vec &indices) {
-        const std::vector<const Fluent*> fluents = m_problem->fluents();
-        for (unsigned i : indices) {
+    void set_result(const Bit_Set &fluent_set) {
+        m_result.reset();
+        const std::vector<const Fluent*> fluents = m_problem->total_fluents();
+        for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
+            if (!fluent_set.isset(i)) continue;
             const Fluent* fluent = fluents[i];
-            assert(fluent->pddl_objs_idx().size() > m_position);
             if (fluent->pddl_predicate_type() == m_predicate_type) {
                 m_result.set(fluent->pddl_objs_idx()[m_position]);
             }
@@ -74,10 +90,11 @@ public:
     LeafConceptElement(
         const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position)
         : BaseConceptElement(problem, goal), m_predicate_type(problem->predicate_index(predicate_name)), m_position(position) {
-        m_result = Bit_Set(m_problem->fluents().size());
+        assert(m_problem);
+        // we also consider fluents that remain constant.
+        m_result = Bit_Set(m_problem->num_objects());
         if (this->goal()) {
-            m_result.reset();
-            set_result(m_problem->goal());
+            set_result(m_problem->goal_fluents_set());
         }
     }
     virtual ~LeafConceptElement() = default;
@@ -85,8 +102,7 @@ public:
     virtual const ObjectsResult& evaluate(const State* state) override {
         if (is_uninitialized(state)) {
             m_state = state;
-            m_result.reset();
-            set_result(state->fluent_vec());
+            set_result(m_problem->state_fluents_set(state));
         }
         return m_result;
     }
@@ -146,7 +162,7 @@ protected:
     void set_result(const State* state) {
         m_result = m_left->evaluate(state);
         const ObjectsResult &right_result = m_right->evaluate(state);
-        for (unsigned i = 0; i < m_result.size(); ++i) {
+        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
             if (right_result.isset(i)) {
                 m_result.unset(i);
             }

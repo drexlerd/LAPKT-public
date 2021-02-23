@@ -17,13 +17,15 @@ class State;
 class BaseFeature {
 protected:
     const BaseSketch* m_sketch;
+    const std::string m_name;
 public:
-    BaseFeature(const BaseSketch* sketch) : m_sketch(sketch) { }
+    BaseFeature(const BaseSketch* sketch, const std::string &name) : m_sketch(sketch), m_name(name) { }
     virtual ~BaseFeature() = default;
 
     virtual void backup_evaluation() const = 0;
 
     const BaseSketch* sketch() const { return m_sketch; }
+    const std::string& name() const { return m_name; }
 };
 
 
@@ -32,7 +34,7 @@ protected:
     mutable bool old_eval;
     bool new_eval;
 public:
-    BooleanFeature(const BaseSketch* sketch) : BaseFeature(sketch) { }
+    BooleanFeature(const BaseSketch* sketch, const std::string &name) : BaseFeature(sketch, name ) { }
     virtual ~BooleanFeature() = default;
 
     /**
@@ -60,7 +62,7 @@ protected:
     mutable int old_eval;
     int new_eval;
 public:
-    NumericalFeature(const BaseSketch* sketch) : BaseFeature(sketch) { }
+    NumericalFeature(const BaseSketch* sketch, const std::string &name) : BaseFeature(sketch, name) { }
     virtual ~NumericalFeature() = default;
 
     virtual void evaluate(const State* state) = 0;
@@ -89,6 +91,7 @@ protected:
 public:
     BooleanFeatureEvalProxy(const BooleanFeature* feature) : m_feature(feature) { }
     virtual bool evaluate() const = 0;
+    const BooleanFeature* feature() const { return m_feature; }
 };
 class PositiveBoolean : public BooleanFeatureEvalProxy {
 public:
@@ -133,6 +136,7 @@ protected:
 public:
     NumericalFeatureEvalProxy(const NumericalFeature* feature) : m_feature(feature) { }
     virtual bool evaluate() const = 0;
+    const NumericalFeature* feature() const { return m_feature; }
 };
 class ZeroNumerical : public NumericalFeatureEvalProxy {
 public:
@@ -173,6 +177,7 @@ public:
 class Rule {
 protected:
     const BaseSketch* m_sketch;
+    const std::string m_name;
     // Preconditions
     std::vector<const BooleanFeatureEvalProxy*> m_boolean_preconditions;
     std::vector<const NumericalFeatureEvalProxy*> m_numerical_preconditions;
@@ -182,11 +187,13 @@ protected:
 
 public:
     Rule(const BaseSketch* sketch,
+        const std::string &name,
         std::vector<const BooleanFeatureEvalProxy*> &&boolean_preconditions,
         std::vector<const NumericalFeatureEvalProxy*> &&numerical_preconditions,
         std::vector<const BooleanFeatureEvalProxy*> &&boolean_effects,
         std::vector<const NumericalFeatureEvalProxy*> &&numerical_effects)
         : m_sketch(sketch),
+          m_name(name),
           m_boolean_preconditions(std::move(boolean_preconditions)),
           m_numerical_preconditions(std::move(numerical_preconditions)),
           m_boolean_effects(std::move(boolean_effects)),
@@ -223,6 +230,7 @@ public:
      * Getters.
      */
     const BaseSketch* sketch() const { return m_sketch; }
+    const std::string &name() const { return m_name; }
 };
 
 /**
@@ -249,16 +257,19 @@ protected:
     std::vector<const Rule*> m_rules;
     // rules applicable in the subproblem's initial state.
     std::vector<const Rule*> m_init_applicable_rules;
+
+    // the rules applied until termination
+    mutable std::vector<const Rule*> m_applied_rules;
 protected:
     /**
      * Add features with respective names.
      */
-    void add_numerical_feature(const std::string &feature_name, NumericalFeature *feature) {
-        m_numerical_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
+    void add_numerical_feature(NumericalFeature *feature) {
+        m_numerical_feature_name_to_idx.insert(make_pair(feature->name(), m_numerical_features.size()));
         m_numerical_features.push_back(feature);
     }
-    void add_boolean_feature(const std::string &feature_name, BooleanFeature *feature) {
-        m_boolean_feature_name_to_idx.insert(make_pair(feature_name, m_numerical_features.size()));
+    void add_boolean_feature(BooleanFeature *feature) {
+        m_boolean_feature_name_to_idx.insert(make_pair(feature->name(), m_boolean_features.size()));
         m_boolean_features.push_back(feature);
     }
     const NumericalFeature* get_numerical_feature(const std::string &feature_name) const {
@@ -282,7 +293,6 @@ protected:
     void evaluate_features(const State* state) {
         for (NumericalFeature* nf : m_numerical_features) {
             nf->evaluate(state);
-            // assert(nf->get_new_eval() > 0);
         }
         for (BooleanFeature* bf : m_boolean_features) {
             bf->evaluate(state);
@@ -295,7 +305,10 @@ protected:
      */
     bool exists_compatible_rule() const {
         for (const Rule* rule : m_init_applicable_rules) {
-            if (rule->is_compatible()) return true;
+            if (rule->is_compatible()) {
+                m_applied_rules.push_back(rule);
+                return true;
+            }
         }
         return false;
     }
@@ -310,6 +323,15 @@ protected:
                 m_init_applicable_rules.push_back(rule);
             }
         }
+        std::cout << "applicable rules in initial state: " << std::endl;
+        for (auto rule : m_init_applicable_rules) {
+            std::cout << rule->name() << " ";
+        }
+        std::cout << std::endl;
+        /*if (m_init_applicable_rules.size() == 0) {
+            std::cout << "Error - compute_applicable_rules_for_init: no applicable rule was found!" << std::endl;
+            exit(1);
+        }*/
     }
 
     /**
@@ -370,6 +392,7 @@ public:
      * Getters
      */
     const Sketch_STRIPS_Problem* problem() const { return m_problem; }
+    const std::vector<const Rule*> applied_rules() const { return m_applied_rules; }
 };
 
 

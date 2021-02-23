@@ -79,6 +79,13 @@ public:
 			end = this->do_search();
 			m_pruned_sum_B_count += this->pruned_by_bound();
 
+            std::cout << "applied rules: " << std::endl;
+			const std::vector<const Rule*> applied_rules = this->m_sketch->applied_rules();
+			for (const Rule* rule : applied_rules) {
+				std::cout << rule->name() << ", ";
+			}
+			std::cout << "\n";
+
 			if ( end == NULL ) {
 
 
@@ -133,8 +140,6 @@ public:
 
 
 		}while( !this->problem().goal( *new_init_state ) );
-
-
 
 		return true;
 	}

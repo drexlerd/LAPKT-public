@@ -1,43 +1,65 @@
 #include <sketch.hxx>
 
 namespace aptk {
+class BaseConceptElement;
 
-class GlutenAllergicChildrenToBeServed : public NumericalFeature {
+
+class N_GlutenAllergicChildrenToBeServed : public NumericalFeature {
+private:
+    BaseConceptElement* m_allergic_children_to_be_served;
 public:
-    GlutenAllergicChildrenToBeServed(const BaseSketch* sketch);
-    virtual ~GlutenAllergicChildrenToBeServed() = default;
+    N_GlutenAllergicChildrenToBeServed(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_GlutenAllergicChildrenToBeServed() = default;
 
     virtual void evaluate(const State* state) override;
 };
 
-class RegularChildrenToBeServed : public NumericalFeature {
+class N_RegularChildrenToBeServed : public NumericalFeature {
+private:
+    BaseConceptElement* m_regular_children_to_be_served;
 public:
-    RegularChildrenToBeServed(const BaseSketch* sketch);
-    virtual ~RegularChildrenToBeServed() = default;
+    N_RegularChildrenToBeServed(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_RegularChildrenToBeServed() = default;
 
     virtual void evaluate(const State* state) override;
 };
 
-class GlutenFreeSandwichesAtKitchen : public NumericalFeature {
+class B_GlutenFreeSandwichAtKitchen : public BooleanFeature {
+private:
+    BaseConceptElement* m_gluten_free_sandwich_at_kitchen;
 public:
-    GlutenFreeSandwichesAtKitchen(const BaseSketch* sketch);
-    virtual ~GlutenFreeSandwichesAtKitchen() = default;
+    B_GlutenFreeSandwichAtKitchen(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_GlutenFreeSandwichAtKitchen() = default;
 
     virtual void evaluate(const State* state) override;
 };
 
-class RegularSandwichesAtKitchen : public NumericalFeature {
+class B_RegularSandwichAtKitchen : public BooleanFeature {
+private:
+    BaseConceptElement* m_regular_sandwich_at_kitchen;
 public:
-    RegularSandwichesAtKitchen(const BaseSketch* sketch);
-    virtual ~RegularSandwichesAtKitchen() = default;
+    B_RegularSandwichAtKitchen(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_RegularSandwichAtKitchen() = default;
 
     virtual void evaluate(const State* state) override;
 };
 
-class GlutenFreeSandwichesBeingServed : public NumericalFeature {
+class B_GlutenFreeSandwichOnTray : public BooleanFeature {
+private:
+    BaseConceptElement* m_gluten_free_sandwiches_on_tray;
 public:
-    GlutenFreeSandwichesBeingServed(const BaseSketch* sketch);
-    virtual ~GlutenFreeSandwichesBeingServed() = default;
+    B_GlutenFreeSandwichOnTray(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_GlutenFreeSandwichOnTray() = default;
+
+    virtual void evaluate(const State* state) override;
+};
+
+class B_RegularSandwichOnTray : public BooleanFeature {
+private:
+    BaseConceptElement* m_regular_sandwiches_on_tray;
+public:
+    B_RegularSandwichOnTray(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_RegularSandwichOnTray() = default;
 
     virtual void evaluate(const State* state) override;
 };
