@@ -381,6 +381,14 @@ public:
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
             // (iii) return true to indicate SIW that a new subproblem was found
+            /*if (m_applied_rules.size() == 5) {
+                std::cout << "applied rules so far: " << std::endl;
+                for (const Rule* rule : m_applied_rules) {
+                    std::cout << rule->name() << "\n";
+                }
+		    	std::cout << "\n";
+                exit(1);
+            }*/
             return true;
         }
         // 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.

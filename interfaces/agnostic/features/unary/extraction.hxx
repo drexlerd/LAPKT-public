@@ -11,9 +11,12 @@ protected:
     const unsigned m_position;
 
     void compute_result(const Bit_Set& result) {
-        // allocate memory once
         if (m_result.max_index() == 0) {
+            // allocate memory once
             m_result = Bit_Set(m_problem->num_objects());
+        } else {
+            // otherwise reset.
+            m_result.reset();
         }
         for (int i = 0; i < m_problem->num_total_fluents(); ++i) {
             if (result.isset(i)) {
@@ -30,7 +33,13 @@ public:
     virtual ~ExtractionElement() = default;
 
     virtual void print_result() const override {
-
+        std::cout << "{ ";
+        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
+            if (m_result.isset(i)) {
+                std::cout << m_problem->index_to_object_name().at(i) << ", ";
+            }
+        }
+        std::cout << "}" << std::endl;
     }
 };
 

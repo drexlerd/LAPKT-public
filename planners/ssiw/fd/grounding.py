@@ -487,7 +487,8 @@ def sketch(domain_file, problem_file, sketch_name, output_task):
         # Note: we only consider atoms relevant for state features
         if not isinstance(atom, pddl.Atom): continue
         p_signature = atom.text()
-        atom_names.append(p_signature)
+        # dont add fluents that were already added.
+        if p_signature in atom_names: continue
         p_name = atom.predicate
         # print("[%s] [%s]" % (p_name, p_signature))
         objects = []
