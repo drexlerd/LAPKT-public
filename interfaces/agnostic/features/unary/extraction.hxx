@@ -28,6 +28,10 @@ public:
         : UnaryElement(problem, goal, role), m_position(position) {
     }
     virtual ~ExtractionElement() = default;
+
+    virtual void print_result() const override {
+
+    }
 };
 
 

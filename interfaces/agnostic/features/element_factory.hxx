@@ -47,21 +47,21 @@ private:
  */
 class ElementFactory {
 private:
-    static ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*> m_leaf_concept_cache;
-    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_intersect_concept_cache;
-    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_setminus_concept_cache;
+    static ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*> m_concept_cache;
+    static ElementCache<std::tuple<bool, std::string>, BaseElement*> m_role_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_intersect_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_setminus_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> m_extraction_cache;
+
 public:
     ElementFactory() = default;
     virtual ~ElementFactory() = default;
 
-    static BaseElement* make_leaf_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position);
-    static BaseElement* make_intersect_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
-    static BaseElement* make_setminus_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
-    static BaseElement* make_extraction_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role);
-
-    static BaseElement* make_leaf_role(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name);
-    static BaseElement* make_intersect_role(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
-    static BaseElement* make_setminus_role(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
+    static BaseElement* make_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position);
+    static BaseElement* make_role(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name);
+    static BaseElement* make_intersect(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
+    static BaseElement* make_setminus(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
+    static BaseElement* make_extraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position);
 };
 
 }

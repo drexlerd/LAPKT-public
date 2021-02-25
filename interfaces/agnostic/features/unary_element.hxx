@@ -1,5 +1,5 @@
-#ifndef __BINARY_ELEMENT__
-#define __BINARY_ELEMENT__
+#ifndef __UNARY_ELEMENT__
+#define __UNARY_ELEMENT__
 
 #include "element.hxx"
 
