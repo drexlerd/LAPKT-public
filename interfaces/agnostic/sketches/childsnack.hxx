@@ -1,12 +1,15 @@
+#ifndef __CHILDSNACK_DRIVERLOG__
+#define __CHILDSNACK_DRIVERLOG__
+
 #include <sketch.hxx>
 
 namespace aptk {
-class BaseConceptElement;
+class BaseElement;
 
 
 class N_GlutenAllergicChildrenToBeServed : public NumericalFeature {
 private:
-    BaseConceptElement* m_allergic_children_to_be_served;
+    BaseElement* m_allergic_children_to_be_served;
 public:
     N_GlutenAllergicChildrenToBeServed(const BaseSketch* sketch, const std::string &name);
     virtual ~N_GlutenAllergicChildrenToBeServed() = default;
@@ -16,7 +19,7 @@ public:
 
 class N_RegularChildrenToBeServed : public NumericalFeature {
 private:
-    BaseConceptElement* m_regular_children_to_be_served;
+    BaseElement* m_regular_children_to_be_served;
 public:
     N_RegularChildrenToBeServed(const BaseSketch* sketch, const std::string &name);
     virtual ~N_RegularChildrenToBeServed() = default;
@@ -26,7 +29,7 @@ public:
 
 class B_GlutenFreeSandwichAtKitchen : public BooleanFeature {
 private:
-    BaseConceptElement* m_gluten_free_sandwich_at_kitchen;
+    BaseElement* m_gluten_free_sandwich_at_kitchen;
 public:
     B_GlutenFreeSandwichAtKitchen(const BaseSketch* sketch, const std::string &name);
     virtual ~B_GlutenFreeSandwichAtKitchen() = default;
@@ -36,7 +39,7 @@ public:
 
 class B_RegularSandwichAtKitchen : public BooleanFeature {
 private:
-    BaseConceptElement* m_regular_sandwich_at_kitchen;
+    BaseElement* m_regular_sandwich_at_kitchen;
 public:
     B_RegularSandwichAtKitchen(const BaseSketch* sketch, const std::string &name);
     virtual ~B_RegularSandwichAtKitchen() = default;
@@ -46,7 +49,7 @@ public:
 
 class B_GlutenFreeSandwichOnTray : public BooleanFeature {
 private:
-    BaseConceptElement* m_gluten_free_sandwiches_on_tray;
+    BaseElement* m_gluten_free_sandwiches_on_tray;
 public:
     B_GlutenFreeSandwichOnTray(const BaseSketch* sketch, const std::string &name);
     virtual ~B_GlutenFreeSandwichOnTray() = default;
@@ -56,7 +59,7 @@ public:
 
 class B_RegularSandwichOnTray : public BooleanFeature {
 private:
-    BaseConceptElement* m_regular_sandwiches_on_tray;
+    BaseElement* m_regular_sandwiches_on_tray;
 public:
     B_RegularSandwichOnTray(const BaseSketch* sketch, const std::string &name);
     virtual ~B_RegularSandwichOnTray() = default;
@@ -72,3 +75,5 @@ public:
 };
 
 }
+
+#endif

@@ -1,5 +1,7 @@
 #include "childsnack.hxx"
 #include "features/element_factory.hxx"
+#include "features/concept.hxx"
+#include "features/role.hxx"
 
 namespace aptk {
 
@@ -7,11 +9,11 @@ N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch,
     const std::string &name) : NumericalFeature(sketch, name),
     m_allergic_children_to_be_served(
-        ConceptFactory::make_intersect(
+        ConceptFactory::make_intersect_concept(
         sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "allergic_gluten", 0),
-        ConceptFactory::make_setminus(sketch->problem(), false,
+        ConceptFactory::make_setminus_concept(sketch->problem(), false,
             ConceptFactory::make_leaf_concept(m_sketch->problem(), true, "served", 0),
             ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "served", 0)))) {
 }
@@ -25,11 +27,11 @@ void N_GlutenAllergicChildrenToBeServed::evaluate(const State* state) {
 N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
     const BaseSketch* sketch, const std::string &name) : NumericalFeature(sketch, name),
     m_regular_children_to_be_served(
-        ConceptFactory::make_intersect(
+        ConceptFactory::make_intersect_concept(
         sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "not_allergic_gluten", 0),
-        ConceptFactory::make_setminus(sketch->problem(), false,
+        ConceptFactory::make_setminus_concept(sketch->problem(), false,
             ConceptFactory::make_leaf_concept(m_sketch->problem(), true, "served", 0),
             ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "served", 0)))) {
 }
@@ -43,7 +45,7 @@ void N_RegularChildrenToBeServed::evaluate(const State* state) {
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
     m_gluten_free_sandwich_at_kitchen(
-        ConceptFactory::make_intersect(
+        ConceptFactory::make_intersect_concept(
         m_sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
@@ -51,7 +53,7 @@ B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
 }
 
 void B_GlutenFreeSandwichAtKitchen::evaluate(const State* state) {
-    const ObjectsResult &result = m_gluten_free_sandwich_at_kitchen->evaluate(state);
+    const Bit_Set &result = m_gluten_free_sandwich_at_kitchen->evaluate(state);
     // TODO: remove duplicate code
     // size counts the number of set bits, i.e., the number of objects
     new_eval = (result.size() > 0) ? true : false;
@@ -61,7 +63,7 @@ void B_GlutenFreeSandwichAtKitchen::evaluate(const State* state) {
 B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
     m_regular_sandwich_at_kitchen(
-        ConceptFactory::make_setminus(
+        ConceptFactory::make_setminus_concept(
         m_sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
@@ -69,7 +71,7 @@ B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
 }
 
 void B_RegularSandwichAtKitchen::evaluate(const State* state) {
-    const ObjectsResult &result = m_regular_sandwich_at_kitchen->evaluate(state);
+    const Bit_Set &result = m_regular_sandwich_at_kitchen->evaluate(state);
     // TODO: remove duplicate code
     // size counts the number of set bits, i.e., the number of objects
     new_eval = (result.size() > 0) ? true : false;
@@ -79,7 +81,7 @@ void B_RegularSandwichAtKitchen::evaluate(const State* state) {
 B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
     const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
     m_gluten_free_sandwiches_on_tray(
-        ConceptFactory::make_intersect(
+        ConceptFactory::make_intersect_concept(
         m_sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "ontray", 0),
@@ -89,7 +91,7 @@ B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
 void B_GlutenFreeSandwichOnTray::evaluate(const State* state) {
     // TODO: remove duplicate code
     // size counts the number of set bits, i.e., the number of objects
-    const ObjectsResult &result = m_gluten_free_sandwiches_on_tray->evaluate(state);
+    const Bit_Set &result = m_gluten_free_sandwiches_on_tray->evaluate(state);
     new_eval = (result.size() > 0) ? true : false;
 }
 
@@ -97,7 +99,7 @@ void B_GlutenFreeSandwichOnTray::evaluate(const State* state) {
 B_RegularSandwichOnTray::B_RegularSandwichOnTray(
     const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
     m_regular_sandwiches_on_tray(
-        ConceptFactory::make_setminus(
+        ConceptFactory::make_setminus_concept(
         m_sketch->problem(),
         false,
         ConceptFactory::make_leaf_concept(m_sketch->problem(), false, "ontray", 0),
@@ -107,7 +109,7 @@ B_RegularSandwichOnTray::B_RegularSandwichOnTray(
 void B_RegularSandwichOnTray::evaluate(const State* state) {
     // TODO: remove duplicate code
     // size counts the number of set bits, i.e., the number of objects
-    const ObjectsResult &result = m_regular_sandwiches_on_tray->evaluate(state);
+    const Bit_Set &result = m_regular_sandwiches_on_tray->evaluate(state);
     new_eval = (result.size() > 0) ? true : false;
 }
 

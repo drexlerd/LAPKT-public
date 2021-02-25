@@ -68,23 +68,25 @@ public:
 
 		cost = 0;
 
-		if ( this->verbose() )
-			std::cout << std::endl << "Caption\n{#goals, #UNnachieved,  #Achieved} -> IW(max_w)"<<std::endl;
-
+        /**
+		 * Initialize the sketch for the task's initial state.
+		 */
 		this->m_sketch->initialize_first_subproblem( new State( this->problem().task() ) );
 
 		do{
+            std::cout << "applied rules so far: " << std::endl;
+			const std::vector<const Rule*> applied_rules = this->m_sketch->applied_rules();
+			for (const Rule* rule : applied_rules) {
+				std::cout << rule->name() << "\n";
+			}
+			std::cout << "\n";
+
+
 			if ( this->verbose() )
 				//std::cout << std::endl << "{" << gsize << "/" << this->m_goal_candidates.size() << "/" << this->m_goals_achieved.size() << "}:IW(" << this->bound() << ") -> ";
 			end = this->do_search();
 			m_pruned_sum_B_count += this->pruned_by_bound();
 
-            std::cout << "applied rules: " << std::endl;
-			const std::vector<const Rule*> applied_rules = this->m_sketch->applied_rules();
-			for (const Rule* rule : applied_rules) {
-				std::cout << rule->name() << ", ";
-			}
-			std::cout << "\n";
 
 			if ( end == NULL ) {
 
@@ -139,7 +141,7 @@ public:
 			}
 
 
-		}while( !this->problem().goal( *new_init_state ) );
+		} while( !this->problem().goal( *new_init_state ) );
 
 		return true;
 	}

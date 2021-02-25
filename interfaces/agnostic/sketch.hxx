@@ -279,7 +279,6 @@ protected:
         return m_boolean_features[m_boolean_feature_name_to_idx.at(feature_name)];
     }
 
-
     /**
      * Add rule.
      */
