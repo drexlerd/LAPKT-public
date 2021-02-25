@@ -21,6 +21,7 @@ public:
     UnaryElement(const Sketch_STRIPS_Problem* problem, bool goal,
     BaseElement* element)
     : BaseElement(problem, goal), m_element(element) {
+        // Initialize results depending on goal.
         if (goal) {
             if (!element->goal()) {
                 std::cout << "UnaryConceptElement::BinaryConceptElement: children must evaluated at goal!\n";

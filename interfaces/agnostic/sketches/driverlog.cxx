@@ -9,13 +9,13 @@ N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name),
     m_packages_not_at_goal_location(
-        ConceptFactory::make_intersect_concept(
+        ElementFactory::make_intersect_concept(
             sketch->problem(),
             false,
-            ConceptFactory::make_leaf_concept(sketch->problem(), false, "obj", 0),
-            ConceptFactory::make_setminus_concept(sketch->problem(), false,
-                ConceptFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
-                ConceptFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
+            ElementFactory::make_leaf_concept(sketch->problem(), false, "obj", 0),
+            ElementFactory::make_setminus_concept(sketch->problem(), false,
+                ElementFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
+                ElementFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
 
 }
 
@@ -28,13 +28,13 @@ N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name),
     m_trucks_not_at_goal_location(
-        ConceptFactory::make_intersect_concept(
+        ElementFactory::make_intersect_concept(
             sketch->problem(),
             false,
-            ConceptFactory::make_leaf_concept(sketch->problem(), false, "truck", 0),
-            ConceptFactory::make_setminus_concept(sketch->problem(), false,
-                ConceptFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
-                ConceptFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
+            ElementFactory::make_leaf_concept(sketch->problem(), false, "truck", 0),
+            ElementFactory::make_setminus_concept(sketch->problem(), false,
+                ElementFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
+                ElementFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
 
 }
 
@@ -47,13 +47,13 @@ N_DriversNotAtGoalLocation::N_DriversNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name),
     m_drivers_not_at_goal_location(
-        ConceptFactory::make_intersect_concept(
+        ElementFactory::make_intersect_concept(
             sketch->problem(),
             false,
-            ConceptFactory::make_leaf_concept(sketch->problem(), false, "driver", 0),
-            ConceptFactory::make_setminus_concept(sketch->problem(), false,
-                ConceptFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
-                ConceptFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
+            ElementFactory::make_leaf_concept(sketch->problem(), false, "driver", 0),
+            ElementFactory::make_setminus_concept(sketch->problem(), false,
+                ElementFactory::make_leaf_concept(sketch->problem(), true, "at", 0),
+                ElementFactory::make_leaf_concept(sketch->problem(), false, "at", 0)))) {
 
 }
 

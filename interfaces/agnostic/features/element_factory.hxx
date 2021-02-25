@@ -13,7 +13,7 @@ class Sketch_STRIPS_Problem;
  * A simple cache.
  */
 template<typename Key_T, typename Value_T>
-class ConceptCache {
+class ElementCache {
 protected:
     struct KeyHash {
         std::size_t operator()(const Key_T &key) const {
@@ -21,8 +21,8 @@ protected:
         }
     };
 public:
-    ConceptCache() = default;
-    virtual ~ConceptCache() = default;
+    ElementCache() = default;
+    virtual ~ElementCache() = default;
 
     bool exists(const Key_T &key) const {
         if (m_cache.find(key) != m_cache.end()) {
@@ -45,18 +45,23 @@ private:
 /**
  * Factory to generate concepts
  */
-class ConceptFactory {
+class ElementFactory {
 private:
-    static ConceptCache<std::tuple<bool, std::string, unsigned>, BaseElement*> m_leaf_concept_cache;
-    static ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_intersect_concept_cache;
-    static ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_setminus_concept_cache;
+    static ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*> m_leaf_concept_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_intersect_concept_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_setminus_concept_cache;
 public:
-    ConceptFactory() = default;
-    virtual ~ConceptFactory() = default;
+    ElementFactory() = default;
+    virtual ~ElementFactory() = default;
 
     static BaseElement* make_leaf_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position);
     static BaseElement* make_intersect_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
     static BaseElement* make_setminus_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
+    static BaseElement* make_extraction_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role);
+
+    static BaseElement* make_leaf_role(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name);
+    static BaseElement* make_intersect_role(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
+    static BaseElement* make_setminus_role(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
 };
 
 }

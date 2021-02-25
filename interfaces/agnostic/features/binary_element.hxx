@@ -22,9 +22,10 @@ public:
     BinaryElement(const Sketch_STRIPS_Problem* problem, bool goal,
     BaseElement* left, BaseElement* right)
     : BaseElement(problem, goal), m_left(left), m_right(right) {
+        // Initialize results depending on goal.
         if (goal) {
             if (!left->goal() || !right->goal()) {
-                std::cout << "BinaryElement::BinaryElement: children must evaluated at goal!\n";
+                std::cout << "BinaryElement::BinaryElement: children must evaluated at goal!" << std::endl;
                 exit(1);
             }
             compute_result(left->evaluate(nullptr), right->evaluate(nullptr));
@@ -39,6 +40,10 @@ public:
     Bit_Set& evaluate(const State* state) {
         if (is_uninitialized(state)) {
             m_state = state;
+            if (m_left->evaluate(state).max_index() != m_right->evaluate(state).max_index()) {
+                std::cout << "BinaryElement::evaluate: incompatible results!\n" << std::endl;
+                exit(1);
+            }
             compute_result(m_left->evaluate(state), m_right->evaluate(state));
         }
         return m_result;

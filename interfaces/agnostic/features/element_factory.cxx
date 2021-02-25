@@ -11,12 +11,12 @@ namespace aptk
 /**
  * Instantiate static members.
  */
-ConceptCache<std::tuple<bool, std::string, unsigned>, BaseElement*> ConceptFactory::m_leaf_concept_cache = ConceptCache<std::tuple<bool, std::string, unsigned>, BaseElement*>();
-ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ConceptFactory::m_intersect_concept_cache = ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
-ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ConceptFactory::m_setminus_concept_cache = ConceptCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
+ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*> ElementFactory::m_leaf_concept_cache = ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_intersect_concept_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_setminus_concept_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
 
 // TODO: remove duplicate code, e.g. by creating unary, binary, leaf caches.
-BaseElement* ConceptFactory::make_leaf_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position) {
+BaseElement* ElementFactory::make_leaf_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position) {
     std::tuple<bool, std::string, unsigned> key = std::tuple<bool, std::string, unsigned>(goal, predicate_name, position);
     if (!m_leaf_concept_cache.exists(key)) {
         BaseElement* concept = new ConceptElement(problem, goal, predicate_name, position);
@@ -25,7 +25,7 @@ BaseElement* ConceptFactory::make_leaf_concept(const Sketch_STRIPS_Problem* prob
     return m_leaf_concept_cache.get(key);
 }
 
-BaseElement* ConceptFactory::make_intersect_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right) {
+BaseElement* ElementFactory::make_intersect_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right) {
     std::tuple<bool, BaseElement*, BaseElement*> key = std::tuple<bool, BaseElement*, BaseElement*>(goal, left, right);
     if (!m_intersect_concept_cache.exists(key)) {
         BaseElement* concept = new IntersectElement(problem, goal, left, right);
@@ -34,7 +34,7 @@ BaseElement* ConceptFactory::make_intersect_concept(const Sketch_STRIPS_Problem*
     return m_intersect_concept_cache.get(key);
 }
 
-BaseElement* ConceptFactory::make_setminus_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right) {
+BaseElement* ElementFactory::make_setminus_concept(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right) {
     std::tuple<bool, BaseElement*, BaseElement*> key = std::tuple<bool, BaseElement*, BaseElement*>(goal, left, right);
     if (!m_setminus_concept_cache.exists(key)) {
         BaseElement* concept = new SetminusElement(problem, goal, left, right);
