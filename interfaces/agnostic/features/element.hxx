@@ -79,7 +79,6 @@ public:
         std::cout << "{ ";
         for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
             if (m_result.isset(i)) {
-                std::cout << i << " " << m_problem->predicate_index_to_predicate_signature().size() << std::endl;
                 std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";
             }
         }

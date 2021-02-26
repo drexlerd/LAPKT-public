@@ -10,7 +10,7 @@ class SetminusElement : public BinaryElement {
 protected:
     virtual void compute_result(const Bit_Set& left_result, const Bit_Set& right_result) override {
         m_result = left_result;
-        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
+        for (unsigned i = 0; i < left_result.max_index(); ++i) {
             if (right_result.isset(i)) {
                 m_result.unset(i);
             }

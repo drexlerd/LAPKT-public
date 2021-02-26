@@ -23,7 +23,7 @@ N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(const BaseSketch* sketch, const std
 void N_UnachievedGoalAtoms::evaluate(const State* state) {
     new_eval = m_unachieved_goal_atoms->evaluate(state).size();
     m_unachieved_goal_atoms->print_role();
-    // std::cout << new_eval << std::endl;
+    std::cout << new_eval << std::endl;
 }
 
 
@@ -41,6 +41,33 @@ N_IngredientsInShaker::N_IngredientsInShaker(const BaseSketch* sketch, const std
 
 void N_IngredientsInShaker::evaluate(const State* state) {
     new_eval = m_ingredients_in_shaker->evaluate(state).size();
+    m_ingredients_in_shaker->print_concept();
+    /*if (new_eval == 0) {
+        std::cout << "==============" << std::endl;
+        state->print(std::cout);
+        BaseElement* x = ElementFactory::make_intersect(
+            m_sketch->problem(),
+            false,
+            ElementFactory::make_role(m_sketch->problem(), true, "contains"),
+            ElementFactory::make_role(m_sketch->problem(), false, "contains"));
+        x->evaluate(state);
+        x->print_role();
+        BaseElement* y = ElementFactory::make_role(m_sketch->problem(), true, "contains");
+        y->evaluate(state);
+        y->print_role();
+        BaseElement* z = ElementFactory::make_setminus(
+            m_sketch->problem(),
+            false,
+            ElementFactory::make_role(m_sketch->problem(), true, "contains"),
+            ElementFactory::make_intersect(
+                m_sketch->problem(),
+                false,
+                ElementFactory::make_role(m_sketch->problem(), true, "contains"),
+                ElementFactory::make_role(m_sketch->problem(), false, "contains")));
+        z->evaluate(state);
+        z->print_role();
+        std::cout << "==============" << std::endl;
+    }*/
     // std::cout << new_eval << std::endl;
 }
 
@@ -84,7 +111,7 @@ N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch*
 
 void N_CocktailsConsistentWithPart1::evaluate(const State* state) {
     new_eval = m_cocktails_consistent_with_part_1->evaluate(state).size();
-    m_cocktails_consistent_with_part_1->print_concept();
+    // m_cocktails_consistent_with_part_1->print_concept();
     //std::cout << new_eval << std::endl;
 }
 
@@ -147,7 +174,7 @@ N_CocktailsConsistentWithPart2::N_CocktailsConsistentWithPart2(const BaseSketch*
 
 void N_CocktailsConsistentWithPart2::evaluate(const State* state) {
     new_eval = m_cocktails_consistent_with_part_2->evaluate(state).size();
-    m_cocktails_consistent_with_part_2->print_concept();
+    // m_cocktails_consistent_with_part_2->print_concept();
     // std::cout << new_eval << std::endl;
 }
 
@@ -175,7 +202,9 @@ BarmanSketch::BarmanSketch(
     ));
     add_rule(new Rule(this, "serve_cocktail",
         {},
-        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")) },
+        { new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_1")),
+          new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_2")),
+          new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")) },
         {},
         { new DecrementNumerical(get_numerical_feature("unachieved_goal_atoms")) }
     ));
