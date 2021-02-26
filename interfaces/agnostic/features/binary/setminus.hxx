@@ -23,10 +23,6 @@ public:
         : BinaryElement(problem, goal, left, right) {
     }
     virtual ~SetminusElement() = default;
-
-    virtual void print_result() const override {
-
-    }
 };
 
 

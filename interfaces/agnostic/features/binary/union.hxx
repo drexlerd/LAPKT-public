@@ -18,10 +18,6 @@ public:
         : BinaryElement(problem, goal, left, right) {
     }
     virtual ~UnionElement() = default;
-
-    virtual void print_result() const override {
-
-    }
 };
 
 }

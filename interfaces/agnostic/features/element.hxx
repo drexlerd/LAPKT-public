@@ -21,6 +21,31 @@ protected:
     // Preallocated memory to store evaluation result
     Bit_Set m_result;
 
+protected:
+    void allocate_or_reset(unsigned size) {
+        if (m_result.max_index() == 0) {
+            m_result = Bit_Set(size);
+        } else {
+            m_result.reset();
+        }
+    }
+
+    void assert_concept(const Bit_Set &concept, const std::string &error) const {
+        // sanity check
+        if (concept.max_index() != m_problem->num_objects() + 1) {
+            std::cout << error << " failed concept assertion! max_index=" << concept.max_index() << " != objects=" << m_problem->num_objects() << " + 1\n";
+            exit(1);
+        }
+    }
+
+    void assert_role(const Bit_Set &role, const std::string &error) const {
+        // sanity check
+        if (role.max_index() != m_problem->num_total_fluents() + 1) {
+            std::cout << error << " failed role assertion! max_index=" << role.max_index() << " != predicates=" << m_problem->num_total_fluents() << " + 1\n";
+            exit(1);
+        }
+    }
+
 public:
     BaseElement(const Sketch_STRIPS_Problem* problem, bool goal) : m_problem(problem), m_goal(goal), m_state(nullptr) {}
     virtual ~BaseElement() = default;
@@ -39,9 +64,7 @@ public:
     /**
      * Pretty printer.
      */
-    virtual void print_result() const = 0;
-
-    virtual void print_object_result() const {
+    virtual void print_concept() const {
         std::cout << "{ ";
         for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
             if (m_result.isset(i)) {
@@ -51,7 +74,7 @@ public:
         std::cout << "}" << std::endl;
     }
 
-    virtual void print_predicate_result() const {
+    virtual void print_role() const {
         std::cout << "{ ";
         for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
             if (m_result.isset(i)) {
