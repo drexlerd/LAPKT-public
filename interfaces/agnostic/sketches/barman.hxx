@@ -23,6 +23,20 @@ public:
     virtual void evaluate(const State* state) override;
 };
 
+/**
+ * Count the number of shots that are needed in the goal
+ * and are not clean
+ */
+class N_DirtyShots : public NumericalFeature {
+private:
+    BaseElement* m_dirty_shots;
+public:
+    N_DirtyShots(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_DirtyShots() = default;
+
+    virtual void evaluate(const State* state) override;
+};
+
 class N_CocktailsConsistentWithPart1 : public NumericalFeature {
 private:
     BaseElement* m_cocktails_consistent_with_part_1;

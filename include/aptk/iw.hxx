@@ -45,8 +45,8 @@ public:
 	typedef  	Node< State >					Search_Node;
 	typedef 	Closed_List< Search_Node >			Closed_List_Type;
 
-	IW( 	const Search_Model& search_problem ) 
-	: BRFS< Search_Model >(search_problem), m_pruned_B_count(0), m_B( infty ), m_verbose( true ) {	   
+	IW( 	const Search_Model& search_problem )
+	: BRFS< Search_Model >(search_problem), m_pruned_B_count(0), m_B( infty ), m_verbose( true ) {
 		m_novelty = new Abstract_Novelty( search_problem );
 	}
 
@@ -61,7 +61,7 @@ public:
 
 
 		if(!s)
-			this->m_root = new Search_Node( this->problem().init(), no_op, NULL );	
+			this->m_root = new Search_Node( this->problem().init(), no_op, NULL );
 		else
 			this->m_root = new Search_Node( s, no_op, NULL );
 
@@ -70,27 +70,27 @@ public:
 		this->reset();
 
 		m_novelty->init();
-		
+
 		if ( prune( this->m_root ) )  {
-			if ( verbose() ) 
+			if ( verbose() )
 				std::cout<<"Initial State pruned! No Solution found."<<std::endl;
 			return;
 		}
-	
+
 #ifdef DEBUG
 		if ( verbose() ) {
 			std::cout << "Initial search node: ";
 			this->m_root->print(std::cout);
 			std::cout << std::endl;
 		}
-#endif 
+#endif
 		this->m_open.push( this->m_root );
 		this->m_open_hash.put( this->m_root );
 		this->inc_gen();
 	}
 
 	float			bound() const			{ return m_B; }
-	void			set_bound( float v ) 		{ 
+	void			set_bound( float v ) 		{
 		m_B = v;
 		m_novelty->set_arity( m_B );
 	}
@@ -107,9 +107,9 @@ protected:
 		m_novelty->eval( n, node_novelty );
 		if( node_novelty > bound() ) {
 			inc_pruned_bound();
-			//this->close(n);				
+			//this->close(n);
 			return true;
-		}	
+		}
 		return false;
 	}
 
@@ -120,7 +120,7 @@ protected:
 	virtual Search_Node*   	process(  Search_Node *head ) {
 		std::vector< aptk::Action_Idx > app_set;
 		this->problem().applicable_set_v2( *(head->state()), app_set );
-		
+
 		for (unsigned i = 0; i < app_set.size(); ++i ) {
 			int a = app_set[i];
 
@@ -131,21 +131,21 @@ protected:
 			//need to check COND EFF TOO!!
 			// if( head->state()->entails(this->problem().task().actions()[a]->add_vec()) )
 			// 	continue;
-			
 
-			State *succ = this->problem().next( *(head->state()), a );	       			
+
+			State *succ = this->problem().next( *(head->state()), a );
 
 			Search_Node* n = new Search_Node( succ , a, head, this->problem().task().actions()[ a ]->cost() );
 
 			//Lazy expansion
 			//Search_Node* n = new Search_Node( NULL , a, head, this->problem().task().actions()[ a ]->cost() );
 
-			
+
 			if ( this->is_closed( n ) ) {
 				delete n;
 				continue;
 			}
-			
+
 			if( this->previously_hashed(n) ) {
 				delete n;
 			}
@@ -163,6 +163,20 @@ protected:
 						std::cout << this->problem().task().actions()[ n->action() ]->signature() << std::endl;
 					}
 					#endif
+					// TODO(dominik): print partial plan in a single line
+					#ifdef CUSTOMDEBUG
+					std::vector<Action_Idx> plan;
+					float cost;
+					this->extract_plan(this->m_root, n, plan, cost);
+					for ( unsigned k = 0; k < plan.size(); k++ ) {
+						std::cout << k+1 << ". ";
+						const aptk::Action* a = this->problem().task().actions()[ plan[k] ];
+						std::cout << a->signature();
+						std::cout << std::endl;
+					}
+					n->state()->print( std::cout );
+					std::cout << std::endl;
+					#endif
 					delete n;
 					continue;
 				}
@@ -178,20 +192,20 @@ protected:
 						n->state()->print( std::cout );
 					std::cout << this->problem().task().actions()[ n->action() ]->signature() << std::endl;
 				}
-				#endif			
+				#endif
 
-				this->open_node(n);				
+				this->open_node(n);
 				if( this->is_goal( n ) )
 					return n;
 			}
 
-		} 
+		}
 
 
 
 		return NULL;
 	}
-	
+
 protected:
 
 	Abstract_Novelty*      			m_novelty;

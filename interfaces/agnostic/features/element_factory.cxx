@@ -21,6 +21,7 @@ ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> Element
 ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> ElementFactory::m_extraction_cache = ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
+ElementCache<std::string, BaseElement*> ElementFactory::m_custom_cache = ElementCache<std::string, BaseElement*>();
 
 // TODO: remove duplicate code, e.g. by creating unary, binary caches.
 BaseElement* ElementFactory::make_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position) {

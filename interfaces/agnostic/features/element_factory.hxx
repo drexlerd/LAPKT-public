@@ -55,6 +55,7 @@ private:
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_existential_abstraction_cache;
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_universal_abstraction_cache;
 
+    static ElementCache<std::string, BaseElement*> m_custom_cache;
 public:
     ElementFactory() = default;
     virtual ~ElementFactory() = default;
