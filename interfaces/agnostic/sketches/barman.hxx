@@ -3,12 +3,12 @@
 namespace aptk {
 class BaseElement;
 
-class N_CocktailsAndShotsToBeProduced : public NumericalFeature {
+class N_UnachievedGoalAtoms : public NumericalFeature {
 private:
-    BaseElement* m_cocktails_and_shots_to_be_produced;
+    BaseElement* m_unachieved_goal_atoms;
 public:
-    N_CocktailsAndShotsToBeProduced(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_CocktailsAndShotsToBeProduced() = default;
+    N_UnachievedGoalAtoms(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_UnachievedGoalAtoms() = default;
 
     virtual void evaluate(const State* state) override;
 };

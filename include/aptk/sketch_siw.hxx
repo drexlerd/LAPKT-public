@@ -74,14 +74,6 @@ public:
 		this->m_sketch->initialize_first_subproblem( new State( this->problem().task() ) );
 
 		do{
-            std::cout << "applied rules so far: " << std::endl;
-			const std::vector<const Rule*> applied_rules = this->m_sketch->applied_rules();
-			for (const Rule* rule : applied_rules) {
-				std::cout << rule->name() << "\n";
-			}
-			std::cout << "\n";
-
-
 			if ( this->verbose() )
 				//std::cout << std::endl << "{" << gsize << "/" << this->m_goal_candidates.size() << "/" << this->m_goals_achieved.size() << "}:IW(" << this->bound() << ") -> ";
 			end = this->do_search();

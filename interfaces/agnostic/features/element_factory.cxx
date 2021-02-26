@@ -19,8 +19,8 @@ ElementCache<std::tuple<bool, std::string>, BaseElement*> ElementFactory::m_role
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_intersect_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_setminus_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> ElementFactory::m_extraction_cache = ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*>();
-ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*>();
-ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 
 // TODO: remove duplicate code, e.g. by creating unary, binary caches.
 BaseElement* ElementFactory::make_concept(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position) {
@@ -68,19 +68,19 @@ BaseElement* ElementFactory::make_extraction(const Sketch_STRIPS_Problem* proble
     return m_extraction_cache.get(key);
 }
 
-BaseElement* ElementFactory::make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned predicate, unsigned a, unsigned b) {
-    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>(goal, role, concept, predicate, a, b);
+BaseElement* ElementFactory::make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b) {
+    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>(goal, role, concept, a, b);
     if (!m_existential_abstraction_cache.exists(key)) {
-        BaseElement* element = new ExistentialAbstractionElement(problem, goal, role, concept, predicate, a, b);
+        BaseElement* element = new ExistentialAbstractionElement(problem, goal, role, concept, a, b);
         m_existential_abstraction_cache.insert(key, std::move(element));
     }
     return m_existential_abstraction_cache.get(key);
 }
 
-BaseElement* ElementFactory::make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned predicate, unsigned a, unsigned b) {
-    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>(goal, role, concept, predicate, a, b);
+BaseElement* ElementFactory::make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b) {
+    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>(goal, role, concept, a, b);
     if (!m_universal_abstraction_cache.exists(key)) {
-        BaseElement* element = new UniversalAbstractionElement(problem, goal, role, concept, predicate, a, b);
+        BaseElement* element = new UniversalAbstractionElement(problem, goal, role, concept, a, b);
         m_universal_abstraction_cache.insert(key, std::move(element));
     }
     return m_universal_abstraction_cache.get(key);

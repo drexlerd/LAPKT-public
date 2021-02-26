@@ -52,8 +52,8 @@ private:
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_intersect_cache;
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> m_setminus_cache;
     static ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> m_extraction_cache;
-    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*> m_existential_abstraction_cache;
-    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned>, BaseElement*> m_universal_abstraction_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_existential_abstraction_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_universal_abstraction_cache;
 
 public:
     ElementFactory() = default;
@@ -64,8 +64,8 @@ public:
     static BaseElement* make_intersect(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
     static BaseElement* make_setminus(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right);
     static BaseElement* make_extraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position);
-    static BaseElement* make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned predicate, unsigned a, unsigned b);
-    static BaseElement* make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned predicate, unsigned a, unsigned b);
+    static BaseElement* make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
+    static BaseElement* make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
 };
 
 }

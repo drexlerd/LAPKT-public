@@ -60,6 +60,7 @@ public:
      */
     bool goal() const { return m_goal; }
     bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
+    void set_initialized(const State* state) { m_state = state; }
 
     /**
      * Pretty printer.
@@ -68,7 +69,7 @@ public:
         std::cout << "{ ";
         for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
             if (m_result.isset(i)) {
-                std::cout << m_problem->index_to_object_name().at(i) << ", ";
+                std::cout << m_problem->object_index_to_object_name().at(i) << ", ";
             }
         }
         std::cout << "}" << std::endl;
@@ -78,7 +79,8 @@ public:
         std::cout << "{ ";
         for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
             if (m_result.isset(i)) {
-                std::cout << m_problem->index_to_predicate_name().at(i) << ", ";
+                std::cout << i << " " << m_problem->predicate_index_to_predicate_signature().size() << std::endl;
+                std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";
             }
         }
         std::cout << "}" << std::endl;

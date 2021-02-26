@@ -58,11 +58,12 @@ protected:
 	// the total number of objects occuring in the instance
 	unsigned m_num_objects;
     // name to index mappings of predicates and objects
-	std::unordered_map<std::string, unsigned> m_predicate_name_to_index;
-	std::unordered_map<std::string, unsigned> m_object_name_to_index;
+	std::unordered_map<std::string, unsigned> m_predicate_name_to_predicate_type;
+	std::unordered_map<std::string, unsigned> m_object_name_to_object_index;
 	// index to name mappings of predicates and objects
-	std::unordered_map<unsigned, std::string> m_index_to_predicate_name;
-	std::unordered_map<unsigned, std::string> m_index_to_object_name;
+	std::unordered_map<unsigned, std::string> m_predicate_type_to_predicate_name;
+	std::unordered_map<unsigned, std::string> m_predicate_index_to_predicate_signature;
+	std::unordered_map<unsigned, std::string> m_object_index_to_object_name;
 
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
@@ -126,11 +127,11 @@ public:
     unsigned num_total_fluents() const { return m_num_total_fluents; }
     unsigned num_predicates() const { return m_num_predicates; }
 	unsigned num_objects() const { return m_num_objects; }
-	unsigned predicate_index(const std::string &predicate_name) const { return predicate_name_to_index().at(predicate_name); }
-	const std::unordered_map<std::string, unsigned>& predicate_name_to_index() const { return m_predicate_name_to_index; }
-	const std::unordered_map<std::string, unsigned>& object_name_to_index() const { return m_object_name_to_index; }
-    const std::unordered_map<unsigned, std::string>& index_to_predicate_name() const { return m_index_to_predicate_name; }
-	const std::unordered_map<unsigned, std::string>& index_to_object_name() const { return m_index_to_object_name; }
+	unsigned predicate_type(const std::string &predicate_name) const { return predicate_name_to_predicate_type().at(predicate_name); }
+	const std::unordered_map<std::string, unsigned>& predicate_name_to_predicate_type() const { return m_predicate_name_to_predicate_type; }
+	const std::unordered_map<std::string, unsigned>& object_name_to_object_index() const { return m_object_name_to_object_index; }
+    const std::unordered_map<unsigned, std::string>& predicate_index_to_predicate_signature() const { return m_predicate_index_to_predicate_signature; }
+	const std::unordered_map<unsigned, std::string>& object_index_to_object_name() const { return m_object_index_to_object_name; }
 
 
     /**

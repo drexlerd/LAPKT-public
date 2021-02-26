@@ -39,11 +39,11 @@ public:
      */
     Bit_Set& evaluate(const State* state) {
         if (is_uninitialized(state)) {
-            m_state = state;
-            if (m_left->evaluate(state).max_index() != m_right->evaluate(state).max_index()) {
+            set_initialized(state);
+            /*if (m_left->evaluate(state).max_index() != m_right->evaluate(state).max_index()) {
                 std::cout << "BinaryElement::evaluate: incompatible results!\n" << std::endl;
                 exit(1);
-            }
+            }*/
             compute_result(m_left->evaluate(state), m_right->evaluate(state));
         }
         return m_result;

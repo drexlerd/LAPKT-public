@@ -51,14 +51,15 @@ namespace aptk
 		new_fluent->set_predicate_name(predicate_name);
 		new_fluent->set_objs_idx(move(objs_idx));
 		new_fluent->set_objs_names(move(objs_names));
-		p.m_predicate_name_to_index.insert(make_pair(new_fluent->pddl_predicate_name(), new_fluent->pddl_predicate_type()));
-		p.m_index_to_predicate_name.insert(make_pair(new_fluent->pddl_predicate_type(), new_fluent->pddl_predicate_name()));
-        for (int i = 0; i < static_cast<int>(new_fluent->pddl_objs_idx().size()); ++i) {
-			p.m_object_name_to_index.insert(make_pair(new_fluent->pddl_obj_names()[i], new_fluent->pddl_objs_idx()[i]));
-			p.m_index_to_object_name.insert(make_pair(new_fluent->pddl_objs_idx()[i], new_fluent->pddl_obj_names()[i]));
+		p.m_predicate_name_to_predicate_type.insert(make_pair(new_fluent->pddl_predicate_name(), new_fluent->pddl_predicate_type()));
+		p.m_predicate_index_to_predicate_signature.insert(make_pair(new_fluent->index(), new_fluent->signature()));
+        p.m_predicate_type_to_predicate_name.insert(make_pair(new_fluent->pddl_predicate_type(), new_fluent->pddl_predicate_name()));
+		for (int i = 0; i < static_cast<int>(new_fluent->pddl_objs_idx().size()); ++i) {
+			p.m_object_name_to_object_index.insert(make_pair(new_fluent->pddl_obj_names()[i], new_fluent->pddl_objs_idx()[i]));
+			p.m_object_index_to_object_name.insert(make_pair(new_fluent->pddl_objs_idx()[i], new_fluent->pddl_obj_names()[i]));
 		}
-		p.m_num_predicates = p.m_predicate_name_to_index.size();
-		p.m_num_objects = p.m_object_name_to_index.size();
+		p.m_num_predicates = p.m_predicate_name_to_predicate_type.size();
+		p.m_num_objects = p.m_object_name_to_object_index.size();
 		p.m_fluents_map[signature] = new_fluent->index();
 		p.increase_num_fluents();
 		p.fluents().push_back( new_fluent );
@@ -79,14 +80,15 @@ namespace aptk
 		new_fluent->set_predicate_name(predicate_name);
 		new_fluent->set_objs_idx(move(objs_idx));
 		new_fluent->set_objs_names(move(objs_names));
-		p.m_predicate_name_to_index.insert(make_pair(new_fluent->pddl_predicate_name(), new_fluent->pddl_predicate_type()));
-		p.m_index_to_predicate_name.insert(make_pair(new_fluent->pddl_predicate_type(), new_fluent->pddl_predicate_name()));
-        for (int i = 0; i < static_cast<int>(new_fluent->pddl_objs_idx().size()); ++i) {
-			p.m_object_name_to_index.insert(make_pair(new_fluent->pddl_obj_names()[i], new_fluent->pddl_objs_idx()[i]));
-			p.m_index_to_object_name.insert(make_pair(new_fluent->pddl_objs_idx()[i], new_fluent->pddl_obj_names()[i]));
+		p.m_predicate_name_to_predicate_type.insert(make_pair(new_fluent->pddl_predicate_name(), new_fluent->pddl_predicate_type()));
+		p.m_predicate_index_to_predicate_signature.insert(make_pair(new_fluent->index(), new_fluent->signature()));
+        p.m_predicate_type_to_predicate_name.insert(make_pair(new_fluent->pddl_predicate_type(), new_fluent->pddl_predicate_name()));
+		for (int i = 0; i < static_cast<int>(new_fluent->pddl_objs_idx().size()); ++i) {
+			p.m_object_name_to_object_index.insert(make_pair(new_fluent->pddl_obj_names()[i], new_fluent->pddl_objs_idx()[i]));
+			p.m_object_index_to_object_name.insert(make_pair(new_fluent->pddl_objs_idx()[i], new_fluent->pddl_obj_names()[i]));
 		}
-		p.m_num_predicates = p.m_predicate_name_to_index.size();
-		p.m_num_objects = p.m_object_name_to_index.size();
+		p.m_num_predicates = p.m_predicate_name_to_predicate_type.size();
+		p.m_num_objects = p.m_object_name_to_object_index.size();
 		p.m_num_init_fluents++;
 		p.m_init_fluents.push_back( new_fluent);
 		p.m_init_const_fluents.push_back( new_fluent );

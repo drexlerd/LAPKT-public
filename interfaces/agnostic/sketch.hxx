@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <cassert>
+#include "strips_state.hxx"
 
 namespace aptk
 {
@@ -260,6 +261,8 @@ protected:
 
     // the rules applied until termination
     mutable std::vector<const Rule*> m_applied_rules;
+
+    const bool m_verbose = true;
 protected:
     /**
      * Add features with respective names.
@@ -322,11 +325,6 @@ protected:
                 m_init_applicable_rules.push_back(rule);
             }
         }
-        std::cout << "applicable rules in initial state: " << std::endl;
-        for (auto rule : m_init_applicable_rules) {
-            std::cout << rule->name() << " ";
-        }
-        std::cout << std::endl;
         /*if (m_init_applicable_rules.size() == 0) {
             std::cout << "Error - compute_applicable_rules_for_init: no applicable rule was found!" << std::endl;
             exit(1);
@@ -380,15 +378,12 @@ public:
             set_generated_state_information_as_init();
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
+            // print debug information
+            print_feature_evaluations();
+            print_applicable_rules();
+            print_applied_rules();
+            state->print(std::cout);
             // (iii) return true to indicate SIW that a new subproblem was found
-            /*if (m_applied_rules.size() == 5) {
-                std::cout << "applied rules so far: " << std::endl;
-                for (const Rule* rule : m_applied_rules) {
-                    std::cout << rule->name() << "\n";
-                }
-		    	std::cout << "\n";
-                exit(1);
-            }*/
             return true;
         }
         // 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
@@ -400,6 +395,36 @@ public:
      */
     const Sketch_STRIPS_Problem* problem() const { return m_problem; }
     const std::vector<const Rule*> applied_rules() const { return m_applied_rules; }
+
+    /**
+     * Pretty printers.
+     */
+    void print_feature_evaluations() const {
+        std::cout << "Numerical features:\n";
+        for (NumericalFeature* nf : m_numerical_features) {
+            std::cout << "\t" << nf->name() << ": " << nf->get_new_eval() << "\n";
+        }
+        std::cout << "Boolean features:\n";
+        for (BooleanFeature* bf : m_boolean_features) {
+            std::cout << "\t" << bf->name() << ": " << bf->get_new_eval() << "\n";
+        }
+    }
+
+    void print_applied_rules() const {
+        std::cout << "Rules applied:\n";
+        for (const Rule* rule : m_applied_rules) {
+            std::cout << "\t" << rule->name() << "\n";
+        }
+        std::cout << "\n";
+    }
+
+    void print_applicable_rules() const {
+        std::cout << "Applicable rules:\n";
+        for (auto rule : m_init_applicable_rules) {
+            std::cout << "\t" << rule->name() << "\n";
+        }
+        std::cout << std::endl;
+    }
 };
 
 

@@ -10,7 +10,6 @@ namespace aptk {
  */
 class UniversalAbstractionElement : public BinaryElement {
 protected:
-    int m_predicate;
     int m_a;
     int m_b;
 
@@ -25,7 +24,6 @@ protected:
             const Fluent* fluent = m_problem->total_fluents()[i];
             unsigned obj_b = fluent->pddl_objs_idx()[m_b];
             if (role.isset(i) &&
-                fluent->pddl_predicate_type() == m_predicate &&
                 concept.isset(obj_b)) {
                 // TODO: we might want to be the result correspond to predicate instead of extracting just a.
                 unsigned obj_a = fluent->pddl_objs_idx()[m_a];
@@ -35,11 +33,13 @@ protected:
         // 2. remove objects for which not all relations contain object from b
         for (int i = 0; i < m_problem->num_total_fluents(); ++i) {
             const Fluent* fluent = m_problem->total_fluents()[i];
-            unsigned obj_a = fluent->pddl_objs_idx()[m_a];
-            unsigned obj_b = fluent->pddl_objs_idx()[m_b];
-            if (m_result.isset(obj_a) &&
-                !concept.isset(obj_b)) {
-                m_result.unset(obj_a);
+            if (role.isset(i)) {
+                unsigned obj_a = fluent->pddl_objs_idx()[m_a];
+                unsigned obj_b = fluent->pddl_objs_idx()[m_b];
+                if (m_result.isset(obj_a) &&
+                    !concept.isset(obj_b)) {
+                    m_result.unset(obj_a);
+                }
             }
         }
     }
@@ -47,9 +47,9 @@ protected:
 public:
     UniversalAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept,
-        unsigned predicate, unsigned a, unsigned b)
+        unsigned a, unsigned b)
         : BinaryElement(problem, goal, role, concept),
-        m_predicate(predicate), m_a(a), m_b(b) {
+        m_a(a), m_b(b) {
     }
     virtual ~UniversalAbstractionElement() = default;
 };
