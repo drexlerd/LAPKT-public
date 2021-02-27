@@ -1,11 +1,10 @@
-#ifndef __CHILDSNACK_DRIVERLOG__
-#define __CHILDSNACK_DRIVERLOG__
+#ifndef __CHILDSNACK_SKETCH__
+#define __CHILDSNACK_SKETCH__
 
 #include <sketch.hxx>
 
 namespace aptk {
 class BaseElement;
-
 
 class N_GlutenAllergicChildrenToBeServed : public NumericalFeature {
 public:

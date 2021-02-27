@@ -9,6 +9,7 @@ namespace aptk {
 enum class RESULT_TYPE {
     CONCEPT,
     ROLE,
+    NONE,
 };
 
 class BaseElement {
@@ -49,7 +50,7 @@ protected:
     }
 
 public:
-    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal) : m_problem(problem), m_goal(goal), m_state(nullptr) {}
+    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(RESULT_TYPE::NONE) {}
     virtual ~BaseElement() = default;
     /**
      * Evaluate the Element for a given state and return a reference to the result.

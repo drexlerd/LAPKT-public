@@ -1,3 +1,6 @@
+#ifndef __BARMAN_SKETCH__
+#define __BARMAN_SKETCH__
+
 #include <sketch.hxx>
 
 namespace aptk {
@@ -9,16 +12,6 @@ public:
     virtual ~N_UnachievedGoalAtoms() = default;
 };
 
-class N_IngredientsInShaker : public NumericalFeature {
-public:
-    N_IngredientsInShaker(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_IngredientsInShaker() = default;
-};
-
-/**
- * Count the number of shots that are needed in the goal
- * and are not clean
- */
 class N_DirtyShots : public NumericalFeature {
 public:
     N_DirtyShots(const BaseSketch* sketch, const std::string &name);
@@ -44,3 +37,5 @@ public:
 };
 
 }
+
+#endif

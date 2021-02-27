@@ -5,20 +5,20 @@
 
 namespace aptk {
 
+// TODO(dominik): why do I get segfault if I used m_sketch->problem()
 N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch,
     const std::string &name)
-    : NumericalFeature(
-        sketch,
-        name,
+    : NumericalFeature(sketch, name,
         ElementFactory::make_intersect(
             sketch->problem(),
             false,
-            ElementFactory::make_concept(m_sketch->problem(), false, "allergic_gluten", 0),
+            ElementFactory::make_concept(sketch->problem(), false, "allergic_gluten", 0),
             ElementFactory::make_setminus(sketch->problem(), false,
-                ElementFactory::make_concept(m_sketch->problem(), true, "served", 0),
-                ElementFactory::make_concept(m_sketch->problem(), false, "served", 0)))) {
+                ElementFactory::make_concept(sketch->problem(), true, "served", 0),
+                ElementFactory::make_concept(sketch->problem(), false, "served", 0)))) {
 }
+
 
 N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
     const BaseSketch* sketch, const std::string &name)
@@ -26,20 +26,20 @@ N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
     ElementFactory::make_intersect(
         sketch->problem(),
         false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "not_allergic_gluten", 0),
+        ElementFactory::make_concept(sketch->problem(), false, "not_allergic_gluten", 0),
         ElementFactory::make_setminus(sketch->problem(), false,
-            ElementFactory::make_concept(m_sketch->problem(), true, "served", 0),
-            ElementFactory::make_concept(m_sketch->problem(), false, "served", 0)))) {
+            ElementFactory::make_concept(sketch->problem(), true, "served", 0),
+            ElementFactory::make_concept(sketch->problem(), false, "served", 0)))) {
 }
 
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(sketch, name,
     ElementFactory::make_intersect(
-        m_sketch->problem(),
+        sketch->problem(),
         false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
-        ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+        ElementFactory::make_concept(sketch->problem(), false, "at_kitchen_sandwich", 0),
+        ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
 
 B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
@@ -48,10 +48,10 @@ B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
         sketch,
         name,
         ElementFactory::make_setminus(
-            m_sketch->problem(),
+            sketch->problem(),
             false,
-            ElementFactory::make_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
-            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            ElementFactory::make_concept(sketch->problem(), false, "at_kitchen_sandwich", 0),
+            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
 
 B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
@@ -60,10 +60,10 @@ B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
         sketch,
         name,
         ElementFactory::make_intersect(
-            m_sketch->problem(),
+            sketch->problem(),
             false,
-            ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
-            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            ElementFactory::make_concept(sketch->problem(), false, "ontray", 0),
+            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
 
 B_RegularSandwichOnTray::B_RegularSandwichOnTray(
@@ -72,10 +72,10 @@ B_RegularSandwichOnTray::B_RegularSandwichOnTray(
         sketch,
         name,
         ElementFactory::make_setminus(
-            m_sketch->problem(),
+            sketch->problem(),
             false,
-            ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
-            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            ElementFactory::make_concept(sketch->problem(), false, "ontray", 0),
+            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
 
 ChildsnackSketch::ChildsnackSketch(

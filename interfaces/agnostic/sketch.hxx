@@ -25,9 +25,10 @@ protected:
 public:
     BaseFeature(
         const BaseSketch* sketch,
-        const std::string &name,
+        std::string name,
         BaseElement* const element)
-        : m_sketch(sketch), m_name(name), m_element(element) { }
+        : m_sketch(sketch), m_name(name), m_element(element) {
+    }
     virtual ~BaseFeature() = default;
 
     /**
@@ -63,11 +64,15 @@ protected:
 public:
     BooleanFeature(
         const BaseSketch* sketch,
-        const std::string &name,
-        BaseElement* const element) : BaseFeature(sketch, name, element) { }
+        std::string name,
+        BaseElement* const element) : BaseFeature(sketch, name, element), old_eval(false), new_eval(false) { }
     virtual ~BooleanFeature() = default;
 
     virtual void evaluate(const State* state) override {
+        if (!m_element) {
+            std::cout << "BooleanFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
+            exit(1);
+        }
         new_eval = (m_element->evaluate(state).size() > 0) ? true : false;
     }
 
@@ -92,12 +97,17 @@ protected:
 public:
     NumericalFeature(
         const BaseSketch* sketch,
-        const std::string &name,
+        std::string name,
         BaseElement* const element)
-        : BaseFeature(sketch, name, element) { }
+        : BaseFeature(sketch, name, element), old_eval(0), new_eval(0) {
+    }
     virtual ~NumericalFeature() = default;
 
     virtual void evaluate(const State* state) override {
+        if (!m_element) {
+            std::cout << "NumericalFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
+            exit(1);
+        }
         new_eval = m_element->evaluate(state).size();
     }
 
@@ -412,10 +422,10 @@ public:
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
             // print debug information
-            print_applied_rules();
+            /*print_applied_rules();
             print_feature_evaluations();
             print_applicable_rules();
-            state->print(std::cout);
+            state->print(std::cout);*/
             // (iii) return true to indicate SIW that a new subproblem was found
             return true;
         }

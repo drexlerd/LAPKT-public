@@ -13,19 +13,6 @@ N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(
         ElementFactory::get_custom("p")) {
 }
 
-N_IngredientsInShaker::N_IngredientsInShaker(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
-        sketch,
-        name,
-        ElementFactory::make_existential_abstraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), false, "contains"),
-            ElementFactory::make_concept(sketch->problem(), false, "shaker-level", 0),
-            1,
-            0)) {
-}
-
 N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(
         sketch,
@@ -121,7 +108,6 @@ BarmanSketch::BarmanSketch(
 
 
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
-    add_numerical_feature(new N_IngredientsInShaker(this, "ingredients_in_shaker"));
     add_numerical_feature(new N_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));
     add_numerical_feature(new N_CocktailsConsistentWithPart2(this, "cocktails_consistent_with_part_2"));
     add_numerical_feature(new N_DirtyShots(this, "dirty_shots"));
@@ -154,7 +140,6 @@ BarmanSketch::BarmanSketch(
         {},
         { new DecrementNumerical(get_numerical_feature("unachieved_goal_atoms")) }
     ));
-    // TODO: maybe we should clean shots that are used
 }
 
 }
