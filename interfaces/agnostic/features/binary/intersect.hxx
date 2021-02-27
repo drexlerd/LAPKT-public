@@ -17,6 +17,12 @@ public:
     IntersectElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right)
         : BinaryElement(problem, goal, left, right) {
+        // sanity check
+        if (left->result_type() != right->result_type()) {
+            std::cout << "IntersectElement::IntersectElement: incompatible parameters!" << std::endl;
+            exit(1);
+        }
+        m_result_type = left->result_type();
     }
     virtual ~IntersectElement() = default;
 };

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cassert>
 #include "strips_state.hxx"
+#include "features/element.hxx"
 
 namespace aptk
 {
@@ -19,19 +20,39 @@ class BaseFeature {
 protected:
     const BaseSketch* m_sketch;
     const std::string m_name;
+    // the compositional algorithm used during evaluation
+    BaseElement* const m_element;
 public:
-    BaseFeature(const BaseSketch* sketch, const std::string &name) : m_sketch(sketch), m_name(name) { }
+    BaseFeature(
+        const BaseSketch* sketch,
+        const std::string &name,
+        BaseElement* const element)
+        : m_sketch(sketch), m_name(name), m_element(element) { }
     virtual ~BaseFeature() = default;
+
+    /**
+     * Evaluate the feature for a given state.
+     * The problem provides additional information.
+     */
+    virtual void evaluate(const State* state) = 0;
 
     virtual void backup_evaluation() const = 0;
 
     const BaseSketch* sketch() const { return m_sketch; }
     const std::string& name() const { return m_name; }
+    BaseElement* element() const { return m_element; }
 
     /**
-     * Prett
+     * Pretty printer.
      */
-    virtual void print() const {}
+    virtual void print() const {
+        if (!m_element) {
+            std::cout << "BaseFeature::print: tried printing nullptr BaseElement!" << std::endl;
+            exit(1);
+        }
+        std::cout << m_name << ": ";
+        m_element->print();
+    }
 };
 
 
@@ -40,14 +61,15 @@ protected:
     mutable bool old_eval;
     bool new_eval;
 public:
-    BooleanFeature(const BaseSketch* sketch, const std::string &name) : BaseFeature(sketch, name ) { }
+    BooleanFeature(
+        const BaseSketch* sketch,
+        const std::string &name,
+        BaseElement* const element) : BaseFeature(sketch, name, element) { }
     virtual ~BooleanFeature() = default;
 
-    /**
-     * Evaluate the feature for a given state.
-     * The problem provides additional information.
-     */
-    virtual void evaluate(const State* state) = 0;
+    virtual void evaluate(const State* state) override {
+        new_eval = (m_element->evaluate(state).size() > 0) ? true : false;
+    }
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -68,10 +90,16 @@ protected:
     mutable int old_eval;
     int new_eval;
 public:
-    NumericalFeature(const BaseSketch* sketch, const std::string &name) : BaseFeature(sketch, name) { }
+    NumericalFeature(
+        const BaseSketch* sketch,
+        const std::string &name,
+        BaseElement* const element)
+        : BaseFeature(sketch, name, element) { }
     virtual ~NumericalFeature() = default;
 
-    virtual void evaluate(const State* state) = 0;
+    virtual void evaluate(const State* state) override {
+        new_eval = m_element->evaluate(state).size();
+    }
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
@@ -384,10 +412,10 @@ public:
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
             // print debug information
-            /*print_applied_rules();
+            print_applied_rules();
             print_feature_evaluations();
             print_applicable_rules();
-            state->print(std::cout);*/
+            state->print(std::cout);
             // (iii) return true to indicate SIW that a new subproblem was found
             return true;
         }
@@ -407,11 +435,11 @@ public:
     void print_feature_evaluations() const {
         std::cout << "Numerical features:\n";
         for (NumericalFeature* nf : m_numerical_features) {
-            std::cout << "\t" << nf->name() << ": " << nf->get_new_eval() << "\n";
+            nf->print();
         }
         std::cout << "Boolean features:\n";
         for (BooleanFeature* bf : m_boolean_features) {
-            std::cout << "\t" << bf->name() << ": " << bf->get_new_eval() << "\n";
+            bf->print();
         }
         std::cout << std::endl;
     }

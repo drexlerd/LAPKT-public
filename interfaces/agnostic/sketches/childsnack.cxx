@@ -7,27 +7,23 @@ namespace aptk {
 
 N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch,
-    const std::string &name) : NumericalFeature(sketch, name),
-    m_allergic_children_to_be_served(
+    const std::string &name)
+    : NumericalFeature(
+        sketch,
+        name,
         ElementFactory::make_intersect(
-        sketch->problem(),
-        false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "allergic_gluten", 0),
-        ElementFactory::make_setminus(sketch->problem(), false,
-            ElementFactory::make_concept(m_sketch->problem(), true, "served", 0),
-            ElementFactory::make_concept(m_sketch->problem(), false, "served", 0)))) {
+            sketch->problem(),
+            false,
+            ElementFactory::make_concept(m_sketch->problem(), false, "allergic_gluten", 0),
+            ElementFactory::make_setminus(sketch->problem(), false,
+                ElementFactory::make_concept(m_sketch->problem(), true, "served", 0),
+                ElementFactory::make_concept(m_sketch->problem(), false, "served", 0)))) {
 }
-
-void N_GlutenAllergicChildrenToBeServed::evaluate(const State* state) {
-    // TODO: remove duplicate code
-    new_eval = m_allergic_children_to_be_served->evaluate(state).size();
-}
-
 
 N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
-    const BaseSketch* sketch, const std::string &name) : NumericalFeature(sketch, name),
-    m_regular_children_to_be_served(
-        ElementFactory::make_intersect(
+    const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_intersect(
         sketch->problem(),
         false,
         ElementFactory::make_concept(m_sketch->problem(), false, "not_allergic_gluten", 0),
@@ -36,83 +32,51 @@ N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
             ElementFactory::make_concept(m_sketch->problem(), false, "served", 0)))) {
 }
 
-void N_RegularChildrenToBeServed::evaluate(const State* state) {
-    // TODO: remove duplicate code
-    new_eval = m_regular_children_to_be_served->evaluate(state).size();
-}
-
-
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
-    const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
-    m_gluten_free_sandwich_at_kitchen(
-        ElementFactory::make_intersect(
+    const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(sketch, name,
+    ElementFactory::make_intersect(
         m_sketch->problem(),
         false,
         ElementFactory::make_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
         ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
-
-void B_GlutenFreeSandwichAtKitchen::evaluate(const State* state) {
-    const Bit_Set &result = m_gluten_free_sandwich_at_kitchen->evaluate(state);
-    // TODO: remove duplicate code
-    // size counts the number of set bits, i.e., the number of objects
-    new_eval = (result.size() > 0) ? true : false;
-}
-
 
 B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
-    const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
-    m_regular_sandwich_at_kitchen(
+    const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(
+        sketch,
+        name,
         ElementFactory::make_setminus(
-        m_sketch->problem(),
-        false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
-        ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            m_sketch->problem(),
+            false,
+            ElementFactory::make_concept(m_sketch->problem(), false, "at_kitchen_sandwich", 0),
+            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
-
-void B_RegularSandwichAtKitchen::evaluate(const State* state) {
-    const Bit_Set &result = m_regular_sandwich_at_kitchen->evaluate(state);
-    // TODO: remove duplicate code
-    // size counts the number of set bits, i.e., the number of objects
-    new_eval = (result.size() > 0) ? true : false;
-}
-
 
 B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
-    const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
-    m_gluten_free_sandwiches_on_tray(
+    const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(
+        sketch,
+        name,
         ElementFactory::make_intersect(
-        m_sketch->problem(),
-        false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
-        ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            m_sketch->problem(),
+            false,
+            ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
+            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
-
-void B_GlutenFreeSandwichOnTray::evaluate(const State* state) {
-    // TODO: remove duplicate code
-    // size counts the number of set bits, i.e., the number of objects
-    const Bit_Set &result = m_gluten_free_sandwiches_on_tray->evaluate(state);
-    new_eval = (result.size() > 0) ? true : false;
-}
-
 
 B_RegularSandwichOnTray::B_RegularSandwichOnTray(
-    const BaseSketch* sketch, const std::string &name) : BooleanFeature(sketch, name),
-    m_regular_sandwiches_on_tray(
+    const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(
+        sketch,
+        name,
         ElementFactory::make_setminus(
-        m_sketch->problem(),
-        false,
-        ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
-        ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            m_sketch->problem(),
+            false,
+            ElementFactory::make_concept(m_sketch->problem(), false, "ontray", 0),
+            ElementFactory::make_concept(m_sketch->problem(), false, "no_gluten_sandwich", 0))) {
 }
-
-void B_RegularSandwichOnTray::evaluate(const State* state) {
-    // TODO: remove duplicate code
-    // size counts the number of set bits, i.e., the number of objects
-    const Bit_Set &result = m_regular_sandwiches_on_tray->evaluate(state);
-    new_eval = (result.size() > 0) ? true : false;
-}
-
 
 ChildsnackSketch::ChildsnackSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {

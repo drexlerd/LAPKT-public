@@ -31,6 +31,8 @@ public:
     virtual ~GoalCounterFeature() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 /**

@@ -34,8 +34,9 @@ void GoalCounterFeature::exclude_actions( Bit_Set& excluded ){
     }
 }
 
+// TODO(dominik): set BaseElement to nullptr?
 GoalCounterFeature::GoalCounterFeature(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name),
+    : NumericalFeature(sketch, name, nullptr),
     m_consistency_test(true),
     m_reachability(new aptk::agnostic::Reachability_Test( *(this->sketch()->problem()) )) {
     // initialize goal candidates
@@ -82,6 +83,10 @@ void GoalCounterFeature::evaluate(const State* state) {
 
     // set the result value
     new_eval = m_initial_num_goal_candidates - m_goals_achieved.size();
+}
+
+void GoalCounterFeature::print() const {
+    std::cout << m_name << ": " << new_eval << "\n";
 }
 
 

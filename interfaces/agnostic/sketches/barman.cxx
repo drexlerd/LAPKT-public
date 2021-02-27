@@ -5,22 +5,18 @@
 
 namespace aptk {
 
-N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name),
-    m_unachieved_goal_atoms(
+N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(
+    const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(
+        sketch,
+        name,
         ElementFactory::get_custom("p")) {
 }
 
-void N_UnachievedGoalAtoms::evaluate(const State* state) {
-    new_eval = m_unachieved_goal_atoms->evaluate(state).size();
-    //std::cout << m_name << ": ";
-    //m_unachieved_goal_atoms->print_role();
-}
-
-
 N_IngredientsInShaker::N_IngredientsInShaker(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name),
-    m_ingredients_in_shaker(
+    : NumericalFeature(
+        sketch,
+        name,
         ElementFactory::make_existential_abstraction(
             sketch->problem(),
             false,
@@ -30,79 +26,54 @@ N_IngredientsInShaker::N_IngredientsInShaker(const BaseSketch* sketch, const std
             0)) {
 }
 
-void N_IngredientsInShaker::evaluate(const State* state) {
-    new_eval = m_ingredients_in_shaker->evaluate(state).size();
-    //std::cout << m_name << ": ";
-    //m_ingredients_in_shaker->print_concept();
-}
-
-
 N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
-  : NumericalFeature(sketch, name),
-    m_dirty_shots(
+    : NumericalFeature(
+        sketch,
+        name,
         ElementFactory::make_setminus(
-        sketch->problem(),
-        false,
-        ElementFactory::make_extraction(
             sketch->problem(),
             false,
-            ElementFactory::get_custom("p"),
-            0),
-        ElementFactory::make_concept(sketch->problem(), false, "clean", 0))) {
-
-}
-
-void N_DirtyShots::evaluate(const State* state) {
-    new_eval = m_dirty_shots->evaluate(state).size();
-    //std::cout << m_name << ": ";
-    //m_dirty_shots->print_concept();
-}
-
-N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name) {
-    m_cocktails_consistent_with_part_1 =
-    ElementFactory::make_intersect(
-        sketch->problem(),
-        false,
-        ElementFactory::get_custom("c1"),
-        ElementFactory::make_extraction(
-            sketch->problem(),
-            false,
-            ElementFactory::get_custom("p"),
-            1));
-}
-
-void N_CocktailsConsistentWithPart1::evaluate(const State* state) {
-    new_eval = m_cocktails_consistent_with_part_1->evaluate(state).size();
-    //std::cout << m_name << ": ";
-    //m_cocktails_consistent_with_part_1->print_concept();
-}
-
-
-N_CocktailsConsistentWithPart2::N_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name) {
-    m_cocktails_consistent_with_part_2 =
-    ElementFactory::make_intersect(
-        sketch->problem(),
-        false,
-        ElementFactory::get_custom("c1"),
-        ElementFactory::make_intersect(
-            sketch->problem(),
-            false,
-            ElementFactory::get_custom("c2"),
             ElementFactory::make_extraction(
                 sketch->problem(),
                 false,
                 ElementFactory::get_custom("p"),
-                1)));
+                0),
+            ElementFactory::make_concept(sketch->problem(), false, "clean", 0))) {
 }
 
-void N_CocktailsConsistentWithPart2::evaluate(const State* state) {
-    new_eval = m_cocktails_consistent_with_part_2->evaluate(state).size();
-    //std::cout << m_name << ": ";
-    //m_cocktails_consistent_with_part_2->print_concept();
+N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(
+        sketch,
+        name,
+        ElementFactory::make_intersect(
+            sketch->problem(),
+            false,
+            ElementFactory::get_custom("c1"),
+            ElementFactory::make_extraction(
+                sketch->problem(),
+                false,
+                ElementFactory::get_custom("p"),
+                1))) {
 }
 
+N_CocktailsConsistentWithPart2::N_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(
+        sketch,
+        name,
+        ElementFactory::make_intersect(
+            sketch->problem(),
+            false,
+            ElementFactory::get_custom("c1"),
+            ElementFactory::make_intersect(
+                sketch->problem(),
+                false,
+                ElementFactory::get_custom("c2"),
+                ElementFactory::make_extraction(
+                    sketch->problem(),
+                    false,
+                    ElementFactory::get_custom("p"),
+                    1)))) {
+}
 
 BarmanSketch::BarmanSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {

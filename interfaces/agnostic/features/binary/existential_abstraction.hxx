@@ -33,6 +33,13 @@ public:
         unsigned a, unsigned b)
         : BinaryElement(problem, goal, role, concept),
         m_a(a), m_b(b) {
+        // sanity check
+        if (role->result_type() != RESULT_TYPE::ROLE ||
+            concept->result_type() != RESULT_TYPE::CONCEPT) {
+            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: incompatible parameters!" << std::endl;
+            exit(1);
+        }
+        m_result_type = RESULT_TYPE::CONCEPT;
     }
     virtual ~ExistentialAbstractionElement() = default;
 };

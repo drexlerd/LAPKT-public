@@ -6,9 +6,10 @@
 
 namespace aptk {
 
-/**
- * Abstract concepts and roles.
- */
+enum class RESULT_TYPE {
+    CONCEPT,
+    ROLE,
+};
 
 class BaseElement {
 protected:
@@ -20,6 +21,7 @@ protected:
     const State* m_state;
     // Preallocated memory to store evaluation result
     Bit_Set m_result;
+    RESULT_TYPE m_result_type;
 
 protected:
     void allocate_or_reset(unsigned size) {
@@ -59,27 +61,26 @@ public:
      * Getters
      */
     bool goal() const { return m_goal; }
+    RESULT_TYPE result_type() const { return m_result_type; }
     bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
     void set_initialized(const State* state) { m_state = state; }
 
     /**
      * Pretty printer.
      */
-    virtual void print_concept() const {
+    virtual void print() const {
         std::cout << "{ ";
-        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
-            if (m_result.isset(i)) {
-                std::cout << m_problem->object_index_to_object_name().at(i) << ", ";
+        if (m_result_type == RESULT_TYPE::CONCEPT) {
+            for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
+                if (m_result.isset(i)) {
+                    std::cout << m_problem->object_index_to_object_name().at(i) << ", ";
+                }
             }
-        }
-        std::cout << "}" << std::endl;
-    }
-
-    virtual void print_role() const {
-        std::cout << "{ ";
-        for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
-            if (m_result.isset(i)) {
-                std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";
+        } else if (m_result_type == RESULT_TYPE::ROLE) {
+            for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
+                if (m_result.isset(i)) {
+                    std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";
+                }
             }
         }
         std::cout << "}" << std::endl;
