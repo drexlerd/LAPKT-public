@@ -8,22 +8,13 @@ namespace aptk {
 N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name),
     m_unachieved_goal_atoms(
-        ElementFactory::make_setminus(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), true, "contains"),
-            ElementFactory::make_intersect(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role(sketch->problem(), true, "contains"),
-                ElementFactory::make_role(sketch->problem(), false, "contains"))
-            )) {
+        ElementFactory::get_custom("p")) {
 }
 
 void N_UnachievedGoalAtoms::evaluate(const State* state) {
     new_eval = m_unachieved_goal_atoms->evaluate(state).size();
-    // m_unachieved_goal_atoms->print_role();
-    std::cout << "unachieved goals: " << new_eval << std::endl;
+    //std::cout << m_name << ": ";
+    //m_unachieved_goal_atoms->print_role();
 }
 
 
@@ -41,7 +32,8 @@ N_IngredientsInShaker::N_IngredientsInShaker(const BaseSketch* sketch, const std
 
 void N_IngredientsInShaker::evaluate(const State* state) {
     new_eval = m_ingredients_in_shaker->evaluate(state).size();
-    // m_ingredients_in_shaker->print_concept();
+    //std::cout << m_name << ": ";
+    //m_ingredients_in_shaker->print_concept();
 }
 
 
@@ -54,138 +46,109 @@ N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
         ElementFactory::make_extraction(
             sketch->problem(),
             false,
-            ElementFactory::make_setminus(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role(sketch->problem(), true, "contains"),
-                ElementFactory::make_intersect(
-                    sketch->problem(),
-                    false,
-                    ElementFactory::make_role(sketch->problem(), true, "contains"),
-                    ElementFactory::make_role(sketch->problem(), false, "contains"))
-                ),
-            1),
+            ElementFactory::get_custom("p"),
+            0),
         ElementFactory::make_concept(sketch->problem(), false, "clean", 0))) {
 
 }
 
 void N_DirtyShots::evaluate(const State* state) {
     new_eval = m_dirty_shots->evaluate(state).size();
-    std::cout << "dirty_shots: " << new_eval << std::endl;
+    //std::cout << m_name << ": ";
+    //m_dirty_shots->print_concept();
 }
 
 N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name) {
-    BaseElement* c1 =
-    ElementFactory::make_universal_abstraction(
-        sketch->problem(),
-        false,
-        ElementFactory::make_role(sketch->problem(), false, "cocktail-part1"),
-        ElementFactory::make_existential_abstraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), false, "contains"),
-            ElementFactory::make_concept(sketch->problem(), false, "shaker-level", 0),
-            1,
-            0),
-        0,
-        1);
-    BaseElement* p =
-    ElementFactory::make_extraction(
-        sketch->problem(),
-        false,
-        ElementFactory::make_setminus(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), true, "contains"),
-            ElementFactory::make_intersect(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role(sketch->problem(), true, "contains"),
-                ElementFactory::make_role(sketch->problem(), false, "contains"))
-            ),
-        1);
     m_cocktails_consistent_with_part_1 =
     ElementFactory::make_intersect(
         sketch->problem(),
         false,
-        c1,
-        p);
+        ElementFactory::get_custom("c1"),
+        ElementFactory::make_extraction(
+            sketch->problem(),
+            false,
+            ElementFactory::get_custom("p"),
+            1));
 }
 
 void N_CocktailsConsistentWithPart1::evaluate(const State* state) {
     new_eval = m_cocktails_consistent_with_part_1->evaluate(state).size();
-    // m_cocktails_consistent_with_part_1->print_concept();
-    //std::cout << new_eval << std::endl;
+    //std::cout << m_name << ": ";
+    //m_cocktails_consistent_with_part_1->print_concept();
 }
 
 
 N_CocktailsConsistentWithPart2::N_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name) {
-    BaseElement* c1 =
-    ElementFactory::make_universal_abstraction(
-        sketch->problem(),
-        false,
-        ElementFactory::make_role(sketch->problem(), false, "cocktail-part1"),
-        ElementFactory::make_existential_abstraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), false, "contains"),
-            ElementFactory::make_concept(sketch->problem(), false, "shaker-level", 0),
-            1,
-            0),
-        0,
-        1);
-    BaseElement* c2 =
-    ElementFactory::make_universal_abstraction(
-        sketch->problem(),
-        false,
-        ElementFactory::make_role(sketch->problem(), false, "cocktail-part2"),
-        ElementFactory::make_existential_abstraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), false, "contains"),
-            ElementFactory::make_concept(sketch->problem(), false, "shaker-level", 0),
-            1,
-            0),
-        0,
-        1);
-    BaseElement* p =
-    ElementFactory::make_extraction(
-        sketch->problem(),
-        false,
-        ElementFactory::make_setminus(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), true, "contains"),
-            ElementFactory::make_intersect(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role(sketch->problem(), true, "contains"),
-                ElementFactory::make_role(sketch->problem(), false, "contains"))
-            ),
-        1);
     m_cocktails_consistent_with_part_2 =
     ElementFactory::make_intersect(
         sketch->problem(),
         false,
-        c1,
+        ElementFactory::get_custom("c1"),
         ElementFactory::make_intersect(
             sketch->problem(),
             false,
-            c2,
-            p));
+            ElementFactory::get_custom("c2"),
+            ElementFactory::make_extraction(
+                sketch->problem(),
+                false,
+                ElementFactory::get_custom("p"),
+                1)));
 }
 
 void N_CocktailsConsistentWithPart2::evaluate(const State* state) {
     new_eval = m_cocktails_consistent_with_part_2->evaluate(state).size();
-    // m_cocktails_consistent_with_part_2->print_concept();
-    // std::cout << new_eval << std::endl;
+    //std::cout << m_name << ": ";
+    //m_cocktails_consistent_with_part_2->print_concept();
 }
 
 
 BarmanSketch::BarmanSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
+    ElementFactory::add_custom(
+        "c1",
+        ElementFactory::make_universal_abstraction(
+            problem,
+            false,
+            ElementFactory::make_role(problem, false, "cocktail-part1"),
+            ElementFactory::make_existential_abstraction(
+                problem,
+                false,
+                ElementFactory::make_role(problem, false, "contains"),
+                ElementFactory::make_concept(problem, false, "shaker-level", 0),
+                1,
+                0),
+            0,
+            1));
+    ElementFactory::add_custom(
+        "c2",
+        ElementFactory::make_universal_abstraction(
+            problem,
+            false,
+            ElementFactory::make_role(problem, false, "cocktail-part2"),
+            ElementFactory::make_existential_abstraction(
+                problem,
+                false,
+                ElementFactory::make_role(problem, false, "contains"),
+                ElementFactory::make_concept(problem, false, "shaker-level", 0),
+                1,
+                0),
+            0,
+            1));
+    ElementFactory::add_custom(
+        "p",
+        ElementFactory::make_setminus(
+            problem,
+            false,
+            ElementFactory::make_role(problem, true, "contains"),
+            ElementFactory::make_intersect(
+                problem,
+                false,
+                ElementFactory::make_role(problem, true, "contains"),
+                ElementFactory::make_role(problem, false, "contains"))));
+
+
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
     add_numerical_feature(new N_IngredientsInShaker(this, "ingredients_in_shaker"));
     add_numerical_feature(new N_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));
@@ -216,9 +179,7 @@ BarmanSketch::BarmanSketch(
     ));
     add_rule(new Rule(this, "serve_cocktail",
         {},
-        { new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_1")),
-          new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_2")),
-          new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")) },
+        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")) },
         {},
         { new DecrementNumerical(get_numerical_feature("unachieved_goal_atoms")) }
     ));

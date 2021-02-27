@@ -15,6 +15,8 @@ public:
     virtual ~N_GlutenAllergicChildrenToBeServed() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 class N_RegularChildrenToBeServed : public NumericalFeature {
@@ -25,6 +27,8 @@ public:
     virtual ~N_RegularChildrenToBeServed() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 class B_GlutenFreeSandwichAtKitchen : public BooleanFeature {
@@ -35,6 +39,8 @@ public:
     virtual ~B_GlutenFreeSandwichAtKitchen() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 class B_RegularSandwichAtKitchen : public BooleanFeature {
@@ -45,6 +51,8 @@ public:
     virtual ~B_RegularSandwichAtKitchen() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 class B_GlutenFreeSandwichOnTray : public BooleanFeature {
@@ -55,6 +63,8 @@ public:
     virtual ~B_GlutenFreeSandwichOnTray() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 class B_RegularSandwichOnTray : public BooleanFeature {
@@ -65,6 +75,8 @@ public:
     virtual ~B_RegularSandwichOnTray() = default;
 
     virtual void evaluate(const State* state) override;
+
+    virtual void print() const override;
 };
 
 

@@ -67,6 +67,9 @@ public:
     static BaseElement* make_extraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position);
     static BaseElement* make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
     static BaseElement* make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
+
+    static BaseElement* add_custom(std::string name, BaseElement* custom);
+    static BaseElement* get_custom(std::string name);
 };
 
 }

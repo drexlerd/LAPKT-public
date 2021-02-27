@@ -27,6 +27,11 @@ public:
 
     const BaseSketch* sketch() const { return m_sketch; }
     const std::string& name() const { return m_name; }
+
+    /**
+     * Prett
+     */
+    virtual void print() const {}
 };
 
 
@@ -379,10 +384,10 @@ public:
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
             // print debug information
+            /*print_applied_rules();
             print_feature_evaluations();
             print_applicable_rules();
-            print_applied_rules();
-            state->print(std::cout);
+            state->print(std::cout);*/
             // (iii) return true to indicate SIW that a new subproblem was found
             return true;
         }
@@ -408,6 +413,7 @@ public:
         for (BooleanFeature* bf : m_boolean_features) {
             std::cout << "\t" << bf->name() << ": " << bf->get_new_eval() << "\n";
         }
+        std::cout << std::endl;
     }
 
     void print_applied_rules() const {
@@ -415,7 +421,7 @@ public:
         for (const Rule* rule : m_applied_rules) {
             std::cout << "\t" << rule->name() << "\n";
         }
-        std::cout << "\n";
+        std::cout << std::endl;
     }
 
     void print_applicable_rules() const {

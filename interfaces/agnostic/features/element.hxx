@@ -86,48 +86,6 @@ public:
     }
 };
 
-
-/**
- * Extract objects occuring at specific location in a role.
- */
-/*
-class ExtractConceptElement : public BaseConceptElement {
-protected:
-    BaseRoleElement* m_role;
-
-    void set_result(const Bit_Set &fluent_set) {
-        m_result = m_left->evaluate(state);
-        const ObjectsResult &right_result = m_right->evaluate(state);
-        for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
-            if (right_result.isset(i)) {
-                m_result.unset(i);
-            }
-        }
-    }
-
-public:
-    ExtractConceptElement(
-        const Sketch_STRIPS_Problem* problem, bool goal, BaseRoleElement* role)
-        : BaseConceptElement(problem, goal), m_role(role) {
-        m_result = Bit_Set(m_problem->num_objects());
-        if (this->goal()) {
-            // children must be goal initialized as well
-            assert(m_role->goal());
-            set_result(m_problem->goal_fluents_set());
-        }
-    }
-    virtual ~ExtractConceptElement() = default;
-
-    virtual const ObjectsResult& evaluate(const State* state) override {
-        if (is_uninitialized(state)) {
-            m_state = state;
-            set_result(m_role->evaluate(state));
-        }
-        return m_result;
-    }
-};
-*/
-
 }
 
 #endif

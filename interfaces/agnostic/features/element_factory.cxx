@@ -87,5 +87,22 @@ BaseElement* ElementFactory::make_universal_abstraction(const Sketch_STRIPS_Prob
     return m_universal_abstraction_cache.get(key);
 }
 
+BaseElement* ElementFactory::add_custom(std::string name, BaseElement* custom) {
+    if (m_custom_cache.exists(name)) {
+        std::cout << "ElementFactory::add_custom: key already exists!\n";
+        exit(1);
+    }
+    m_custom_cache.insert(name, std::move(custom));
+    return m_custom_cache.get(name);
+}
+
+BaseElement* ElementFactory::get_custom(std::string name) {
+    if (!m_custom_cache.exists(name)) {
+        std::cout << "ElementFactory::get_custom: key does not exists!\n";
+        exit(1);
+    }
+    return m_custom_cache.get(name);
+}
+
 
 } // namespace aptk
