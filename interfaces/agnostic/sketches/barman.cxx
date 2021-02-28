@@ -28,8 +28,8 @@ N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
             ElementFactory::make_concept(sketch->problem(), false, "clean", 0))) {
 }
 
-N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
+B_CocktailsConsistentWithPart1::B_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(
         sketch,
         name,
         ElementFactory::make_intersect(
@@ -43,8 +43,8 @@ N_CocktailsConsistentWithPart1::N_CocktailsConsistentWithPart1(const BaseSketch*
                 1))) {
 }
 
-N_CocktailsConsistentWithPart2::N_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
+B_CocktailsConsistentWithPart2::B_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
+    : BooleanFeature(
         sketch,
         name,
         ElementFactory::make_intersect(
@@ -108,29 +108,27 @@ BarmanSketch::BarmanSketch(
 
 
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
-    add_numerical_feature(new N_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));
-    add_numerical_feature(new N_CocktailsConsistentWithPart2(this, "cocktails_consistent_with_part_2"));
+    add_boolean_feature(new B_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));
+    add_boolean_feature(new B_CocktailsConsistentWithPart2(this, "cocktails_consistent_with_part_2"));
     add_numerical_feature(new N_DirtyShots(this, "dirty_shots"));
     add_rule(new Rule(this, "fill_first_ingredient",
-        {},
+        { new NegativeBoolean(get_boolean_feature("cocktails_consistent_with_part_1")), },
         { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")),
-          new ZeroNumerical(get_numerical_feature("cocktails_consistent_with_part_1")) },
-        { },
-        { new IncrementNumerical(get_numerical_feature("cocktails_consistent_with_part_1")) }
+          },
+        { new ChangedPositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_1")), },
+        { }
     ));
     add_rule(new Rule(this, "fill_second_ingredient",
-        {},
-        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")),
-          new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_1")),
-          new ZeroNumerical(get_numerical_feature("cocktails_consistent_with_part_2")) },
-        {},
-        { new IncrementNumerical(get_numerical_feature("cocktails_consistent_with_part_2")) }
+        { new PositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_1")),
+          new NegativeBoolean(get_boolean_feature("cocktails_consistent_with_part_2")) },
+        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")), },
+        { new ChangedPositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_2")), },
+        { }
     ));
     add_rule(new Rule(this, "clean_dirty_shots",
-        {},
-        { new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_1")),
-          new NonzeroNumerical(get_numerical_feature("cocktails_consistent_with_part_2")),
-          new NonzeroNumerical(get_numerical_feature("dirty_shots")) },
+        { new PositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_1")),
+          new PositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_2")), },
+        { new NonzeroNumerical(get_numerical_feature("dirty_shots")) },
         {},
         { new DecrementNumerical(get_numerical_feature("dirty_shots")) }
     ));

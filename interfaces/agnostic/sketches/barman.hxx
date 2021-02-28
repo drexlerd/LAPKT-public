@@ -18,16 +18,16 @@ public:
     virtual ~N_DirtyShots() = default;
 };
 
-class N_CocktailsConsistentWithPart1 : public NumericalFeature {
+class B_CocktailsConsistentWithPart1 : public BooleanFeature {
 public:
-    N_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_CocktailsConsistentWithPart1() = default;
+    B_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_CocktailsConsistentWithPart1() = default;
 };
 
-class N_CocktailsConsistentWithPart2 : public NumericalFeature {
+class B_CocktailsConsistentWithPart2 : public BooleanFeature {
 public:
-    N_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_CocktailsConsistentWithPart2() = default;
+    B_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_CocktailsConsistentWithPart2() = default;
 };
 
 class BarmanSketch : public BaseSketch {

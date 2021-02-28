@@ -98,6 +98,12 @@ namespace aptk
 		return p.m_init_fluents.size()-1;
 	}
 
+	unsigned Sketch_STRIPS_Problem::add_derived_fluent(std::string signature,
+		unsigned predicate_type, std::string predicate_name,
+		Index_Vec &&objs_idx, Name_Vec &&objs_names ) {
+        return this->add_other_fluent(*this, signature, predicate_type, predicate_name, std::move(objs_idx), std::move(objs_names));
+	}
+
 	void Sketch_STRIPS_Problem::print_init_fluents( std::ostream& os ) const {
 		for ( unsigned k = 0; k < init_fluents().size(); k++ ) {
 			os << k+1 << ". " << init_fluents().at(k)->signature() << std::endl;

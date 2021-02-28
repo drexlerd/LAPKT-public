@@ -24,6 +24,11 @@ protected:
     Bit_Set m_result;
     RESULT_TYPE m_result_type;
 
+    // TODO(dominik): in the future we want to allow precomputation
+    // of additional information to fluents such as
+    // numerical distance values.
+    // This is useful to derive features that use commutative arithmetic operations
+    // such as summation, maximization, minimization
 protected:
     void allocate_or_reset(unsigned size) {
         if (m_result.max_index() == 0) {

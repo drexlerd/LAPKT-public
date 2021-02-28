@@ -80,6 +80,10 @@ public:
 	static unsigned	add_other_fluent( Sketch_STRIPS_Problem& p, std::string signature,
 		unsigned predicate_type, std::string predicate_name,
 		Index_Vec &&objs_idx, Name_Vec &&objs_names );
+	// fluents that are derived from other fluents during sketch initialization
+	unsigned add_derived_fluent(std::string signature,
+		unsigned predicate_type, std::string predicate_name,
+		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 
     /**
 	 * Compute fluent sets for feature evaluation.
