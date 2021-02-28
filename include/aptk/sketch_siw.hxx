@@ -71,7 +71,9 @@ public:
         /**
 		 * Initialize the sketch for the task's initial state.
 		 */
-		this->m_sketch->initialize_first_subproblem( new State( this->problem().task() ) );
+		new_init_state = new State( this->problem().task() );
+		new_init_state->set( this->m_root->state()->fluent_vec() );
+		this->m_sketch->initialize_first_subproblem( new_init_state );
 
 		do{
 			if ( this->verbose() )

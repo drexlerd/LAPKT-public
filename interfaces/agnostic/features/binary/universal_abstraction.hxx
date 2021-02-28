@@ -56,6 +56,7 @@ public:
             std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: incompatible parameters!" << std::endl;
             exit(1);
         }
+        // TODO(dominik): must check that a and b are valid as well
         m_result_type = RESULT_TYPE::CONCEPT;
     }
     virtual ~UniversalAbstractionElement() = default;

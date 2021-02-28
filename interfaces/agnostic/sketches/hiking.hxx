@@ -9,11 +9,13 @@ public:
 };
 
 class N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal : public NumericalFeature {
+public:
     N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal(const BaseSketch* sketch, const std::string &name);
     virtual ~N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal() = default;
 };
 
 class N_CouplesNotAtGoalWithTentUpAtNextSubgoal : public NumericalFeature {
+public:
     N_CouplesNotAtGoalWithTentUpAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
     virtual ~N_CouplesNotAtGoalWithTentUpAtNextSubgoal() = default;
 };
