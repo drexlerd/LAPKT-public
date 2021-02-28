@@ -60,6 +60,10 @@ public:
         }
     }
     virtual ~CompositionElement() = default;
+
+    virtual Bit_Set& evaluate(const State* state) override {
+
+    }
 };
 
 }

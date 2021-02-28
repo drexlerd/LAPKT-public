@@ -5,6 +5,7 @@
 #include "binary/existential_abstraction.hxx"
 #include "binary/universal_abstraction.hxx"
 #include "unary/extraction.hxx"
+#include "derived/composition.hxx"
 #include "concept.hxx"
 #include "role.hxx"
 
@@ -21,6 +22,8 @@ ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> Element
 ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> ElementFactory::m_extraction_cache = ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
+ElementCache<std::tuple<bool, std::string, std::string>, BaseElement*> ElementFactory::m_composition_cache = ElementCache<std::tuple<bool, std::string, std::string>, BaseElement*>();
+
 ElementCache<std::string, BaseElement*> ElementFactory::m_custom_cache = ElementCache<std::string, BaseElement*>();
 
 // TODO: remove duplicate code, e.g. by creating unary, binary caches.
@@ -85,6 +88,15 @@ BaseElement* ElementFactory::make_universal_abstraction(const Sketch_STRIPS_Prob
         m_universal_abstraction_cache.insert(key, std::move(element));
     }
     return m_universal_abstraction_cache.get(key);
+}
+
+BaseElement* ElementFactory::make_composition(const Sketch_STRIPS_Problem* problem, bool goal, std::string left_predicate_name, std::string right_predicate_name) {
+    std::tuple<bool, std::string, std::string> key = std::tuple<bool, std::string, std::string>(goal, left_predicate_name, right_predicate_name);
+    if (!m_composition_cache.exists(key)) {
+        BaseElement* element = new CompositionElement(problem, goal, left_predicate_name, right_predicate_name);
+        m_composition_cache.insert(key, std::move(element));
+    }
+    return m_composition_cache.get(key);
 }
 
 BaseElement* ElementFactory::add_custom(std::string name, BaseElement* custom) {

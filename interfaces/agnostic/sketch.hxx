@@ -403,6 +403,11 @@ public:
         set_generated_state_information_as_init();
         // 3. recompute applicable rules for the generated state, and
         compute_applicable_rules_for_init();
+        // debug print
+        print_applied_rules();
+        print_feature_evaluations();
+        print_applicable_rules();
+        state->print(std::cout);
     }
 
     /**
@@ -422,10 +427,10 @@ public:
             // (ii) recompute applicable rules for the generated state, and
             compute_applicable_rules_for_init();
             // print debug information
-            /*print_applied_rules();
+            print_applied_rules();
             print_feature_evaluations();
             print_applicable_rules();
-            state->print(std::cout);*/
+            state->print(std::cout);
             // (iii) return true to indicate SIW that a new subproblem was found
             return true;
         }
