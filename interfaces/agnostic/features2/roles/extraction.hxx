@@ -37,6 +37,7 @@ public:
             }
         }
     }
+    virtual ~RoleExtractionElement() = default;
 };
 
 }

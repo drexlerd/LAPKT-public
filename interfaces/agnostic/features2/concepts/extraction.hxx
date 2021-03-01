@@ -1,22 +1,17 @@
-#ifndef __CONCEPT__
-#define __CONCEPT__
+#ifndef __CONCEPT_EXTRACTION__
+#define __CONCEPT_EXTRACTION__
 
-#include "element.hxx"
+#include "../concept.hxx"
 
 namespace aptk {
 
-using Concept = unsigned;
-using Concepts = std::vector<Concept>;
 
-/**
- * The underlying result represents a set of objects.
- */
-class ConceptElement : public BaseElement {
+class ConceptExtractionElement : public ConceptElement {
 protected:
     const unsigned m_predicate_type;
     const unsigned m_position;
 
-    void compute_result(const Bit_Set &fluent_set) {
+    void compute_result(const State* state) {
         m_result.reset();
         const std::vector<const Fluent*> fluents = m_problem->total_fluents();
         for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
@@ -36,6 +31,7 @@ public:
             compute_result(problem->goal_fluents_set());
         }
     }
+    virtual ~ConceptIntersectionElement() = default;
 
     virtual const Bit_Set& evaluate(const State* state) override {
         if (is_uninitialized(state)) {

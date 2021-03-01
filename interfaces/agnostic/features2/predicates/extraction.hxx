@@ -32,6 +32,7 @@ public:
             }
         }
     }
+    virtual ~PredicateExtractionElement() = default;
 };
 
 }

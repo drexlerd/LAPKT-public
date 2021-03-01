@@ -1,15 +1,12 @@
 #ifndef __ELEMENT__
 #define __ELEMENT__
 
-#include <aptk/bit_set.hxx>
 #include <sketch_strips_prob.hxx>
+#include <unordered_set>
+#include <vector>
+#include <algorithm>
 
 namespace aptk {
-
-enum class RESULT_TYPE {
-    OBJECT,
-    PREDICATE,
-};
 
 class BaseElement {
 protected:

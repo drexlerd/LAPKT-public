@@ -2,11 +2,18 @@
 #define __ROLE__
 
 #include "element.hxx"
+#include "boost/functional/hash.hpp"
 
 namespace aptk {
 
 using Role = std::pair<unsigned, unsigned>;
 using Roles = std::vector<Role>;
+struct RoleHash {
+    std::size_t operator()(const Role &role) const {
+        return boost::hash_value(role);
+    }
+};
+using Roles_Set = std::unordered_set<Role, RoleHash>;
 
 /**
  * The underlying result represents a set of predicates.
@@ -16,8 +23,8 @@ protected:
     Roles m_result;
 
 public:
-    RoleElement(const Sketch_STRIPS_Problem* problem, bool goal)
-    : BaseElement(problem, goal) { }
+    RoleElement(const Sketch_STRIPS_Problem* problem, bool goal) : BaseElement(problem, goal) { }
+    virtual ~RoleElement() = default;
 
     /**
      * A RoleElement returns a reference to Roles.

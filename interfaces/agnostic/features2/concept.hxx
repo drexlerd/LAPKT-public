@@ -7,6 +7,7 @@ namespace aptk {
 
 using Concept = unsigned;
 using Concepts = std::vector<Concept>;
+using Concepts_Set = std::unordered_set<Concept>;
 
 /**
  * The underlying result represents a set of objects.
@@ -16,9 +17,8 @@ protected:
     Concepts m_result;
 
 public:
-    ConceptElement(const Sketch_STRIPS_Problem* problem, bool goal)
-    : BaseElement(problem, goal) {
-    }
+    ConceptElement(const Sketch_STRIPS_Problem* problem, bool goal) : BaseElement(problem, goal) { }
+    virtual ~ConceptElement() = default;
 
     /**
      * A ConceptElement returns a reference to Concepts.

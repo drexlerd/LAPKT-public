@@ -7,6 +7,7 @@ namespace aptk {
 
 using Predicate = unsigned;
 using Predicates = std::vector<Predicate>;
+using Predicates_Set = std::unordered_set<Predicate>;
 
 /**
  * The underlying result represents all predicates of a certain type.
@@ -17,6 +18,7 @@ protected:
 
 public:
     PredicateElement(const Sketch_STRIPS_Problem* problem, bool goal) : BaseElement(problem, goal) { }
+    virtual ~PredicateElement() = default;
 
     /**
      * A RoleElement returns a reference to Predicates.
