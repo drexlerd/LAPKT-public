@@ -37,6 +37,10 @@ public:
         return m_result;
     }
 
+    virtual unsigned get_result_size(const State* state) override {
+        return evaluate(state).size();
+    }
+
     /**
      * Getters
      */

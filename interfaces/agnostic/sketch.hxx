@@ -73,7 +73,7 @@ public:
             std::cout << "BooleanFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
             exit(1);
         }
-        new_eval = (m_element->evaluate(state).size() > 0) ? true : false;
+        new_eval = (m_element->get_result_size(state) > 0) ? true : false;
     }
 
     virtual void backup_evaluation() const override {
@@ -108,7 +108,7 @@ public:
             std::cout << "NumericalFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
             exit(1);
         }
-        new_eval = m_element->evaluate(state).size();
+        new_eval = m_element->get_result_size(state);
     }
 
     virtual void backup_evaluation() const override {

@@ -18,6 +18,13 @@ protected:
     const State* m_state;
 
     /**
+     * Getters
+     */
+    bool goal() const { return m_goal; }
+    bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
+    void set_initialized(const State* state) { m_state = state; }
+
+    /**
      * Compute the result for the given state
      */
     virtual void compute_result(const State* state) = 0;
@@ -27,11 +34,9 @@ public:
     virtual ~BaseElement() = default;
 
     /**
-     * Getters
+     * Returns the number of elements in the result after evaluation.
      */
-    bool goal() const { return m_goal; }
-    bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
-    void set_initialized(const State* state) { m_state = state; }
+    virtual unsigned get_result_size(const State* state) = 0;
 
     /**
      * Pretty printer.
