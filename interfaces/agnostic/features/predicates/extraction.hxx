@@ -14,9 +14,13 @@ protected:
 
     virtual void compute_result(const State* state) override {
         m_result.clear();
-        for (unsigned p : state->fluent_vec()) {
-            if (m_problem->total_fluents()[p]->pddl_predicate_type() == m_predicate_type) {
-                m_result.push_back(p);
+        Fluent_Set state_fluents = m_problem->state_fluents_set(state);
+        for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
+            if (state_fluents.isset(i)) {
+                const Fluent* fluent = m_problem->total_fluents()[i];
+                if (fluent->pddl_predicate_type() == m_predicate_type) {
+                    m_result.push_back(fluent->index());
+                }
             }
         }
     }

@@ -73,7 +73,7 @@ BarmanSketch::BarmanSketch(
             ElementFactory::make_concept_existential_abstraction(
                 problem,
                 false,
-                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1),
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 1, 0),
                 ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0)
             )
         )
@@ -87,7 +87,7 @@ BarmanSketch::BarmanSketch(
             ElementFactory::make_concept_existential_abstraction(
                 problem,
                 false,
-                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1),
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 1, 0),
                 ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0))));
     ElementFactory::add_role_custom(
         "p",
