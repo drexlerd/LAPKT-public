@@ -9,11 +9,6 @@ namespace aptk {
  * The underlying result represents all predicates of a certain type.
  */
 class PredicateElement : public BaseElement {
-protected:
-    virtual bool assert_parameters() const override {
-        // nothing to be checked
-    }
-
 public:
     PredicateElement(const Sketch_STRIPS_Problem* problem, std::string predicate_name)
     : BaseElement(problem, true, RESULT_TYPE::PREDICATE) {

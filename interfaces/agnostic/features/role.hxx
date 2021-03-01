@@ -24,10 +24,6 @@ protected:
         }
     }
 
-    virtual bool assert_parameters() const override {
-        // nothing to be checked
-    }
-
 public:
     RoleElement(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name)
     : BaseElement(problem, goal, RESULT_TYPE::PREDICATE), m_predicate_type(problem->predicate_type(predicate_name)) {

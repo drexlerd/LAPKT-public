@@ -22,14 +22,6 @@ protected:
         m_result.reset();
     }
 
-    virtual bool assert_parameters() const override {
-        if (m_left->result_type() != RESULT_TYPE::PREDICATE &&
-            m_right->result_type() != RESULT_TYPE::PREDICATE) {
-            std::cout << "CompositionElement::CompositionElement: incompatible parameters!\n";
-            exit(1);
-        }
-    }
-
 public:
     CompositionElement(
         const Sketch_STRIPS_Problem* problem, bool goal,
@@ -38,6 +30,12 @@ public:
         : BinaryElement(problem, goal, left_role, right_role, RESULT_TYPE::PREDICATE),
         m_left_a(left_a), m_left_b(left_b),
         m_right_a(right_a), m_right_b(right_b) {
+        if (m_left->result_type() != RESULT_TYPE::PREDICATE ||
+            m_right->result_type() != RESULT_TYPE::PREDICATE ||
+            !m_left->goal() || !m_right->goal()) {
+            std::cout << "CompositionElement::CompositionElement: incompatible parameters!\n";
+            exit(1);
+        }
         // TODO(dominik):
         // 1. instantiate new fluents that are set to true in the result
         // for each composition of the predicates given with the role.

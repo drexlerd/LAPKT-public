@@ -28,19 +28,9 @@ protected:
     // numerical distance values.
     // This is useful to derive features that use commutative arithmetic operations
     // such as summation, maximization, minimization
-protected:
-
-    /**
-     * Check if parameters are in correct shape, e.g. predicate or objects.
-     */
-    virtual bool assert_parameters() const {
-        std::cout << "BaseElement::assert_parameters: not allowed to call abstract method!" << std::endl;
-    }
 
 public:
     BaseElement(const Sketch_STRIPS_Problem* problem, bool goal, RESULT_TYPE result_type) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(result_type) {
-        // perform parameter checking
-        assert_parameters();
         // allocate memory for result
         if (result_type == RESULT_TYPE::OBJECT) {
             m_result = Bit_Set(problem->num_objects());

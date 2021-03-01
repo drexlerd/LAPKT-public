@@ -12,18 +12,14 @@ protected:
         m_result.set_union(right_result);
     }
 
-    virtual bool assert_parameters() const override {
-        // nothing to be checked
-        if (m_left->result_type() != m_right->result_type()) {
-            std::cout << "UnionElement::UnionElement: incompatible parameters!" << std::endl;
-            exit(1);
-        }
-    }
-
 public:
     UnionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right)
         : BinaryElement(problem, goal, left, right, left->result_type()) {
+        if (m_left->result_type() != m_right->result_type()) {
+            std::cout << "UnionElement::UnionElement: incompatible parameters!" << std::endl;
+            exit(1);
+        }
     }
     virtual ~UnionElement() = default;
 };

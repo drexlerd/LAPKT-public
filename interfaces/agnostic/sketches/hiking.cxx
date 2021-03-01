@@ -10,21 +10,9 @@ N_CouplesNotAtGoalLocation::N_CouplesNotAtGoalLocation(
 
 }
 
-N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal::N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal(
+B_CouplesNotAtGoalWithTentUpAtNextSubgoal::B_CouplesNotAtGoalWithTentUpAtNextSubgoal(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
-        ElementFactory::make_universal_abstraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role(sketch->problem(), false, "at_tent"),
-            ElementFactory::make_concept(sketch->problem(), false, "up", 0),
-            1,
-            0)) {
-}
-
-N_CouplesNotAtGoalWithTentUpAtNextSubgoal::N_CouplesNotAtGoalWithTentUpAtNextSubgoal(
-    const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : BooleanFeature(sketch, name,
         ElementFactory::get_custom("p")) {
 }
 
@@ -42,7 +30,7 @@ HikingSketch::HikingSketch(
         0));
 
     add_numerical_feature(new N_CouplesNotAtGoalLocation(this, "couples_not_at_goal_location"));
-    add_numerical_feature(new N_CouplesNotAtGoalWithTentUpAtPreviousSubgoal(this, "couples_with_tent_up_at_previous_subgoal"));
+    add_boolean_feature(new B_CouplesNotAtGoalWithTentUpAtNextSubgoal(this, "couple_with_tent_up_at_next_subgoal"));
     add_rule(new Rule(this, "move_couples_towards_target",
         {},
         { new NonzeroNumerical(get_numerical_feature("couples_not_at_goal_location")) },

@@ -25,17 +25,14 @@ protected:
         }
     }
 
-    virtual bool assert_parameters() const override {
-        if (m_element->result_type() != RESULT_TYPE::PREDICATE) {
-            std::cout << "ExtractionElement::ExtractionElement: incompatible parameters!" << std::endl;
-            exit(1);
-        }
-    }
-
 public:
     ExtractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position)
         : UnaryElement(problem, goal, role, RESULT_TYPE::OBJECT), m_position(position) {
+        if (m_element->result_type() != RESULT_TYPE::PREDICATE) {
+            std::cout << "ExtractionElement::ExtractionElement: incompatible parameters!" << std::endl;
+            exit(1);
+        }
     }
     virtual ~ExtractionElement() = default;
 };

@@ -25,14 +25,6 @@ protected:
         }
     }
 
-    virtual bool assert_parameters() const override {
-        // sanity check
-        if (m_left->result_type() != RESULT_TYPE::PREDICATE &&
-            m_right->result_type() != RESULT_TYPE::OBJECT) {
-            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: Expecting predicates as input!\n";
-            exit(1);
-        }
-    }
 
 public:
     ExistentialAbstractionElement(
@@ -40,6 +32,11 @@ public:
         unsigned a, unsigned b)
         : BinaryElement(problem, goal, role, concept, RESULT_TYPE::OBJECT),
         m_a(a), m_b(b) {
+        if (m_left->result_type() != RESULT_TYPE::PREDICATE ||
+            m_right->result_type() != RESULT_TYPE::OBJECT) {
+            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: Expecting predicates as input!\n";
+            exit(1);
+        }
     }
     virtual ~ExistentialAbstractionElement() = default;
 };
