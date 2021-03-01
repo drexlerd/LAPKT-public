@@ -21,20 +21,22 @@ protected:
     virtual void compute_result(const Bit_Set &left_result, const Bit_Set &right_result) override {
     }
 
+    virtual bool assert_parameters() const override {
+        if (m_left->result_type() != RESULT_TYPE::PREDICATE &&
+            m_right->result_type() != RESULT_TYPE::PREDICATE) {
+            std::cout << "CompositionElement::CompositionElement: incompatible parameters!\n";
+            exit(1);
+        }
+    }
+
 public:
     CompositionElement(
         const Sketch_STRIPS_Problem* problem, bool goal,
         BaseElement* left_role, unsigned left_a, unsigned left_b,
         BaseElement* right_role, unsigned right_a, unsigned right_b)
-        : BinaryElement(problem, goal, left_role, right_role),
+        : BinaryElement(problem, goal, left_role, right_role, RESULT_TYPE::PREDICATE),
         m_left_a(left_a), m_left_b(left_b),
         m_right_a(right_a), m_right_b(right_b) {
-        if (left_role->result_type() != RESULT_TYPE::PREDICATE &&
-            right_role->result_type() != RESULT_TYPE::PREDICATE) {
-            std::cout << "CompositionElement::CompositionElement: Expecting predicates as input!\n";
-            exit(1);
-        }
-        m_result_type = RESULT_TYPE::PREDICATE;
         // TODO(dominik):
         // 1. instantiate new fluents that are set to true in the result
         // for each composition of the predicates given with the role.

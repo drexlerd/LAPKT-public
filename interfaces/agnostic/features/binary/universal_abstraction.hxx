@@ -14,9 +14,6 @@ protected:
     int m_b;
 
     virtual void compute_result(const Bit_Set& role, const Bit_Set& concept) override {
-        // sanity check
-        assert_role(role, "UniversalAbstractionElement:");
-        assert_concept(concept, "UniversalAbstractionElement:");
         // allocate memory
         allocate_or_reset(m_problem->num_objects());
         // 1. perform existential abstraction to find elements for which some relation to b exists.
@@ -44,20 +41,21 @@ protected:
         }
     }
 
+    virtual bool assert_parameters() const override {
+        // sanity check
+        if (m_left->result_type() != RESULT_TYPE::PREDICATE &&
+            m_right->result_type() != RESULT_TYPE::OBJECT) {
+            std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: Expecting predicates as input!\n";
+            exit(1);
+        }
+    }
+
 public:
     UniversalAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept,
         unsigned a, unsigned b)
-        : BinaryElement(problem, goal, role, concept),
+        : BinaryElement(problem, goal, role, concept, RESULT_TYPE::OBJECT),
         m_a(a), m_b(b) {
-        // sanity check
-        if (role->result_type() != RESULT_TYPE::PREDICATE ||
-            concept->result_type() != RESULT_TYPE::OBJECT) {
-            std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: incompatible parameters!" << std::endl;
-            exit(1);
-        }
-        // TODO(dominik): must check that a and b are valid as well
-        m_result_type = RESULT_TYPE::OBJECT;
     }
     virtual ~UniversalAbstractionElement() = default;
 };

@@ -14,14 +14,14 @@ protected:
      * Evaluate.
      */
     virtual void compute_result(const Bit_Set& left_result, const Bit_Set& right_result) {
-        std::cout << "BinaryElement::compute_result: not allowed to call abstract method" << std::endl;
+        std::cout << "BinaryElement::compute_result: not allowed to call abstract method!" << std::endl;
         exit(1);
     }
 
 public:
     BinaryElement(const Sketch_STRIPS_Problem* problem, bool goal,
-    BaseElement* left, BaseElement* right)
-    : BaseElement(problem, goal), m_left(left), m_right(right) {
+    BaseElement* left, BaseElement* right, RESULT_TYPE result_type)
+    : BaseElement(problem, goal, result_type), m_left(left), m_right(right) {
         // Initialize results depending on goal.
         if (goal) {
             if (!left->goal() || !right->goal()) {

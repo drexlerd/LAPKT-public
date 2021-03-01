@@ -25,16 +25,17 @@ protected:
         }
     }
 
-public:
-    ExtractionElement(
-        const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position)
-        : UnaryElement(problem, goal, role), m_position(position) {
-        // sanity check
-        if (role->result_type() != RESULT_TYPE::PREDICATE) {
+    virtual bool assert_parameters() const override {
+        if (m_element->result_type() != RESULT_TYPE::PREDICATE) {
             std::cout << "ExtractionElement::ExtractionElement: incompatible parameters!" << std::endl;
             exit(1);
         }
-        m_result_type = RESULT_TYPE::OBJECT;
+    }
+
+public:
+    ExtractionElement(
+        const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position)
+        : UnaryElement(problem, goal, role, RESULT_TYPE::OBJECT), m_position(position) {
     }
     virtual ~ExtractionElement() = default;
 };

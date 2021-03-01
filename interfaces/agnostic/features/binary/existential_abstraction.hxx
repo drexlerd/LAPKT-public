@@ -14,8 +14,6 @@ protected:
     int m_b;
 
     virtual void compute_result(const Bit_Set& role, const Bit_Set& concept) override {
-        assert_role(role, "ExistentialAbstractionElement:");
-        assert_concept(concept, "ExistentialAbstractionElement:");
         allocate_or_reset(m_problem->num_objects());
         for (int i = 0; i < m_problem->num_total_fluents(); ++i) {
             const Fluent* fluent = m_problem->total_fluents()[i];
@@ -27,19 +25,21 @@ protected:
         }
     }
 
+    virtual bool assert_parameters() const override {
+        // sanity check
+        if (m_left->result_type() != RESULT_TYPE::PREDICATE &&
+            m_right->result_type() != RESULT_TYPE::OBJECT) {
+            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: Expecting predicates as input!\n";
+            exit(1);
+        }
+    }
+
 public:
     ExistentialAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept,
         unsigned a, unsigned b)
-        : BinaryElement(problem, goal, role, concept),
+        : BinaryElement(problem, goal, role, concept, RESULT_TYPE::OBJECT),
         m_a(a), m_b(b) {
-        // sanity check
-        if (role->result_type() != RESULT_TYPE::PREDICATE ||
-            concept->result_type() != RESULT_TYPE::OBJECT) {
-            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: incompatible parameters!" << std::endl;
-            exit(1);
-        }
-        m_result_type = RESULT_TYPE::OBJECT;
     }
     virtual ~ExistentialAbstractionElement() = default;
 };

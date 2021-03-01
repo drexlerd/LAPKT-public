@@ -19,8 +19,8 @@ protected:
 
 public:
     UnaryElement(const Sketch_STRIPS_Problem* problem, bool goal,
-    BaseElement* element)
-    : BaseElement(problem, goal), m_element(element) {
+    BaseElement* element, RESULT_TYPE result_type)
+    : BaseElement(problem, goal, result_type), m_element(element) {
         // Initialize results depending on goal.
         if (goal) {
             if (!element->goal()) {

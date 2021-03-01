@@ -5,11 +5,12 @@
 #include "binary/existential_abstraction.hxx"
 #include "binary/universal_abstraction.hxx"
 #include "binary/composition.hxx"
-#include "binary/role_value_map.hxx"
+#include "binary/role_map.hxx"
 #include "unary/extraction.hxx"
 #include "unary/transitive_closure.hxx"
 #include "concept.hxx"
 #include "role.hxx"
+#include "predicate.hxx"
 
 namespace aptk
 {
@@ -19,12 +20,15 @@ namespace aptk
  */
 ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*> ElementFactory::m_concept_cache = ElementCache<std::tuple<bool, std::string, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, std::string>, BaseElement*> ElementFactory::m_role_cache = ElementCache<std::tuple<bool, std::string>, BaseElement*>();
+ElementCache<std::tuple<std::string>, BaseElement*> ElementFactory::m_predicate_cache = ElementCache<std::tuple<std::string>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_intersect_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> ElementFactory::m_setminus_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> ElementFactory::m_extraction_cache = ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*> ElementFactory::m_composition_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*> ElementFactory::m_role_map_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*>();
+
 
 ElementCache<std::string, BaseElement*> ElementFactory::m_custom_cache = ElementCache<std::string, BaseElement*>();
 
@@ -45,6 +49,15 @@ BaseElement* ElementFactory::make_role(const Sketch_STRIPS_Problem* problem, boo
         m_role_cache.insert(key, std::move(concept));
     }
     return m_role_cache.get(key);
+}
+
+BaseElement* ElementFactory::make_predicate(const Sketch_STRIPS_Problem* problem, std::string predicate_name) {
+    std::tuple<std::string> key = std::tuple<std::string>(predicate_name);
+    if (!m_predicate_cache.exists(key)) {
+        BaseElement* concept = new PredicateElement(problem, predicate_name);
+        m_predicate_cache.insert(key, std::move(concept));
+    }
+    return m_predicate_cache.get(key);
 }
 
 BaseElement* ElementFactory::make_intersect(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* left, BaseElement* right) {
@@ -102,6 +115,19 @@ BaseElement* ElementFactory::make_composition(
         m_composition_cache.insert(key, std::move(element));
     }
     return m_composition_cache.get(key);
+}
+
+
+BaseElement* ElementFactory::make_role_map(
+    const Sketch_STRIPS_Problem* problem, bool goal,
+    BaseElement* left, unsigned left_a, unsigned left_b,
+    BaseElement* right, unsigned right_a, unsigned right_b) {
+    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>(goal, left, right, left_a, left_b, right_a, right_b);
+    if (!m_role_map_cache.exists(key)) {
+        BaseElement* element = new RoleMapElement(problem, goal, left, left_a, left_b, right, right_a, right_b);
+        m_role_map_cache.insert(key, std::move(element));
+    }
+    return m_role_map_cache.get(key);
 }
 
 BaseElement* ElementFactory::add_custom(std::string name, BaseElement* custom) {

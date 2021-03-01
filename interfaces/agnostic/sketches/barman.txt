@@ -1,0 +1,59 @@
+optimal plan barman with 1 cocktail
+
+grasp left shot10 (1)
+
+fill-shot shot10 ingredient3 left right dispenser3 (10)
+pour-shot-to-clean-shaker shot10 ingredient3 shaker1 left l0 l1 (1)
+clean-shot shot10 ingredient3 left right (1)
+fill-shot shot10 ingredient4 left right dispenser4 (10)
+grasp right shaker1 (1)
+pour-shot-to-used-shaker shot10 ingredient4 shaker1 left l1 l2 (1)
+leave left shot10 (1)
+shake cocktail1 ingredient3 ingredient4 shaker1 right left (1)
+pour-shaker-to-shot cocktail1 shot1 right shaker1 l2 l1 (1)
+
+suboptimal
+
+1. (grasp left shot1)
+2. (fill-shot shot1 ingredient1 left right dispenser1)
+3. (pour-shot-to-clean-shaker shot1 ingredient1 shaker1 left l0 l1)
+4. (clean-shot shot1 ingredient1 left right)
+5. (fill-shot shot1 ingredient2 left right dispenser2)
+6. (pour-shot-to-used-shaker shot1 ingredient2 shaker1 left l1 l2)
+
+7. (leave left shot1)
+8. (grasp left shaker1)
+9. (shake cocktail2 ingredient1 ingredient2 shaker1 left right)
+10. (pour-shaker-to-shot cocktail2 shot2 left shaker1 l2 l1)
+11. (empty-shaker left shaker1 cocktail2 l1 l0)
+12. (clean-shaker left right shaker1)
+13. (leave left shaker1)
+14. (grasp left shot1)
+15. (clean-shot shot1 ingredient2 left right)
+16. (fill-shot shot1 ingredient1 left right dispenser1)
+17. (pour-shot-to-clean-shaker shot1 ingredient1 shaker1 left l0 l1)
+18. (clean-shot shot1 ingredient1 left right)
+19. (fill-shot shot1 ingredient2 left right dispenser2)
+20. (pour-shot-to-used-shaker shot1 ingredient2 shaker1 left l1 l2)
+21. (clean-shot shot1 ingredient2 left right)
+22. (leave left shot1)
+23. (grasp left shaker1)
+24. (shake cocktail1 ingredient1 ingredient2 shaker1 left right)
+25. (pour-shaker-to-shot cocktail1 shot1 left shaker1 l2 l1)
+
+
+(:state
+clean_shot10 clean_shot3 clean_shot4
+empty_shot10 empty_shot3 empty_shot4
+ontable_shot10 ontable_shot2 ontable_shot3 ontable_shot4 ontable_shot5 ontable_shot6 ontable_shot7 ontable_shot8
+used_shot1_ingredient2
+empty_shot1
+ontable_shot1
+contains_shot8_cocktail6 contains_shot2_cocktail2 contains_shot5_cocktail3 contains_shot6_cocktail5 contains_shot7_cocktail1
+holding_right_shot9
+contains_shaker1_ingredient3 contains_shaker1_ingredient4
+unshaked_shaker1
+handempty_left
+ontable_shaker1
+shaker-level_shaker1_l2
+contains_shot9_ingredient3 used_shot9_ingredient3 )

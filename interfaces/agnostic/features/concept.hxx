@@ -25,11 +25,14 @@ protected:
         }
     }
 
+    virtual bool assert_parameters() const override {
+        // nothing to be checked
+    }
+
 public:
     ConceptElement(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name, unsigned position)
-    : BaseElement(problem, goal), m_predicate_type(problem->predicate_type(predicate_name)), m_position(position) {
+    : BaseElement(problem, goal, RESULT_TYPE::OBJECT), m_predicate_type(problem->predicate_type(predicate_name)), m_position(position) {
         m_result = Bit_Set(problem->num_objects());
-        m_result_type = RESULT_TYPE::OBJECT;
         if (goal) {
             compute_result(problem->goal_fluents_set());
         }

@@ -38,24 +38,18 @@ protected:
         }
     }
 
-    void assert_concept(const Bit_Set &concept, const std::string &error) const {
-        // sanity check
-        if (concept.max_index() != m_problem->num_objects() + 1) {
-            std::cout << error << " failed concept assertion! max_index=" << concept.max_index() << " != objects=" << m_problem->num_objects() << " + 1\n";
-            exit(1);
-        }
-    }
-
-    void assert_role(const Bit_Set &role, const std::string &error) const {
-        // sanity check
-        if (role.max_index() != m_problem->num_total_fluents() + 1) {
-            std::cout << error << " failed role assertion! max_index=" << role.max_index() << " != predicates=" << m_problem->num_total_fluents() << " + 1\n";
-            exit(1);
-        }
+    /**
+     * Check if parameters are in correct shape, e.g. predicate or objects.
+     */
+    virtual bool assert_parameters() const {
+        std::cout << "BaseElement::assert_parameters: not allowed to call abstract method!" << std::endl;
     }
 
 public:
-    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(RESULT_TYPE::NONE) {}
+    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal, RESULT_TYPE result_type) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(result_type) {
+        // perform parameter checking
+        assert_parameters();
+    }
     virtual ~BaseElement() = default;
     /**
      * Evaluate the Element for a given state and return a reference to the result.
