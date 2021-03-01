@@ -7,8 +7,8 @@
 namespace aptk {
 
 enum class RESULT_TYPE {
-    CONCEPT,
-    ROLE,
+    OBJECT,
+    PREDICATE,
     NONE,
 };
 
@@ -76,13 +76,13 @@ public:
      */
     virtual void print() const {
         std::cout << "{ ";
-        if (m_result_type == RESULT_TYPE::CONCEPT) {
+        if (m_result_type == RESULT_TYPE::OBJECT) {
             for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
                 if (m_result.isset(i)) {
                     std::cout << m_problem->object_index_to_object_name().at(i) << ", ";
                 }
             }
-        } else if (m_result_type == RESULT_TYPE::ROLE) {
+        } else if (m_result_type == RESULT_TYPE::PREDICATE) {
             for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
                 if (m_result.isset(i)) {
                     std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";

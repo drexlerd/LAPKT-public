@@ -4,8 +4,10 @@
 #include "binary/union.hxx"
 #include "binary/existential_abstraction.hxx"
 #include "binary/universal_abstraction.hxx"
+#include "binary/composition.hxx"
+#include "binary/role_value_map.hxx"
 #include "unary/extraction.hxx"
-#include "derived/composition.hxx"
+#include "unary/transitive_closure.hxx"
 #include "concept.hxx"
 #include "role.hxx"
 
@@ -22,7 +24,7 @@ ElementCache<std::tuple<bool, BaseElement*, BaseElement*>, BaseElement*> Element
 ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> ElementFactory::m_extraction_cache = ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_existential_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
 ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> ElementFactory::m_universal_abstraction_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*>();
-ElementCache<std::tuple<bool, std::string, std::string>, BaseElement*> ElementFactory::m_composition_cache = ElementCache<std::tuple<bool, std::string, std::string>, BaseElement*>();
+ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*> ElementFactory::m_composition_cache = ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*>();
 
 ElementCache<std::string, BaseElement*> ElementFactory::m_custom_cache = ElementCache<std::string, BaseElement*>();
 
@@ -90,10 +92,13 @@ BaseElement* ElementFactory::make_universal_abstraction(const Sketch_STRIPS_Prob
     return m_universal_abstraction_cache.get(key);
 }
 
-BaseElement* ElementFactory::make_composition(const Sketch_STRIPS_Problem* problem, bool goal, std::string left_predicate_name, std::string right_predicate_name) {
-    std::tuple<bool, std::string, std::string> key = std::tuple<bool, std::string, std::string>(goal, left_predicate_name, right_predicate_name);
+BaseElement* ElementFactory::make_composition(
+    const Sketch_STRIPS_Problem* problem, bool goal,
+    BaseElement* left, unsigned left_a, unsigned left_b,
+    BaseElement* right, unsigned right_a, unsigned right_b) {
+    std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned> key = std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>(goal, left, right, left_a, left_b, right_a, right_b);
     if (!m_composition_cache.exists(key)) {
-        BaseElement* element = new CompositionElement(problem, goal, left_predicate_name, right_predicate_name);
+        BaseElement* element = new CompositionElement(problem, goal, left, left_a, left_b, right, right_a, right_b);
         m_composition_cache.insert(key, std::move(element));
     }
     return m_composition_cache.get(key);

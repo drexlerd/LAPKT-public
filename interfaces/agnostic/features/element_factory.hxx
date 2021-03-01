@@ -54,8 +54,8 @@ private:
     static ElementCache<std::tuple<bool, BaseElement*, unsigned>, BaseElement*> m_extraction_cache;
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_existential_abstraction_cache;
     static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned>, BaseElement*> m_universal_abstraction_cache;
-    static ElementCache<std::tuple<bool, std::string, std::string>, BaseElement*> m_composition_cache;
-
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*> m_composition_cache;
+    static ElementCache<std::tuple<bool, BaseElement*, BaseElement*, unsigned, unsigned, unsigned, unsigned>, BaseElement*> m_role_value_map_cache;
 
     static ElementCache<std::string, BaseElement*> m_custom_cache;
 public:
@@ -69,7 +69,9 @@ public:
     static BaseElement* make_extraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position);
     static BaseElement* make_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
     static BaseElement* make_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, BaseElement* concept, unsigned a, unsigned b);
-    static BaseElement* make_composition(const Sketch_STRIPS_Problem* problem, bool goal, std::string left_predicate_name, std::string right_predicate_name);
+    static BaseElement* make_composition(const Sketch_STRIPS_Problem* problem, bool goal,
+        BaseElement* left, unsigned left_a, unsigned left_b,
+        BaseElement* right, unsigned right_a, unsigned right_b);
 
     static BaseElement* add_custom(std::string name, BaseElement* custom);
     static BaseElement* get_custom(std::string name);

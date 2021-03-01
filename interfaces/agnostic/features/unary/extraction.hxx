@@ -30,11 +30,11 @@ public:
         const Sketch_STRIPS_Problem* problem, bool goal, BaseElement* role, unsigned position)
         : UnaryElement(problem, goal, role), m_position(position) {
         // sanity check
-        if (role->result_type() != RESULT_TYPE::ROLE) {
+        if (role->result_type() != RESULT_TYPE::PREDICATE) {
             std::cout << "ExtractionElement::ExtractionElement: incompatible parameters!" << std::endl;
             exit(1);
         }
-        m_result_type = RESULT_TYPE::CONCEPT;
+        m_result_type = RESULT_TYPE::OBJECT;
     }
     virtual ~ExtractionElement() = default;
 };

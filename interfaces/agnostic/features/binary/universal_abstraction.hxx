@@ -51,13 +51,13 @@ public:
         : BinaryElement(problem, goal, role, concept),
         m_a(a), m_b(b) {
         // sanity check
-        if (role->result_type() != RESULT_TYPE::ROLE ||
-            concept->result_type() != RESULT_TYPE::CONCEPT) {
+        if (role->result_type() != RESULT_TYPE::PREDICATE ||
+            concept->result_type() != RESULT_TYPE::OBJECT) {
             std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: incompatible parameters!" << std::endl;
             exit(1);
         }
         // TODO(dominik): must check that a and b are valid as well
-        m_result_type = RESULT_TYPE::CONCEPT;
+        m_result_type = RESULT_TYPE::OBJECT;
     }
     virtual ~UniversalAbstractionElement() = default;
 };

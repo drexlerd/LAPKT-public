@@ -410,6 +410,7 @@ public:
         state->print(std::cout);
     }
 
+
     /**
      * Try entering a new subproblem for a given state.
      * Returns true if the given state defines the initial state
