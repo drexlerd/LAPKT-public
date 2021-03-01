@@ -2,42 +2,47 @@
 #define __ROLE__
 
 #include "element.hxx"
+#include "boost/functional/hash.hpp"
 
 namespace aptk {
+
+using Role = std::pair<unsigned, unsigned>;
+using Roles = std::vector<Role>;
+struct RoleHash {
+    std::size_t operator()(const Role &role) const {
+        return boost::hash_value(role);
+    }
+};
+using Roles_Set = std::unordered_set<Role, RoleHash>;
 
 /**
  * The underlying result represents a set of predicates.
  */
 class RoleElement : public BaseElement {
 protected:
-    const unsigned m_predicate_type;
-
-    void compute_result(const Bit_Set &fluent_set) {
-        m_result.reset();
-        const std::vector<const Fluent*> fluents = m_problem->total_fluents();
-        for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
-            if (!fluent_set.isset(i)) continue;
-            const Fluent* fluent = fluents[i];
-            if (fluent->pddl_predicate_type() == m_predicate_type) {
-                m_result.set(i);
-            }
-        }
-    }
+    Roles m_result;
 
 public:
-    RoleElement(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name)
-    : BaseElement(problem, goal, RESULT_TYPE::PREDICATE), m_predicate_type(problem->predicate_type(predicate_name)) {
-        if (this->goal()) {
-            compute_result(m_problem->goal_fluents_set());
-        }
-    }
+    RoleElement(const Sketch_STRIPS_Problem* problem, bool goal) : BaseElement(problem, goal) { }
+    virtual ~RoleElement() = default;
 
-    const Bit_Set& evaluate(const State* state) override {
+    /**
+     * A RoleElement returns a reference to Roles.
+     */
+    virtual const Roles& evaluate(const State* state) {
         if (is_uninitialized(state)) {
-            m_state = state;
-            compute_result(m_problem->state_fluents_set(state));
+            set_initialized(state);
+            compute_result(state);
         }
         return m_result;
+    }
+
+    /**
+     * Getters
+     */
+    const Roles& result() const { return m_result; }
+
+    virtual void print() const override {
     }
 };
 

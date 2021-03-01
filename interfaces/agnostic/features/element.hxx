@@ -1,15 +1,12 @@
 #ifndef __ELEMENT__
 #define __ELEMENT__
 
-#include <aptk/bit_set.hxx>
 #include <sketch_strips_prob.hxx>
+#include <unordered_set>
+#include <vector>
+#include <algorithm>
 
 namespace aptk {
-
-enum class RESULT_TYPE {
-    OBJECT,
-    PREDICATE,
-};
 
 class BaseElement {
 protected:
@@ -19,63 +16,27 @@ protected:
     bool m_goal;
     // Reference to state used during evaluation.
     const State* m_state;
-    // Preallocated memory to store evaluation result
-    Bit_Set m_result;
-    RESULT_TYPE m_result_type;
 
-    // TODO(dominik): in the future we want to allow precomputation
-    // of additional information to fluents such as
-    // numerical distance values.
-    // This is useful to derive features that use commutative arithmetic operations
-    // such as summation, maximization, minimization
+    /**
+     * Compute the result for the given state
+     */
+    virtual void compute_result(const State* state) = 0;
 
 public:
-    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal, RESULT_TYPE result_type) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(result_type) {
-        // allocate memory for result
-        if (result_type == RESULT_TYPE::OBJECT) {
-            m_result = Bit_Set(problem->num_objects());
-        } else if (result_type == RESULT_TYPE::PREDICATE) {
-            m_result = Bit_Set(problem->num_total_fluents());
-        } else {
-            std::cout << "BaseElement::BaseElement: unknown result type!" << std::endl;
-            exit(1);
-        }
-    }
+    BaseElement(const Sketch_STRIPS_Problem* problem, bool goal) : m_problem(problem), m_goal(goal), m_state(nullptr) { }
     virtual ~BaseElement() = default;
-    /**
-     * Evaluate the Element for a given state and return a reference to the result.
-     * The resulting Bit_Set can either represent objects or predicates.
-     */
-    virtual const Bit_Set& evaluate(const State* state=nullptr) = 0;
 
     /**
      * Getters
      */
     bool goal() const { return m_goal; }
-    RESULT_TYPE result_type() const { return m_result_type; }
     bool is_uninitialized(const State* state) const { return (!m_goal && m_state != state); }
     void set_initialized(const State* state) { m_state = state; }
 
     /**
      * Pretty printer.
      */
-    virtual void print() const {
-        std::cout << "{ ";
-        if (m_result_type == RESULT_TYPE::OBJECT) {
-            for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
-                if (m_result.isset(i)) {
-                    std::cout << m_problem->object_index_to_object_name().at(i) << ", ";
-                }
-            }
-        } else if (m_result_type == RESULT_TYPE::PREDICATE) {
-            for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
-                if (m_result.isset(i)) {
-                    std::cout << m_problem->predicate_index_to_predicate_signature().at(i) << ", ";
-                }
-            }
-        }
-        std::cout << "}" << std::endl;
-    }
+    virtual void print() const = 0;
 };
 
 }

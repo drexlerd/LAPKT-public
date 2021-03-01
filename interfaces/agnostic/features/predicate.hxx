@@ -5,26 +5,38 @@
 
 namespace aptk {
 
+using Predicate = unsigned;
+using Predicates = std::vector<Predicate>;
+using Predicates_Set = std::unordered_set<Predicate>;
+
 /**
  * The underlying result represents all predicates of a certain type.
  */
 class PredicateElement : public BaseElement {
 protected:
-    const unsigned m_predicate_type;
+    Predicates m_result;
 
 public:
-    PredicateElement(const Sketch_STRIPS_Problem* problem, std::string predicate_name)
-    : BaseElement(problem, true, RESULT_TYPE::PREDICATE), m_predicate_type(problem->predicate_type(predicate_name)) {
-        m_result = Bit_Set(m_problem->num_total_fluents());
-        for (const Fluent* fluent : m_problem->total_fluents()) {
-            if (fluent->pddl_predicate_type() == m_predicate_type) {
-                m_result.set(fluent->index());
-            }
+    PredicateElement(const Sketch_STRIPS_Problem* problem, bool goal) : BaseElement(problem, goal) { }
+    virtual ~PredicateElement() = default;
+
+    /**
+     * A RoleElement returns a reference to Predicates.
+     */
+    const Predicates& evaluate(const State* state) {
+        if (is_uninitialized(state)) {
+            set_initialized(state);
+            compute_result(state);
         }
+        return m_result;
     }
 
-    const Bit_Set& evaluate(const State* state) override {
-        return m_result;
+    /**
+     * Getters
+     */
+    const Predicates& result() const { return m_result; }
+
+    virtual void print() const override {
     }
 };
 
