@@ -91,15 +91,20 @@ BarmanSketch::BarmanSketch(
                 ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0))));
     ElementFactory::add_role_custom(
         "p",
-        ElementFactory::make_role_setminus(
+        ElementFactory::make_role_extraction(
             problem,
             false,
-            ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "contains"), 0, 1),
-            ElementFactory::make_role_intersection(
+            ElementFactory::make_predicate_setminus(
                 problem,
                 false,
-                ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "contains"), 0, 1),
-                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1))));
+                ElementFactory::make_predicate_extraction(problem, true, "contains"),
+                ElementFactory::make_predicate_intersection(
+                    problem,
+                    false,
+                    ElementFactory::make_predicate_extraction(problem, true, "contains"),
+                    ElementFactory::make_predicate_extraction(problem, false, "contains"))),
+            0,
+            1));
 
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
     add_boolean_feature(new B_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));

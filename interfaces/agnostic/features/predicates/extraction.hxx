@@ -25,9 +25,13 @@ public:
     PredicateExtractionElement(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name)
     : PredicateElement(problem, goal), m_predicate_type(problem->predicate_type(predicate_name)) {
         if (goal) {
-            for (const Fluent* fluent : m_problem->total_fluents()) {
-                if (fluent->pddl_predicate_type() == m_predicate_type) {
-                    m_result.push_back(fluent->index());
+            Fluent_Set goal_fluents = m_problem->goal_fluents_set();
+            for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
+                if (goal_fluents.isset(i)) {
+                    const Fluent* fluent = m_problem->total_fluents()[i];
+                    if (fluent->pddl_predicate_type() == m_predicate_type) {
+                        m_result.push_back(fluent->index());
+                    }
                 }
             }
         }
