@@ -27,7 +27,6 @@ protected:
 public:
     RoleElement(const Sketch_STRIPS_Problem* problem, bool goal, std::string predicate_name)
     : BaseElement(problem, goal, RESULT_TYPE::PREDICATE), m_predicate_type(problem->predicate_type(predicate_name)) {
-        m_result = Bit_Set(m_problem->num_total_fluents());
         if (this->goal()) {
             compute_result(m_problem->goal_fluents_set());
         }

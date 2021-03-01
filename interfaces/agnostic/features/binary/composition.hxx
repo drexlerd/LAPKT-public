@@ -31,8 +31,7 @@ public:
         m_left_a(left_a), m_left_b(left_b),
         m_right_a(right_a), m_right_b(right_b) {
         if (m_left->result_type() != RESULT_TYPE::PREDICATE ||
-            m_right->result_type() != RESULT_TYPE::PREDICATE ||
-            !m_left->goal() || !m_right->goal()) {
+            m_right->result_type() != RESULT_TYPE::PREDICATE) {
             std::cout << "CompositionElement::CompositionElement: incompatible parameters!\n";
             exit(1);
         }
@@ -54,6 +53,11 @@ public:
                 }
             }
         }*/
+
+        // TODO(dominik): Collect all child predicate types that occur in the chain.
+        // All such predicates can potentially occur in the result and must be initialized
+        // in the composition.
+        //
     }
     virtual ~CompositionElement() = default;
 };
