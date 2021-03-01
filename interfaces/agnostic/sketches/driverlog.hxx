@@ -6,7 +6,7 @@
 
 namespace aptk {
 class BaseElement;
-
+/*
 class N_PackagesNotAtGoalLocation : public NumericalFeature {
 public:
     N_PackagesNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
@@ -30,6 +30,7 @@ public:
     DriverlogSketch(const Sketch_STRIPS_Problem *problem);
     virtual ~DriverlogSketch() = default;
 };
+*/
 
 }
 #endif

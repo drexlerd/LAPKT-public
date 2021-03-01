@@ -41,6 +41,11 @@ public:
     const Predicates& result() const { return m_result; }
 
     virtual void print() const override {
+        std::cout << "{ ";
+        for (const Predicate& p : m_result) {
+            std::cout << m_problem->predicate_index_to_predicate_signature().at(p) << ", ";
+        }
+        std::cout << "}" << std::endl;
     }
 };
 

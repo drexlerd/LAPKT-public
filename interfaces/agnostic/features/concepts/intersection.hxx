@@ -13,6 +13,7 @@ protected:
 
     virtual void compute_result(const State* state) override {
         m_result.clear();
+        m_left->evaluate(state);
         Concepts_Set left_set(m_left->evaluate(state).begin(), m_left->evaluate(state).end());
         Concepts_Set right_set(m_right->evaluate(state).begin(), m_right->evaluate(state).end());
         for (Concept c : left_set) {

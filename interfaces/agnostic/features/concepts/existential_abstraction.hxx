@@ -26,6 +26,10 @@ public:
     ExistentialAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept)
         : ConceptElement(problem, goal), m_role(role), m_concept(concept) {
+        if (role == nullptr || concept == nullptr) {
+            std::cout << "ExistentialAbstractionElement::ExistentialAbstractionElement: nullptr in parameters - " << role << " " << concept << std::endl;
+            exit(1);
+        }
         if (goal) {
             Concepts_Set concepts_set(concept->result().begin(), concept->result().end());
             for (const Role& role : role->result()) {

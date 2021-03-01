@@ -9,36 +9,37 @@ N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(
     : NumericalFeature(
         sketch,
         name,
-        ElementFactory::get_custom("p")) {
+        ElementFactory::get_role_custom("p")) {
 }
 
 N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(
         sketch,
         name,
-        ElementFactory::make_setminus(
+        ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
-            ElementFactory::make_extraction(
+            ElementFactory::make_concept_extraction(
                 sketch->problem(),
                 false,
-                ElementFactory::get_custom("p"),
+                ElementFactory::get_role_custom("p"),
                 0),
-            ElementFactory::make_concept(sketch->problem(), false, "clean", 0))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "clean"), 0, 1), 0)
+            )) {
 }
 
 B_CocktailsConsistentWithPart1::B_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(
         sketch,
         name,
-        ElementFactory::make_intersect(
+        ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
-            ElementFactory::get_custom("c1"),
-            ElementFactory::make_extraction(
+            ElementFactory::get_concept_custom("c1"),
+            ElementFactory::make_concept_extraction(
                 sketch->problem(),
                 false,
-                ElementFactory::get_custom("p"),
+                ElementFactory::get_role_custom("p"),
                 1))) {
 }
 
@@ -46,65 +47,59 @@ B_CocktailsConsistentWithPart2::B_CocktailsConsistentWithPart2(const BaseSketch*
     : BooleanFeature(
         sketch,
         name,
-        ElementFactory::make_intersect(
+        ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
-            ElementFactory::get_custom("c1"),
-            ElementFactory::make_intersect(
+            ElementFactory::get_concept_custom("c1"),
+            ElementFactory::make_concept_intersection(
                 sketch->problem(),
                 false,
-                ElementFactory::get_custom("c2"),
-                ElementFactory::make_extraction(
+                ElementFactory::get_concept_custom("c2"),
+                ElementFactory::make_concept_extraction(
                     sketch->problem(),
                     false,
-                    ElementFactory::get_custom("p"),
+                    ElementFactory::get_role_custom("p"),
                     1)))) {
 }
 
 BarmanSketch::BarmanSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-    ElementFactory::add_custom(
+    ElementFactory::add_concept_custom(
         "c1",
-        ElementFactory::make_universal_abstraction(
+        ElementFactory::make_concept_universal_abstraction(
             problem,
             false,
-            ElementFactory::make_role(problem, false, "cocktail-part1"),
-            ElementFactory::make_existential_abstraction(
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "cocktail-part1"), 0, 1),
+            ElementFactory::make_concept_existential_abstraction(
                 problem,
                 false,
-                ElementFactory::make_role(problem, false, "contains"),
-                ElementFactory::make_concept(problem, false, "shaker-level", 0),
-                1,
-                0),
-            0,
-            1));
-    ElementFactory::add_custom(
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1),
+                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0)
+            )
+        )
+    );
+    ElementFactory::add_concept_custom(
         "c2",
-        ElementFactory::make_universal_abstraction(
+        ElementFactory::make_concept_universal_abstraction(
             problem,
             false,
-            ElementFactory::make_role(problem, false, "cocktail-part2"),
-            ElementFactory::make_existential_abstraction(
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "cocktail-part2"), 0, 1),
+            ElementFactory::make_concept_existential_abstraction(
                 problem,
                 false,
-                ElementFactory::make_role(problem, false, "contains"),
-                ElementFactory::make_concept(problem, false, "shaker-level", 0),
-                1,
-                0),
-            0,
-            1));
-    ElementFactory::add_custom(
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1),
+                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0))));
+    ElementFactory::add_role_custom(
         "p",
-        ElementFactory::make_setminus(
+        ElementFactory::make_role_setminus(
             problem,
             false,
-            ElementFactory::make_role(problem, true, "contains"),
-            ElementFactory::make_intersect(
+            ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "contains"), 0, 1),
+            ElementFactory::make_role_intersection(
                 problem,
                 false,
-                ElementFactory::make_role(problem, true, "contains"),
-                ElementFactory::make_role(problem, false, "contains"))));
-
+                ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "contains"), 0, 1),
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1))));
 
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
     add_boolean_feature(new B_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));

@@ -16,6 +16,7 @@ protected:
 
     virtual void compute_result(const State* state) override {
         m_result.clear();
+        m_concept->evaluate(state);
         Concepts_Set concepts_set(m_concept->evaluate(state).begin(), m_concept->evaluate(state).end());
         Concepts_Set result_set;
         // 1. perform existential abstraction to find elements for which some relation to b exists.
@@ -38,6 +39,10 @@ public:
     UniversalAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept)
         : ConceptElement(problem, goal), m_role(role), m_concept(concept) {
+        if (role == nullptr || concept == nullptr) {
+            std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: nullptr in parameters - " << role << " " << concept << std::endl;
+            exit(1);
+        }
         if (goal) {
             Concepts_Set concepts_set(concept->result().begin(), concept->result().end());
             Concepts_Set result_set;

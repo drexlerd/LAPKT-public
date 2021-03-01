@@ -4,7 +4,7 @@
 #include "features/role.hxx"
 
 namespace aptk {
-
+/*
 N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(
@@ -101,5 +101,5 @@ DriverlogSketch::DriverlogSketch(
           new DecrementNumerical(get_numerical_feature("drivers_not_at_goal")) }
     ));
 }
-
+*/
 }

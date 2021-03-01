@@ -1,7 +1,7 @@
 #include <sketch.hxx>
 
 namespace aptk {
-
+/*
 class N_CouplesNotAtGoalLocation : public NumericalFeature {
 public:
     N_CouplesNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
@@ -21,5 +21,5 @@ public:
     HikingSketch(const Sketch_STRIPS_Problem *problem);
     virtual ~HikingSketch() = default;
 };
-
+*/
 }

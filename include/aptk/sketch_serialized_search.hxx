@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../interfaces/agnostic/sketches/goal_counter.hxx"
 //#include "../../interfaces/agnostic/sketches/childsnack.hxx"
 //#include "../../interfaces/agnostic/sketches/driverlog.hxx"
-//#include "../../interfaces/agnostic/sketches/barman.hxx"
+#include "../../interfaces/agnostic/sketches/barman.hxx"
 //#include "../../interfaces/agnostic/sketches/hiking.hxx"
 
 namespace aptk {
@@ -54,7 +54,7 @@ public:
 		} else if (sketch_problem->domain_name() == "driverlog") {
             //m_sketch = new aptk::DriverlogSketch(sketch_problem);
 		} else if (sketch_problem->domain_name() == "barman") {
-			//m_sketch = new aptk::BarmanSketch(sketch_problem);
+			m_sketch = new aptk::BarmanSketch(sketch_problem);
 		} else if (sketch_problem->domain_name() == "hiking") {
             //m_sketch = new aptk::HikingSketch(sketch_problem);
 		} else {

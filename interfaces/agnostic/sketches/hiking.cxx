@@ -2,7 +2,7 @@
 #include "features/element_factory.hxx"
 
 namespace aptk {
-
+/*
 N_CouplesNotAtGoalLocation::N_CouplesNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
@@ -38,5 +38,5 @@ HikingSketch::HikingSketch(
         { new DecrementNumerical(get_numerical_feature("couples_not_at_goal_location")) }
     ));
 }
-
+*/
 }

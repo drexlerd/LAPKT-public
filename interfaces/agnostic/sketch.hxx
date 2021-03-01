@@ -449,11 +449,11 @@ public:
      * Pretty printers.
      */
     void print_feature_evaluations() const {
-        std::cout << "Numerical features:\n";
+        std::cout << "Numerical features: " << m_numerical_features.size() << "\n";
         for (NumericalFeature* nf : m_numerical_features) {
             nf->print();
         }
-        std::cout << "Boolean features:\n";
+        std::cout << "Boolean features: " << m_boolean_features.size() << "\n";
         for (BooleanFeature* bf : m_boolean_features) {
             bf->print();
         }
