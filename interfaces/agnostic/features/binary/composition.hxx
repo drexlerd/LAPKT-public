@@ -19,6 +19,7 @@ protected:
     Fluent_Vec m_derived_fluents;
 
     virtual void compute_result(const Bit_Set &left_result, const Bit_Set &right_result) override {
+        m_result.reset();
     }
 
     virtual bool assert_parameters() const override {

@@ -14,8 +14,7 @@ protected:
     int m_b;
 
     virtual void compute_result(const Bit_Set& role, const Bit_Set& concept) override {
-        // allocate memory
-        allocate_or_reset(m_problem->num_objects());
+        m_result.reset();
         // 1. perform existential abstraction to find elements for which some relation to b exists.
         for (int i = 0; i < m_problem->num_total_fluents(); ++i) {
             const Fluent* fluent = m_problem->total_fluents()[i];

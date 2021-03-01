@@ -13,6 +13,7 @@ protected:
     const unsigned m_right_b;
 
     virtual void compute_result(const Bit_Set &left_result, const Bit_Set &right_result) override {
+        m_result.reset();
     }
 
     virtual bool assert_parameters() const override {

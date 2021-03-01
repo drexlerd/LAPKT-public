@@ -9,7 +9,6 @@ namespace aptk {
 enum class RESULT_TYPE {
     OBJECT,
     PREDICATE,
-    NONE,
 };
 
 class BaseElement {
@@ -30,13 +29,6 @@ protected:
     // This is useful to derive features that use commutative arithmetic operations
     // such as summation, maximization, minimization
 protected:
-    void allocate_or_reset(unsigned size) {
-        if (m_result.max_index() == 0) {
-            m_result = Bit_Set(size);
-        } else {
-            m_result.reset();
-        }
-    }
 
     /**
      * Check if parameters are in correct shape, e.g. predicate or objects.
@@ -49,6 +41,15 @@ public:
     BaseElement(const Sketch_STRIPS_Problem* problem, bool goal, RESULT_TYPE result_type) : m_problem(problem), m_goal(goal), m_state(nullptr), m_result_type(result_type) {
         // perform parameter checking
         assert_parameters();
+        // allocate memory for result
+        if (result_type == RESULT_TYPE::OBJECT) {
+            m_result = Bit_Set(problem->num_objects());
+        } else if (result_type == RESULT_TYPE::PREDICATE) {
+            m_result = Bit_Set(problem->num_total_fluents());
+        } else {
+            std::cout << "BaseElement::BaseElement: unknown result type!" << std::endl;
+            exit(1);
+        }
     }
     virtual ~BaseElement() = default;
     /**
