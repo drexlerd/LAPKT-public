@@ -6,7 +6,7 @@
 namespace aptk {
 
 
-class RoleIntersectionElement : public RoleElement {
+class RoleSetminusElement : public RoleElement {
 protected:
     RoleElement* m_left;
     RoleElement* m_right;
@@ -23,7 +23,7 @@ protected:
     }
 
 public:
-    RoleIntersectionElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right)
+    RoleSetminusElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right)
     : RoleElement(problem, goal), m_left(left), m_right(right) {
         if (goal) {
             Roles_Set left_set(left->result().begin(), left->result().end());
@@ -35,7 +35,7 @@ public:
             }
         }
     }
-    virtual ~RoleIntersectionElement() = default;
+    virtual ~RoleSetminusElement() = default;
 };
 
 }
