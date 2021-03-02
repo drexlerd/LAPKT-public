@@ -6,6 +6,9 @@
 
 namespace aptk {
 
+/**
+ * The NumericalFeature implements counting of objects in the result.
+ */
 class NumericalFeature : public BaseFeature {
 protected:
     // the compositional algorithm used during evaluation
@@ -41,6 +44,10 @@ public:
      * Pretty printer.
      */
     virtual void print() const override {
+        if (m_element == nullptr) {
+            std::cout << "NumericalFeature::print: tried printing on nullptr!" << std::endl;
+            exit(1);
+        }
         std::cout << m_name << ": ";
         m_element->print();
     }

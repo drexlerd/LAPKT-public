@@ -50,7 +50,7 @@ public:
     virtual void print() const override {
         std::cout << "{ ";
         for (const Role& r : m_result) {
-            std::cout << "(" << m_problem->object_index_to_object_name().at(r.first) << ", " << m_problem->object_index_to_object_name().at(r.second) << "), ";
+            std::cout << "(" << r.first << ":" << m_problem->object_index_to_object_name().at(r.first) << ", " << r.second << ":" << m_problem->object_index_to_object_name().at(r.second) << "), ";
         }
         std::cout << "}" << std::endl;
     }

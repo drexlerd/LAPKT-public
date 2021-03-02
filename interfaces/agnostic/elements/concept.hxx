@@ -43,7 +43,7 @@ public:
     virtual void print() const override {
         std::cout << "{ ";
         for (const Concept& c : m_result) {
-            std::cout << m_problem->object_index_to_object_name().at(c) << ", ";
+            std::cout << c << ":" << m_problem->object_index_to_object_name().at(c) << ", ";
         }
         std::cout << "}" << std::endl;
     }

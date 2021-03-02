@@ -1,24 +1,8 @@
 #include "../role.hxx"
+#include "../utils.hxx"
 #include <map>
 
 namespace aptk {
-
-/**
- * Computes representation of roles sorted and grouped by the concept
- * that occurs the a specific position depending on parameter first.
- */
-static std::map<Concept, Roles> compute_concept_role_mapping(const Roles &roles, bool first) {
-    std::map<Concept, Roles> result;
-    for (const Role& r : roles) {
-        Concept c = (first) ? r.first : r.second;
-        if (result.find(c) == result.end()) {
-            result.insert(std::make_pair(c, Roles( {r,} )));
-        } else {
-            result.at(c).push_back(r);
-        }
-    }
-    return result;
-}
 
 class RoleCompositionElement : public RoleElement {
 protected:
@@ -27,9 +11,9 @@ protected:
 
     void compute_result(const Roles& left_roles, const Roles& right_roles) {
         // 1. collect right elements of left role O(NlogN)
-        std::map<Concept, Roles> left_concept_role = compute_concept_role_mapping(left_roles, true);
+        std::map<Concept, Roles> left_concept_role = aptk::elements::compute_concept_role_mapping(left_roles, false);
         // 2. collect left elements of right role O(NlogN)
-        std::map<Concept, Roles> right_concept_role = compute_concept_role_mapping(right_roles, false);
+        std::map<Concept, Roles> right_concept_role = aptk::elements::compute_concept_role_mapping(right_roles, true);
         // 3. connect pairwise O(N^2) or linear in size of result set
         Roles_Set result_set;
         auto it1 = left_concept_role.begin();
@@ -37,13 +21,12 @@ protected:
         while (it1 != left_concept_role.end() && it2 != right_concept_role.end()) {
             if (it1->first < it2->first) {
                 ++it1;
-            } else if (it1->first < it2->first) {
+            } else if (it1->first > it2->first) {
                 ++it2;
             } else {
-                // compose roles
+                // concepts are equal => compose rules.
                 for (const Role &r1 : it1->second) {
                     for (const Role &r2 : it2->second) {
-                        assert(r1.second == r2.first);
                         result_set.insert(std::make_pair(r1.first, r2.second));
                     }
                 }

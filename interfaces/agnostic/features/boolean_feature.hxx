@@ -5,6 +5,10 @@
 
 namespace aptk {
 
+/**
+ * The BooleanFeature implements the boolean variable that is true
+ * iff the number of elements in the result is nonzero.
+ */
 class BooleanFeature : public BaseFeature {
 protected:
     // the compositional algorithm used during evaluation

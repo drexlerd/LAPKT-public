@@ -18,9 +18,22 @@ public:
     virtual ~B_CouplesNotAtGoalWithTentUpAtNextSubgoal() = default;
 };
 
-class SD_HikesUntilGoal : public SumDistanceFeature {
-    SD_HikesUntilGoal(const BaseSketch* sketch, const std::string &name);
-    virtual ~SD_HikesUntilGoal() = default;
+class B_CarAtPlaceWithTentUp : public BooleanFeature {
+public:
+    B_CarAtPlaceWithTentUp(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_CarAtPlaceWithTentUp() = default;
+};
+
+class B_Test : public BooleanFeature {
+public:
+    B_Test(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_Test() = default;
+};
+
+class SD_RemainingHikes : public SumDistanceFeature {
+public:
+    SD_RemainingHikes(const BaseSketch* sketch, const std::string &name);
+    virtual ~SD_RemainingHikes() = default;
 };
 
 class HikingSketch : public BaseSketch {
