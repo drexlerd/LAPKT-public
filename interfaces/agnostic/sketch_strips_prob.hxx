@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <mutex_set.hxx>
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
 
 namespace aptk
 {

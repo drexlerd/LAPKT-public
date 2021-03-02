@@ -2,11 +2,12 @@
 #define __ROLE__
 
 #include "element.hxx"
+#include "concept.hxx"
 #include "boost/functional/hash.hpp"
 
 namespace aptk {
 
-using Role = std::pair<unsigned, unsigned>;
+using Role = std::pair<Concept, Concept>;
 using Roles = std::vector<Role>;
 struct RoleHash {
     std::size_t operator()(const Role &role) const {
