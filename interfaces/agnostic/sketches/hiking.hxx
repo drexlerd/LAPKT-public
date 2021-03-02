@@ -15,7 +15,6 @@ public:
     virtual ~B_CouplesNotAtGoalWithTentUpAtNextSubgoal() = default;
 };
 
-
 class HikingSketch : public BaseSketch {
 public:
     HikingSketch(const Sketch_STRIPS_Problem *problem);

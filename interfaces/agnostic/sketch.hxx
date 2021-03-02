@@ -21,14 +21,11 @@ class BaseFeature {
 protected:
     const BaseSketch* m_sketch;
     const std::string m_name;
-    // the compositional algorithm used during evaluation
-    BaseElement* const m_element;
 public:
     BaseFeature(
         const BaseSketch* sketch,
-        std::string name,
-        BaseElement* const element)
-        : m_sketch(sketch), m_name(name), m_element(element) {
+        std::string name)
+        : m_sketch(sketch), m_name(name) {
     }
     virtual ~BaseFeature() = default;
 
@@ -42,38 +39,28 @@ public:
 
     const BaseSketch* sketch() const { return m_sketch; }
     const std::string& name() const { return m_name; }
-    BaseElement* element() const { return m_element; }
 
     /**
      * Pretty printer.
      */
-    virtual void print() const {
-        if (!m_element) {
-            std::cout << "BaseFeature::print: tried printing nullptr BaseElement!" << std::endl;
-            exit(1);
-        }
-        std::cout << m_name << ": ";
-        m_element->print();
-    }
+    virtual void print() const = 0;
 };
 
 
 class BooleanFeature : public BaseFeature {
 protected:
+    // the compositional algorithm used during evaluation
+    BaseElement* const m_element;
     mutable bool old_eval;
     bool new_eval;
 public:
     BooleanFeature(
         const BaseSketch* sketch,
         std::string name,
-        BaseElement* const element) : BaseFeature(sketch, name, element), old_eval(false), new_eval(false) { }
+        BaseElement* const element) : BaseFeature(sketch, name), m_element(element), old_eval(false), new_eval(false) { }
     virtual ~BooleanFeature() = default;
 
     virtual void evaluate(const State* state) override {
-        if (!m_element) {
-            std::cout << "BooleanFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
-            exit(1);
-        }
         new_eval = (m_element->get_result_size(state) > 0) ? true : false;
     }
 
@@ -88,11 +75,21 @@ public:
     bool get_new_eval() const {
         return new_eval;
     }
+
+    /**
+     * Pretty printer.
+     */
+    virtual void print() const override {
+        std::cout << m_name << ": ";
+        m_element->print();
+    }
 };
 
 
 class NumericalFeature : public BaseFeature {
 protected:
+    // the compositional algorithm used during evaluation
+    BaseElement* const m_element;
     mutable int old_eval;
     int new_eval;
 public:
@@ -100,15 +97,11 @@ public:
         const BaseSketch* sketch,
         std::string name,
         BaseElement* const element)
-        : BaseFeature(sketch, name, element), old_eval(0), new_eval(0) {
+        : BaseFeature(sketch, name), m_element(element), old_eval(0), new_eval(0) {
     }
     virtual ~NumericalFeature() = default;
 
     virtual void evaluate(const State* state) override {
-        if (!m_element) {
-            std::cout << "NumericalFeature::evaluate: tried evaluating nullptr BaseElement!" << std::endl;
-            exit(1);
-        }
         new_eval = m_element->get_result_size(state);
     }
 
@@ -122,6 +115,14 @@ public:
 
     int get_new_eval() const {
         return new_eval;
+    }
+
+    /**
+     * Pretty printer.
+     */
+    virtual void print() const override {
+        std::cout << m_name << ": ";
+        m_element->print();
     }
 };
 
