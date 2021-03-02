@@ -6,125 +6,14 @@
 #include <unordered_map>
 #include <iostream>
 #include <cassert>
-#include "strips_state.hxx"
-#include "features/element.hxx"
-#include "features/element_factory.hxx"
 
 namespace aptk
 {
 class BaseSketch;
 class Sketch_STRIPS_Problem;
 class State;
-
-
-class BaseFeature {
-protected:
-    const BaseSketch* m_sketch;
-    const std::string m_name;
-public:
-    BaseFeature(
-        const BaseSketch* sketch,
-        std::string name)
-        : m_sketch(sketch), m_name(name) {
-    }
-    virtual ~BaseFeature() = default;
-
-    /**
-     * Evaluate the feature for a given state.
-     * The problem provides additional information.
-     */
-    virtual void evaluate(const State* state) = 0;
-
-    virtual void backup_evaluation() const = 0;
-
-    const BaseSketch* sketch() const { return m_sketch; }
-    const std::string& name() const { return m_name; }
-
-    /**
-     * Pretty printer.
-     */
-    virtual void print() const = 0;
-};
-
-
-class BooleanFeature : public BaseFeature {
-protected:
-    // the compositional algorithm used during evaluation
-    BaseElement* const m_element;
-    mutable bool old_eval;
-    bool new_eval;
-public:
-    BooleanFeature(
-        const BaseSketch* sketch,
-        std::string name,
-        BaseElement* const element) : BaseFeature(sketch, name), m_element(element), old_eval(false), new_eval(false) { }
-    virtual ~BooleanFeature() = default;
-
-    virtual void evaluate(const State* state) override {
-        new_eval = (m_element->get_result_size(state) > 0) ? true : false;
-    }
-
-    virtual void backup_evaluation() const override {
-        old_eval = new_eval;
-    }
-
-    bool get_old_eval() const {
-        return old_eval;
-    }
-
-    bool get_new_eval() const {
-        return new_eval;
-    }
-
-    /**
-     * Pretty printer.
-     */
-    virtual void print() const override {
-        std::cout << m_name << ": ";
-        m_element->print();
-    }
-};
-
-
-class NumericalFeature : public BaseFeature {
-protected:
-    // the compositional algorithm used during evaluation
-    BaseElement* const m_element;
-    mutable int old_eval;
-    int new_eval;
-public:
-    NumericalFeature(
-        const BaseSketch* sketch,
-        std::string name,
-        BaseElement* const element)
-        : BaseFeature(sketch, name), m_element(element), old_eval(0), new_eval(0) {
-    }
-    virtual ~NumericalFeature() = default;
-
-    virtual void evaluate(const State* state) override {
-        new_eval = m_element->get_result_size(state);
-    }
-
-    virtual void backup_evaluation() const override {
-        old_eval = new_eval;
-    }
-
-    int get_old_eval() const {
-        return old_eval;
-    }
-
-    int get_new_eval() const {
-        return new_eval;
-    }
-
-    /**
-     * Pretty printer.
-     */
-    virtual void print() const override {
-        std::cout << m_name << ": ";
-        m_element->print();
-    }
-};
+class BooleanFeature;
+class NumericalFeature;
 
 /**
  * Takes some feature and allow some more complex evaluation.
@@ -135,44 +24,34 @@ protected:
     // the underlying boolean feature
     const BooleanFeature* m_feature;
 public:
-    BooleanFeatureEvalProxy(const BooleanFeature* feature) : m_feature(feature) { }
+    BooleanFeatureEvalProxy(const BooleanFeature* feature);
     virtual bool evaluate() const = 0;
-    const BooleanFeature* feature() const { return m_feature; }
+    const BooleanFeature* feature() const;
 };
 class PositiveBoolean : public BooleanFeatureEvalProxy {
 public:
-    PositiveBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval();
-    }
+    PositiveBoolean(const BooleanFeature* feature);
+    virtual bool evaluate() const override;
 };
 class NegativeBoolean : public BooleanFeatureEvalProxy {
 public:
-    NegativeBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return !m_feature->get_old_eval();
-    }
+    NegativeBoolean(const BooleanFeature* feature);
+    virtual bool evaluate() const override;
 };
 class ChangedPositiveBoolean : public BooleanFeatureEvalProxy {
 public:
-    ChangedPositiveBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return !m_feature->get_old_eval() && m_feature->get_new_eval();
-    }
+    ChangedPositiveBoolean(const BooleanFeature* feature);
+    virtual bool evaluate() const override;
 };
 class ChangedNegativeBoolean : public BooleanFeatureEvalProxy {
 public:
-    ChangedNegativeBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() && !m_feature->get_new_eval();
-    }
+    ChangedNegativeBoolean(const BooleanFeature* feature);
+    virtual bool evaluate() const override;
 };
 class UnchangedBoolean : public BooleanFeatureEvalProxy {
 public:
-    UnchangedBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() == m_feature->get_new_eval();
-    }
+    UnchangedBoolean(const BooleanFeature* feature);
+    virtual bool evaluate() const override;
 };
 
 class NumericalFeatureEvalProxy {
@@ -180,44 +59,34 @@ protected:
     // the underlying numerical feature
     const NumericalFeature* m_feature;
 public:
-    NumericalFeatureEvalProxy(const NumericalFeature* feature) : m_feature(feature) { }
+    NumericalFeatureEvalProxy(const NumericalFeature* feature);
     virtual bool evaluate() const = 0;
-    const NumericalFeature* feature() const { return m_feature; }
+    const NumericalFeature* feature() const;
 };
 class ZeroNumerical : public NumericalFeatureEvalProxy {
 public:
-    ZeroNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() == 0;
-    }
+    ZeroNumerical(const NumericalFeature* feature);
+    virtual bool evaluate() const override;
 };
 class NonzeroNumerical : public NumericalFeatureEvalProxy {
 public:
-    NonzeroNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() > 0;
-    }
+    NonzeroNumerical(const NumericalFeature* feature);
+    virtual bool evaluate() const override;
 };
 class DecrementNumerical : public NumericalFeatureEvalProxy {
 public:
-    DecrementNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() > m_feature->get_new_eval();
-    }
+    DecrementNumerical(const NumericalFeature* feature);
+    virtual bool evaluate() const override;
 };
 class IncrementNumerical : public NumericalFeatureEvalProxy {
 public:
-    IncrementNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() < m_feature->get_new_eval();
-    }
+    IncrementNumerical(const NumericalFeature* feature);
+    virtual bool evaluate() const override;
 };
 class UnchangedNumerical : public NumericalFeatureEvalProxy {
 public:
-    UnchangedNumerical(const NumericalFeature* feature) : NumericalFeatureEvalProxy(feature) { }
-    virtual bool evaluate() const override {
-        return m_feature->get_old_eval() == m_feature->get_new_eval();
-    }
+    UnchangedNumerical(const NumericalFeature* feature);
+    virtual bool evaluate() const override;
 };
 
 class Rule {
@@ -312,105 +181,45 @@ protected:
     /**
      * Add features with respective names.
      */
-    void add_numerical_feature(NumericalFeature *feature) {
-        m_numerical_feature_name_to_idx.insert(make_pair(feature->name(), m_numerical_features.size()));
-        m_numerical_features.push_back(feature);
-    }
-    void add_boolean_feature(BooleanFeature *feature) {
-        m_boolean_feature_name_to_idx.insert(make_pair(feature->name(), m_boolean_features.size()));
-        m_boolean_features.push_back(feature);
-    }
-    const NumericalFeature* get_numerical_feature(const std::string &feature_name) const {
-        return m_numerical_features[m_numerical_feature_name_to_idx.at(feature_name)];
-    }
-    const BooleanFeature* get_boolean_feature(const std::string &feature_name) const {
-        return m_boolean_features[m_boolean_feature_name_to_idx.at(feature_name)];
-    }
+    void add_numerical_feature(NumericalFeature *feature);
+    void add_boolean_feature(BooleanFeature *feature);
+    const NumericalFeature* get_numerical_feature(const std::string &feature_name) const;
+    const BooleanFeature* get_boolean_feature(const std::string &feature_name) const;
 
     /**
      * Add rule.
      */
-    void add_rule(const Rule* rule) {
-        m_rules.push_back(rule);
-    }
+    void add_rule(const Rule* rule);
 
     /**
      * Evaluate features for a given state.
      */
-    void evaluate_features(const State* state) {
-        for (NumericalFeature* nf : m_numerical_features) {
-            nf->evaluate(state);
-        }
-        for (BooleanFeature* bf : m_boolean_features) {
-            bf->evaluate(state);
-        }
-    }
+    void evaluate_features(const State* state);
 
     /**
      * Return true iff there exists an applicable rule
      * between the initial and generated state information.
      */
-    bool exists_compatible_rule() const {
-        for (const Rule* rule : m_init_applicable_rules) {
-            if (rule->is_compatible()) {
-                m_applied_rules.push_back(rule);
-                return true;
-            }
-        }
-        return false;
-    }
+    bool exists_compatible_rule() const;
 
     /**
      * Compute applicable rules for the initial state.
      */
-    void compute_applicable_rules_for_init() {
-        m_init_applicable_rules.clear();
-        for (const Rule* rule : m_rules) {
-            if (rule->is_applicable()) {
-                m_init_applicable_rules.push_back(rule);
-            }
-        }
-        /*if (m_init_applicable_rules.size() == 0) {
-            std::cout << "Error - compute_applicable_rules_for_init: no applicable rule was found!" << std::endl;
-            exit(1);
-        }*/
-    }
+    void compute_applicable_rules_for_init();
 
     /**
      * Set generated state information as the new initial state information
      */
-    void set_generated_state_information_as_init() {
-        for (const NumericalFeature* nf : m_numerical_features) {
-            nf->backup_evaluation();
-        }
-        for (const BooleanFeature* bf : m_boolean_features) {
-            bf->backup_evaluation();
-        }
-    }
+    void set_generated_state_information_as_init();
 
 public:
-    BaseSketch(const Sketch_STRIPS_Problem *problem)
-    : m_problem(problem) { }
-    virtual ~BaseSketch() = default;
+    BaseSketch(const Sketch_STRIPS_Problem *problem);
+    virtual ~BaseSketch();
 
     /**
      * Enter the first subproblem.
      */
-    void initialize_first_subproblem(const State* state) {
-        // 1. Evaluate features f(s').
-        // TODO: we assume that state are never checked twice
-        // because it would not be novel anyways.
-        evaluate_features(state);
-        // 2. set the generate state information as the new initial state,
-        set_generated_state_information_as_init();
-        // 3. recompute applicable rules for the generated state, and
-        compute_applicable_rules_for_init();
-        // debug print
-        print_applied_rules();
-        print_feature_evaluations();
-        print_applicable_rules();
-        state->print(std::cout);
-    }
+    void initialize_first_subproblem(const State* state);
 
 
     /**
@@ -418,30 +227,7 @@ public:
      * Returns true if the given state defines the initial state
      * of the next subproblem.
      */
-    bool process_state(const State* state) {
-        // 1. Evaluate features f(s').
-        // TODO: we assume that state are never checked twice
-        // because it would not be novel anyways.
-        evaluate_features(state);
-        //print_feature_evaluations();
-        //state->print(std::cout);
-        // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
-        if (exists_compatible_rule()) {
-            // (i) set the generate state information as the new initial state,
-            set_generated_state_information_as_init();
-            // (ii) recompute applicable rules for the generated state, and
-            compute_applicable_rules_for_init();
-            // print debug information
-            print_applied_rules();
-            print_feature_evaluations();
-            print_applicable_rules();
-            state->print(std::cout);
-            // (iii) return true to indicate SIW that a new subproblem was found
-            return true;
-        }
-        // 2.2. Otherwise, return false to indicate SIW that we remain in the same subproblem.
-        return false;
-    }
+    bool process_state(const State* state);
 
     /**
      * Getters
@@ -452,33 +238,9 @@ public:
     /**
      * Pretty printers.
      */
-    void print_feature_evaluations() const {
-        std::cout << "Numerical features: " << m_numerical_features.size() << "\n";
-        for (NumericalFeature* nf : m_numerical_features) {
-            nf->print();
-        }
-        std::cout << "Boolean features: " << m_boolean_features.size() << "\n";
-        for (BooleanFeature* bf : m_boolean_features) {
-            bf->print();
-        }
-        std::cout << std::endl;
-    }
-
-    void print_applied_rules() const {
-        std::cout << "Rules applied:\n";
-        for (const Rule* rule : m_applied_rules) {
-            std::cout << "\t" << rule->name() << "\n";
-        }
-        std::cout << std::endl;
-    }
-
-    void print_applicable_rules() const {
-        std::cout << "Applicable rules:\n";
-        for (auto rule : m_init_applicable_rules) {
-            std::cout << "\t" << rule->name() << "\n";
-        }
-        std::cout << std::endl;
-    }
+    void print_feature_evaluations() const;
+    void print_applied_rules() const;
+    void print_applicable_rules() const;
 };
 
 

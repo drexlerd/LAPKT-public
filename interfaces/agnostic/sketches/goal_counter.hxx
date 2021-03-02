@@ -4,6 +4,8 @@
 
 #include "sketch.hxx"
 #include "reachability.hxx"
+#include "../features/boolean_feature.hxx"
+#include "../features/numerical_feature.hxx"
 
 namespace aptk {
 class GoalCounterSketch;

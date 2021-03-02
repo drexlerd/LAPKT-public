@@ -1,7 +1,5 @@
 #include "driverlog.hxx"
-#include "features/element_factory.hxx"
-#include "features/concept.hxx"
-#include "features/role.hxx"
+#include "elements/element_factory.hxx"
 
 namespace aptk {
 

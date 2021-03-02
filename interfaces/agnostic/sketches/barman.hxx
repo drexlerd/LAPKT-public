@@ -2,6 +2,8 @@
 #define __BARMAN_SKETCH__
 
 #include <sketch.hxx>
+#include "../features/boolean_feature.hxx"
+#include "../features/numerical_feature.hxx"
 
 namespace aptk {
 class BaseElement;

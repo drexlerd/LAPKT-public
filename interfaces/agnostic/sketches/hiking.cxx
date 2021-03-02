@@ -1,5 +1,5 @@
 #include "hiking.hxx"
-#include "features/element_factory.hxx"
+#include "elements/element_factory.hxx"
 
 namespace aptk {
 
