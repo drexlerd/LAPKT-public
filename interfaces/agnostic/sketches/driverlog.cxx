@@ -4,70 +4,64 @@
 #include "features/role.hxx"
 
 namespace aptk {
-/*
+
 N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
-        sketch,
-        name,
-        ElementFactory::make_setminus(
+    : NumericalFeature(sketch, name,
+        ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
-            ElementFactory::make_intersect(
+            ElementFactory::make_concept_intersection(
                 sketch->problem(),
                 false,
-                ElementFactory::make_concept(sketch->problem(), false, "obj", 0),
-                ElementFactory::make_concept(sketch->problem(), true, "at", 0)),
-            ElementFactory::make_extraction(
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "obj"), 0),
+                ElementFactory::make_concept_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0)),
+            ElementFactory::make_concept_extraction(
                 sketch->problem(),
                 false,
-                ElementFactory::make_intersect(sketch->problem(), false,
-                    ElementFactory::make_role(sketch->problem(), false, "at"),
-                    ElementFactory::make_role(sketch->problem(), true, "at")),
+                ElementFactory::make_role_intersection(sketch->problem(), false,
+                    ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 0, 1),
+                    ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0, 1)),
                 0))) {
 }
 
 N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
-        sketch,
-        name,
-        ElementFactory::make_setminus(
+    : NumericalFeature(sketch, name,
+        ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
-            ElementFactory::make_intersect(
+            ElementFactory::make_concept_intersection(
                 sketch->problem(),
                 false,
-                ElementFactory::make_concept(sketch->problem(), false, "truck", 0),
-                ElementFactory::make_concept(sketch->problem(), true, "at", 0)),
-            ElementFactory::make_extraction(
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "truck"), 0),
+                ElementFactory::make_concept_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0)),
+            ElementFactory::make_concept_extraction(
                 sketch->problem(),
                 false,
-                ElementFactory::make_intersect(sketch->problem(), false,
-                    ElementFactory::make_role(sketch->problem(), false, "at"),
-                    ElementFactory::make_role(sketch->problem(), true, "at")),
+                ElementFactory::make_role_intersection(sketch->problem(), false,
+                    ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 0, 1),
+                    ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0, 1)),
                 0))) {
 }
 
 N_DriversNotAtGoalLocation::N_DriversNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
-        sketch,
-        name,
-        ElementFactory::make_setminus(
+    : NumericalFeature(sketch, name,
+        ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
-            ElementFactory::make_intersect(
+            ElementFactory::make_concept_intersection(
                 sketch->problem(),
                 false,
-                ElementFactory::make_concept(sketch->problem(), false, "driver", 0),
-                ElementFactory::make_concept(sketch->problem(), true, "at", 0)),
-            ElementFactory::make_extraction(
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driver"), 0),
+                ElementFactory::make_concept_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0)),
+            ElementFactory::make_concept_extraction(
                 sketch->problem(),
                 false,
-                ElementFactory::make_intersect(sketch->problem(), false,
-                    ElementFactory::make_role(sketch->problem(), false, "at"),
-                    ElementFactory::make_role(sketch->problem(), true, "at")),
+                ElementFactory::make_role_intersection(sketch->problem(), false,
+                    ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 0, 1),
+                    ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0, 1)),
                 0))) {
 }
 
@@ -101,5 +95,5 @@ DriverlogSketch::DriverlogSketch(
           new DecrementNumerical(get_numerical_feature("drivers_not_at_goal")) }
     ));
 }
-*/
+
 }

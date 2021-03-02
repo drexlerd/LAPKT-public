@@ -422,9 +422,8 @@ public:
         // TODO: we assume that state are never checked twice
         // because it would not be novel anyways.
         evaluate_features(state);
-        print_feature_evaluations();
-        state->print(std::cout);
-        ElementFactory::get_concept_custom("c1")->print();
+        //print_feature_evaluations();
+        //state->print(std::cout);
         // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
         if (exists_compatible_rule()) {
             // (i) set the generate state information as the new initial state,

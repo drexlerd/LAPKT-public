@@ -72,7 +72,8 @@ private:
     static ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateElement*> m_predicate_setminus_cache;
     static ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateElement*> m_predicate_union_cache;
     // concepts
-    static ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*> m_concept_extraction_cache;
+    static ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*> m_concept_role_extraction_cache;
+    static ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*> m_concept_predicate_extraction_cache;
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_intersection_cache;
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_setminus_cache;
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_union_cache;
@@ -97,6 +98,7 @@ public:
     static PredicateElement* make_predicate_union(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* left, PredicateElement* right);
 
     static ConceptElement* make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, unsigned position);
+    static ConceptElement* make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned position);
     static ConceptElement* make_concept_intersection(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);
     static ConceptElement* make_concept_setminus(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);
     static ConceptElement* make_concept_union(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);

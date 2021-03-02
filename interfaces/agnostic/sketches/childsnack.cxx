@@ -2,78 +2,79 @@
 #include "features/element_factory.hxx"
 
 namespace aptk {
-/*
-// TODO(dominik): why do I get segfault if I used m_sketch->problem()
+
 N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch,
     const std::string &name)
     : NumericalFeature(sketch, name,
-        ElementFactory::make_intersect(
+        ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
-            ElementFactory::make_concept(sketch->problem(), false, "allergic_gluten", 0),
-            ElementFactory::make_setminus(sketch->problem(), false,
-                ElementFactory::make_concept(sketch->problem(), true, "served", 0),
-                ElementFactory::make_concept(sketch->problem(), false, "served", 0)))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "allergic_gluten"), 0),
+            ElementFactory::make_concept_extraction(
+                sketch->problem(),
+                false,
+                ElementFactory::make_predicate_setminus(sketch->problem(), false,
+                    ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"),
+                    ElementFactory::make_predicate_extraction(sketch->problem(), false, "served")),
+                0))) {
 }
 
 
 N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
     const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_intersect(
-        sketch->problem(),
-        false,
-        ElementFactory::make_concept(sketch->problem(), false, "not_allergic_gluten", 0),
-        ElementFactory::make_setminus(sketch->problem(), false,
-            ElementFactory::make_concept(sketch->problem(), true, "served", 0),
-            ElementFactory::make_concept(sketch->problem(), false, "served", 0)))) {
+        ElementFactory::make_concept_intersection(
+            sketch->problem(),
+            false,
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "not_allergic_gluten"), 0),
+            ElementFactory::make_concept_extraction(
+                sketch->problem(),
+                false,
+                ElementFactory::make_predicate_setminus(sketch->problem(), false,
+                    ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"),
+                    ElementFactory::make_predicate_extraction(sketch->problem(), false, "served")),
+                0))) {
 }
 
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(sketch, name,
-    ElementFactory::make_intersect(
+    ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
-        ElementFactory::make_concept(sketch->problem(), false, "at_kitchen_sandwich", 0),
-        ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
+        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at_kitchen_sandwich"), 0),
+        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "no_gluten_sandwich"), 0))) {
 }
 
 B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(
-        sketch,
-        name,
-        ElementFactory::make_setminus(
-            sketch->problem(),
-            false,
-            ElementFactory::make_concept(sketch->problem(), false, "at_kitchen_sandwich", 0),
-            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
+    : BooleanFeature(sketch, name,
+        ElementFactory::make_concept_setminus(
+        sketch->problem(),
+        false,
+        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at_kitchen_sandwich"), 0),
+        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "no_gluten_sandwich"), 0))) {
 }
 
 B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(
-        sketch,
-        name,
-        ElementFactory::make_intersect(
+    : BooleanFeature(sketch, name,
+        ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
-            ElementFactory::make_concept(sketch->problem(), false, "ontray", 0),
-            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "ontray"), 0),
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "no_gluten_sandwich"), 0))) {
 }
 
 B_RegularSandwichOnTray::B_RegularSandwichOnTray(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(
-        sketch,
-        name,
-        ElementFactory::make_setminus(
+    : BooleanFeature(sketch, name,
+        ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
-            ElementFactory::make_concept(sketch->problem(), false, "ontray", 0),
-            ElementFactory::make_concept(sketch->problem(), false, "no_gluten_sandwich", 0))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "ontray"), 0),
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "no_gluten_sandwich"), 0))) {
 }
 
 ChildsnackSketch::ChildsnackSketch(
@@ -134,6 +135,6 @@ ChildsnackSketch::ChildsnackSketch(
         { new DecrementNumerical(get_numerical_feature("regular_children_to_be_served")), }
     ));
 }
-*/
+
 
 }

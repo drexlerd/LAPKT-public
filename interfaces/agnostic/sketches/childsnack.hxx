@@ -5,7 +5,7 @@
 
 namespace aptk {
 class BaseElement;
-/*
+
 class N_GlutenAllergicChildrenToBeServed : public NumericalFeature {
 public:
     N_GlutenAllergicChildrenToBeServed(const BaseSketch* sketch, const std::string &name);
@@ -47,7 +47,7 @@ class ChildsnackSketch : public BaseSketch {
 public:
     ChildsnackSketch(const Sketch_STRIPS_Problem *problem);
     virtual ~ChildsnackSketch() = default;
-};*/
+};
 
 }
 

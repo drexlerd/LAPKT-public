@@ -24,7 +24,7 @@ N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
                 false,
                 ElementFactory::get_role_custom("p"),
                 0),
-            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "clean"), 0, 1), 0)
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "clean"), 0)
             )) {
 }
 
@@ -74,7 +74,7 @@ BarmanSketch::BarmanSketch(
                 problem,
                 false,
                 ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 1, 0),
-                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0)
+                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0)
             )
         )
     );
@@ -88,7 +88,7 @@ BarmanSketch::BarmanSketch(
                 problem,
                 false,
                 ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 1, 0),
-                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0, 1), 0))));
+                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0))));
     ElementFactory::add_role_custom(
         "p",
         ElementFactory::make_role_extraction(
