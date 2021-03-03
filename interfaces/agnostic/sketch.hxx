@@ -177,6 +177,7 @@ protected:
     mutable std::vector<const Rule*> m_applied_rules;
 
     const bool m_verbose = true;
+    int m_count = 0;
 protected:
     /**
      * Add features with respective names.

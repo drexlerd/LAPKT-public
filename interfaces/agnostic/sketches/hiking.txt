@@ -41,9 +41,14 @@ walk_together tent0 place1 guy0 place0 girl0 couple0 (1)
 
 The important component that the sketch has to realize:
 
+General policy:
+a. next tent to be build up depends on smallest walked distance + 1
+b. couple needs to group at initial location while having a car at target location
+
+
 1. put_down girl0 place0 tent0 (1)
-2. drive_tent girl0 place0 place1 car0 tent0 (1)
-3. put_up girl0 place1 tent0 (1)  // admissible chain ends here.
-4. drive guy0 place0 place1 car1 (1)
-5. drive_passenger girl0 place1 place0 car0 guy0 (1)
+2. drive_tent girl0 place0 place1 car0 tent0 (1)  // ok
+3. put_up girl0 place1 tent0 (1)  // admissible chain ends here.  // ok
+4. drive guy0 place0 place1 car1 (1)  // car at start and target => couple together at place 1 (this results in two cars at place 1)
+5. drive_passenger girl0 place1 place0 car0 guy0 (1)  // couple together at place 1
 6. walk_together tent0 place1 guy0 place0 girl0 couple0 (1)

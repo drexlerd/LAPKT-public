@@ -165,6 +165,7 @@ bool BaseSketch::process_state(const State* state) {
     // because it would not be novel anyways.
     evaluate_features(state);
     //print_feature_evaluations();
+    //get_boolean_feature("one_at_initial")->print();
     //state->print(std::cout);
     // 2.1. If there exists a rules r that is compatible with (f(s),f(s'))
     if (exists_compatible_rule()) {
@@ -177,6 +178,8 @@ bool BaseSketch::process_state(const State* state) {
         print_feature_evaluations();
         print_applicable_rules();
         state->print(std::cout);
+        ++m_count;
+        // if (m_count == 7) exit(1);
         // (iii) return true to indicate SIW that a new subproblem was found
         return true;
     }

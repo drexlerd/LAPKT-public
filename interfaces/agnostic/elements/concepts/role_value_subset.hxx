@@ -1,5 +1,5 @@
-#ifndef __CONCEPT_ROLE_VALUE_MAP__
-#define __CONCEPT_ROLE_VALUE_MAP__
+#ifndef __CONCEPT_ROLE_VALUE_SUBSET__
+#define __CONCEPT_ROLE_VALUE_SUBSET__
 
 #include "../concept.hxx"
 #include "../role.hxx"
@@ -7,7 +7,7 @@
 namespace aptk {
 
 
-class ConceptRoleValueMapElement : public ConceptElement {
+class ConceptRoleValueSubsetElement : public ConceptElement {
 private:
     RoleElement* m_left;
     RoleElement* m_right;
@@ -32,13 +32,13 @@ private:
         for (unsigned i = 0; i < m_problem->num_objects(); ++i) {
             result_set.insert(i);
         }
-        // 3. Exclude concepts from result that fail the test: forall b:(a,b)\in R <-> (a,b)\in S
+        // 3. Exclude concepts from result that fail the test: forall b:(a,b)\in R -> (a,b)\in S
         for (Concept c1 : a_set) {
             for (Concept c2 : b_set) {
                 Role r(c1, c2);
                 bool left_exists = (left_set.find(r) != left_set.end());
                 bool right_exists = (right_set.find(r) != left_set.end());
-                if (left_exists != right_exists) {
+                if (left_exists && !right_exists) {
                     result_set.erase(c1);
                     break;
                 }
@@ -54,13 +54,13 @@ protected:
     }
 
 public:
-    ConceptRoleValueMapElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right)
+    ConceptRoleValueSubsetElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right)
     : ConceptElement(problem, goal), m_left(left), m_right(right) {
         if (goal) {
             compute_result(left->result(), right->result());
         }
     }
-    virtual ~ConceptRoleValueMapElement() = default;
+    virtual ~ConceptRoleValueSubsetElement() = default;
 };
 
 }

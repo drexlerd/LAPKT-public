@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../interfaces/agnostic/sketches/driverlog.hxx"
 #include "../../interfaces/agnostic/sketches/barman.hxx"
 #include "../../interfaces/agnostic/sketches/hiking.hxx"
+#include "../../interfaces/agnostic/sketches/schedule.hxx"
+#include "../../interfaces/agnostic/sketches/tpp.hxx"
 
 namespace aptk {
 
@@ -57,7 +59,11 @@ public:
 			m_sketch = new aptk::BarmanSketch(sketch_problem);
 		} else if (sketch_problem->domain_name() == "hiking") {
             m_sketch = new aptk::HikingSketch(sketch_problem);
-		} else {
+		} else if (sketch_problem->domain_name() == "schedule") {
+            m_sketch = new aptk::ScheduleSketch(sketch_problem);
+		} else if (sketch_problem->domain_name() == "tpp-propositional") {
+            m_sketch = new aptk::TppSketch(sketch_problem);
+		}else {
 			// default is goal sketch.
 			m_sketch = new aptk::GoalCounterSketch(sketch_problem);
 		}

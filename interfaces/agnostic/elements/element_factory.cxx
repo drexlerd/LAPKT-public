@@ -14,6 +14,8 @@ ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*
 ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_union_cache = ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_existential_abstraction_cache = ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_universal_abstraction_cache = ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*>();
+ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> ElementFactory::m_concept_role_value_equality_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*>();
+ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> ElementFactory::m_concept_role_value_subset_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*>();
 // roles
 ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*> ElementFactory::m_role_extraction_cache = ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_intersection_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
@@ -124,6 +126,25 @@ ConceptElement* ElementFactory::make_concept_universal_abstraction(const Sketch_
     }
     return m_concept_universal_abstraction_cache.get(key);
 }
+
+ConceptElement* ElementFactory::make_concept_role_value_equality(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right) {
+    std::tuple<bool, RoleElement*, RoleElement*> key = std::tuple<bool, RoleElement*, RoleElement*>(goal, left, right);
+    if (!m_concept_role_value_equality_cache.exists(key)) {
+        ConceptElement* result = new ConceptRoleValueEqualityElement(problem, goal, left, right);
+        m_concept_role_value_equality_cache.insert(key, std::move(result));
+    }
+    return m_concept_role_value_equality_cache.get(key);
+}
+
+ConceptElement* ElementFactory::make_concept_role_value_subset(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right) {
+    std::tuple<bool, RoleElement*, RoleElement*> key = std::tuple<bool, RoleElement*, RoleElement*>(goal, left, right);
+    if (!m_concept_role_value_subset_cache.exists(key)) {
+        ConceptElement* result = new ConceptRoleValueSubsetElement(problem, goal, left, right);
+        m_concept_role_value_subset_cache.insert(key, std::move(result));
+    }
+    return m_concept_role_value_subset_cache.get(key);
+}
+
 
 RoleElement* ElementFactory::make_role_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned a, unsigned b) {
     std::tuple<bool, PredicateElement*, unsigned, unsigned> key = std::tuple<bool, PredicateElement*, unsigned, unsigned>(goal, predicate, a, b);

@@ -5,18 +5,24 @@
 
 namespace aptk {
 
-class N_CouplesNotAtGoalLocation : public NumericalFeature {
+class B_TentUpAtNextSubgoal : public BooleanFeature {
 public:
-    N_CouplesNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_CouplesNotAtGoalLocation() = default;
+    B_TentUpAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_TentUpAtNextSubgoal() = default;
 };
 
-
-class B_CouplesNotAtGoalWithTentUpAtNextSubgoal : public BooleanFeature {
+class B_TentAvailableAtNextSubgoal : public BooleanFeature {
 public:
-    B_CouplesNotAtGoalWithTentUpAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_CouplesNotAtGoalWithTentUpAtNextSubgoal() = default;
+    B_TentAvailableAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_TentAvailableAtNextSubgoal() = default;
 };
+
+class N_TentsUpAtCurrentLocation : public NumericalFeature {
+public:
+    N_TentsUpAtCurrentLocation(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_TentsUpAtCurrentLocation() = default;
+};
+
 
 class B_CarAtPlaceWithTentUp : public BooleanFeature {
 public:
@@ -24,10 +30,16 @@ public:
     virtual ~B_CarAtPlaceWithTentUp() = default;
 };
 
-class B_Test : public BooleanFeature {
+class B_AtLeastOneAtInitial : public BooleanFeature {
 public:
-    B_Test(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_Test() = default;
+    B_AtLeastOneAtInitial(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_AtLeastOneAtInitial() = default;
+};
+
+class B_BothAtInitial : public BooleanFeature {
+public:
+    B_BothAtInitial(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_BothAtInitial() = default;
 };
 
 class SD_RemainingHikes : public SumDistanceFeature {

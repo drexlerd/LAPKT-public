@@ -15,6 +15,8 @@
 #include "concepts/union.hxx"
 #include "concepts/existential_abstraction.hxx"
 #include "concepts/universal_abstraction.hxx"
+#include "concepts/role_value_equality.hxx"
+#include "concepts/role_value_subset.hxx"
 #include "roles/extraction.hxx"
 #include "roles/intersection.hxx"
 #include "roles/setminus.hxx"
@@ -80,6 +82,9 @@ private:
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_union_cache;
     static ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> m_concept_existential_abstraction_cache;
     static ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> m_concept_universal_abstraction_cache;
+    static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> m_concept_role_value_equality_cache;
+    static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> m_concept_role_value_subset_cache;
+
     // roles
     static ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*> m_role_extraction_cache;
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_intersection_cache;
@@ -107,6 +112,8 @@ public:
     static ConceptElement* make_concept_union(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);
     static ConceptElement* make_concept_existential_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept);
     static ConceptElement* make_concept_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept);
+    static ConceptElement* make_concept_role_value_equality(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
+    static ConceptElement* make_concept_role_value_subset(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
 
     static RoleElement* make_role_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned a, unsigned b);
     static RoleElement* make_role_intersection(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
