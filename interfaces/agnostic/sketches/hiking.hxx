@@ -35,6 +35,12 @@ public:
     virtual ~B_NextCar() = default;
 };
 
+class B_CurrentCar : public BooleanFeature {
+public:
+    B_CurrentCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_CurrentCar() = default;
+};
+
 class N_CurrentCar : public NumericalFeature {
 public:
     N_CurrentCar(const BaseSketch* sketch, const std::string &name);
