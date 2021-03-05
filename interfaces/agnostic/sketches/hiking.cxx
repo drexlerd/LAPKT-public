@@ -68,8 +68,7 @@ N_PreviousCar::N_PreviousCar(const BaseSketch* sketch, const std::string &name)
         ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("previous_walked"), 1))) {
 }
 
-B_AtLeastOneAtInitial::B_AtLeastOneAtInitial(
-    const BaseSketch* sketch, const std::string &name)
+/*B_AtLeastOneAtInitial::B_AtLeastOneAtInitial(const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
@@ -82,8 +81,7 @@ B_AtLeastOneAtInitial::B_AtLeastOneAtInitial(
                 ElementFactory::get_role_custom("couple_place")))) {
 }
 
-B_BothAtInitial::B_BothAtInitial(
-    const BaseSketch* sketch, const std::string &name)
+B_BothAtInitial::B_BothAtInitial(const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
@@ -94,6 +92,59 @@ B_BothAtInitial::B_BothAtInitial(
                 false,
                 ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "walked"), 0, 1),
                 ElementFactory::get_role_custom("couple_place")))) {
+}*/
+
+N_PreviousPerson::N_PreviousPerson(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_concept_role_value_equality(
+        sketch->problem(),
+        false,
+        ElementFactory::get_role_custom("couple_place"),
+        ElementFactory::get_role_custom("previous_walked"))) {
+}
+
+N_CurrentPerson::N_CurrentPerson(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_concept_role_value_equality(
+        sketch->problem(),
+        false,
+        ElementFactory::get_role_custom("couple_place"),
+        ElementFactory::get_role_custom("current_walked"))) {
+}
+
+N_NextPerson::N_NextPerson(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_concept_role_value_equality(
+        sketch->problem(),
+        false,
+        ElementFactory::get_role_custom("couple_place"),
+        ElementFactory::get_role_custom("next_walked"))) {
+}
+
+N_PreviousCurrentPerson::N_PreviousCurrentPerson(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_concept_role_value_equality(
+        sketch->problem(),
+        false,
+        ElementFactory::get_role_custom("couple_place"),
+        ElementFactory::make_role_union(
+            sketch->problem(),
+            false,
+            ElementFactory::get_role_custom("previous_walked"),
+            ElementFactory::get_role_custom("current_walked")))) {
+}
+
+N_CurrentNextPerson::N_CurrentNextPerson(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_concept_role_value_equality(
+        sketch->problem(),
+        false,
+        ElementFactory::get_role_custom("couple_place"),
+        ElementFactory::make_role_union(
+            sketch->problem(),
+            false,
+            ElementFactory::get_role_custom("current_walked"),
+            ElementFactory::get_role_custom("next_walked")))) {
 }
 
 SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string &name)
@@ -166,8 +217,13 @@ HikingSketch::HikingSketch(
     add_numerical_feature(new N_CurrentCar(this, "current_car"));
     add_numerical_feature(new N_PreviousCar(this, "previous_car"));
 
-    add_boolean_feature(new B_BothAtInitial(this, "both_at_initial"));
-    add_boolean_feature(new B_AtLeastOneAtInitial(this, "one_at_initial"));
+    add_numerical_feature(new N_PreviousPerson(this, "previous_person"));
+    add_numerical_feature(new N_CurrentPerson(this, "current_person"));
+    add_numerical_feature(new N_NextPerson(this, "next_person"));
+
+    add_numerical_feature(new N_PreviousCurrentPerson(this, "previous_current_person"));
+    add_numerical_feature(new N_CurrentNextPerson(this, "current_next_person"));
+
     add_numerical_feature(new SD_RemainingHikes(this, "remaining_hikes"));
     // r1
     add_rule(new Rule(this, "down_tent",
@@ -176,58 +232,58 @@ HikingSketch::HikingSketch(
         {},
         { new DecrementNumerical(get_numerical_feature("current_tent_up")) }
     ));
-    // r2 move first person with tent
+    // r2 move first person with tent (assuming both in the couple are at current location)
     add_rule(new Rule(this, "move_tent",
         { new NegativeBoolean(get_boolean_feature("next_tent_up")),
-          new NegativeBoolean(get_boolean_feature("next_tent_available")),
-          new PositiveBoolean(get_boolean_feature("both_at_initial")),
-          new PositiveBoolean(get_boolean_feature("one_at_initial")) },
-        {},
-        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
-          new UnchangedBoolean(get_boolean_feature("one_at_initial")),
-          },
-        {}
+          new NegativeBoolean(get_boolean_feature("next_tent_available")),},
+        { new NonzeroNumerical(get_numerical_feature("current_person")), },
+
+        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")) },
+        { new DecrementNumerical(get_numerical_feature("current_person")),
+          new IncrementNumerical(get_numerical_feature("current_next_person"))
+        }
     ));
     // r3 build up the tent
     add_rule(new Rule(this, "up_tent",
-        { new PositiveBoolean(get_boolean_feature("one_at_initial")),
-          new PositiveBoolean(get_boolean_feature("next_tent_available")),
+        { new PositiveBoolean(get_boolean_feature("next_tent_available")),
           new NegativeBoolean(get_boolean_feature("next_tent_up")) },
-        {},
-        { new UnchangedBoolean(get_boolean_feature("one_at_initial")),
-          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+        { new NonzeroNumerical(get_numerical_feature("current_next_person")) },
+
+        { new UnchangedBoolean(get_boolean_feature("next_tent_available")),
           new ChangedPositiveBoolean(get_boolean_feature("next_tent_up")), },
-        {}
+        { new UnchangedNumerical(get_numerical_feature("current_next_person")) }
     ));
-    // r4 move second person
+    //r4 move second person
     add_rule(new Rule(this, "move_second",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
-          new PositiveBoolean(get_boolean_feature("next_car")),
-          new PositiveBoolean(get_boolean_feature("one_at_initial")),
-          new NegativeBoolean(get_boolean_feature("both_at_initial")) },
-        {},
+          new PositiveBoolean(get_boolean_feature("next_car")), },
+        { new NonzeroNumerical(get_numerical_feature("current_next_person")) },
+
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
-          new UnchangedBoolean(get_boolean_feature("next_car")),
-          new ChangedNegativeBoolean(get_boolean_feature("one_at_initial")),
-          new UnchangedBoolean(get_boolean_feature("both_at_initial")) },
-        {}
+          new UnchangedBoolean(get_boolean_feature("next_car"))},
+        { new DecrementNumerical(get_numerical_feature("current_next_person")),
+          new IncrementNumerical(get_numerical_feature("next_person")) }
     ));
+
     // r5 regroup at initial location
     add_rule(new Rule(this, "regroup",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
-          new PositiveBoolean(get_boolean_feature("next_car")),
-          new NegativeBoolean(get_boolean_feature("both_at_initial")) },
-        {},
+          new PositiveBoolean(get_boolean_feature("next_car")), },
+        { new NonzeroNumerical(get_numerical_feature("next_person"))},
+
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
-          new UnchangedBoolean(get_boolean_feature("next_car")),
-          new ChangedPositiveBoolean(get_boolean_feature("both_at_initial")) },
-        {}
+          new UnchangedBoolean(get_boolean_feature("next_car")),},
+        { new DecrementNumerical(get_numerical_feature("next_person")),
+          new IncrementNumerical(get_numerical_feature("current_person"))}
     ));
     // r6 walk to next location
     add_rule(new Rule(this, "walk",
-        { new PositiveBoolean(get_boolean_feature("both_at_initial")) },
-        { new NonzeroNumerical(get_numerical_feature("remaining_hikes")) },
-        { new ChangedNegativeBoolean(get_boolean_feature("both_at_initial")) },
+        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
+          new PositiveBoolean(get_boolean_feature("next_car")), },
+        { new NonzeroNumerical(get_numerical_feature("remaining_hikes")),
+          new NonzeroNumerical(get_numerical_feature("current_person")) },
+
+        { },
         { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
     ));
     // after walking bring car from previous location to current location?

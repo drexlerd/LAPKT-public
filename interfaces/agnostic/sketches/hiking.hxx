@@ -5,6 +5,9 @@
 
 namespace aptk {
 
+/**
+ * Tent features
+ */
 class B_NextTentUp : public BooleanFeature {
 public:
     B_NextTentUp(const BaseSketch* sketch, const std::string &name);
@@ -23,7 +26,9 @@ public:
     virtual ~N_CurrentTentUp() = default;
 };
 
-
+/**
+ * Car features
+ */
 class B_NextCar : public BooleanFeature {
 public:
     B_NextCar(const BaseSketch* sketch, const std::string &name);
@@ -42,7 +47,10 @@ public:
     virtual ~N_PreviousCar() = default;
 };
 
-class B_AtLeastOneAtInitial : public BooleanFeature {
+/**
+ * Person features
+ */
+/*class B_AtLeastOneAtInitial : public BooleanFeature {
 public:
     B_AtLeastOneAtInitial(const BaseSketch* sketch, const std::string &name);
     virtual ~B_AtLeastOneAtInitial() = default;
@@ -52,6 +60,40 @@ class B_BothAtInitial : public BooleanFeature {
 public:
     B_BothAtInitial(const BaseSketch* sketch, const std::string &name);
     virtual ~B_BothAtInitial() = default;
+};
+*/
+// whether there is a couple with 1 person at previous and 1 person at current location.
+class N_PreviousCurrentPerson : public NumericalFeature {
+public:
+    N_PreviousCurrentPerson(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_PreviousCurrentPerson() = default;
+};
+
+class N_CurrentNextPerson : public NumericalFeature {
+public:
+    N_CurrentNextPerson(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_CurrentNextPerson() = default;
+};
+
+// whether there is a couple with both persons at previous location
+class N_PreviousPerson : public NumericalFeature {
+public:
+    N_PreviousPerson(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_PreviousPerson() = default;
+};
+
+// whether there is a couple with both persons at current location
+class N_CurrentPerson : public NumericalFeature {
+public:
+    N_CurrentPerson(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_CurrentPerson() = default;
+};
+
+// whether there is a couple with both persons at next location
+class N_NextPerson : public NumericalFeature {
+public:
+    N_NextPerson(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_NextPerson() = default;
 };
 
 class SD_RemainingHikes : public SumDistanceFeature {

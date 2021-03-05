@@ -52,3 +52,13 @@ b. couple needs to group at initial location while having a car at target locati
 4. drive guy0 place0 place1 car1 (1)  // car at start and target => couple together at place 1 (this results in two cars at place 1)
 5. drive_passenger girl0 place1 place0 car0 guy0 (1)  // couple together at place 1
 6. walk_together tent0 place1 guy0 place0 girl0 couple0 (1)
+
+
+up_tent:
+9. (put_up guy0 place2 tent0)
+move_second
+10. (drive guy0 place2 place1 car1)
+11. (drive_passenger guy0 place1 place2 car1 girl0)
+walk
+12. (drive_passenger guy0 place2 place1 car1 girl0)
+13. (walk_together tent0 place2 guy0 place1 girl0 couple0)
