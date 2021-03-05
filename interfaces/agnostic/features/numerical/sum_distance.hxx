@@ -43,38 +43,15 @@ public:
         m_conn->print();
         m_role2->print();
         */
-        // 1. compute pairwise distance matrix of connection role.
-        Concepts_Set nodes_set;
-        for (const Role& r : result_conn) {
-            nodes_set.insert(r.first);
-            nodes_set.insert(r.second);
-        }
-        Concepts nodes(nodes_set.begin(), nodes_set.end());
-        // mapping from concepts to indices for more compact storage.
-        std::vector<unsigned> conn_concept_indices(m_sketch->problem()->num_objects(), -1);
-        for (unsigned i = 0; i < nodes.size(); ++i) {
-            conn_concept_indices[nodes[i]] = i;
-        }
-        // initialize adjacency matrix
-        aptk::features::AdjacencyList edges(nodes.size());
-        for (const Role& r : result_conn) {
-            edges[conn_concept_indices[r.first]].push_back(conn_concept_indices[r.second]);
-        }
-        // compute pairwise distances
-        aptk::features::PairwiseDistances pairwise_distances = aptk::features::compute_pairwise_distances(edges);
-        /*
-        for (auto x : pairwise_distances) {
-            for (auto y : x) {
-                std::cout << y << " ";
-            }
-            std::cout << std::endl;
-        }
-        */
+        // compute pairwise distances over role.
+        std::pair<aptk::elements::PairwiseDistances, Index_Vec> result = aptk::elements::compute_pairwise_distances(m_sketch->problem(), result_conn);
+        aptk::elements::PairwiseDistances pairwise_distances = result.first;
+        std::vector<unsigned> conn_concept_indices = result.second;
 
         // collect elements of role O(NlogN)
         std::map<Concept, Roles> left_concept_role = aptk::elements::compute_concept_role_mapping(result_role1, true);
         std::map<Concept, Roles> right_concept_role = aptk::elements::compute_concept_role_mapping(result_role2, true);
-        aptk::features::Distances minimum_distances(left_concept_role.size(), INF);
+        aptk::elements::Distances minimum_distances(left_concept_role.size(), INF);
         auto it1 = left_concept_role.begin();
         auto it2 = right_concept_role.begin();
         int role1_a = 0;
