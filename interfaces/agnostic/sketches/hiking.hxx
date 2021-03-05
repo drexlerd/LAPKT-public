@@ -5,29 +5,41 @@
 
 namespace aptk {
 
-class B_TentUpAtNextSubgoal : public BooleanFeature {
+class B_NextTentUp : public BooleanFeature {
 public:
-    B_TentUpAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_TentUpAtNextSubgoal() = default;
+    B_NextTentUp(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_NextTentUp() = default;
 };
 
-class B_TentAvailableAtNextSubgoal : public BooleanFeature {
+class B_NextTentAvailable : public BooleanFeature {
 public:
-    B_TentAvailableAtNextSubgoal(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_TentAvailableAtNextSubgoal() = default;
+    B_NextTentAvailable(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_NextTentAvailable() = default;
 };
 
-class N_TentsUpAtCurrentLocation : public NumericalFeature {
+class N_CurrentTentUp : public NumericalFeature {
 public:
-    N_TentsUpAtCurrentLocation(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_TentsUpAtCurrentLocation() = default;
+    N_CurrentTentUp(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_CurrentTentUp() = default;
 };
 
 
-class B_CarAtPlaceWithTentUp : public BooleanFeature {
+class B_NextCar : public BooleanFeature {
 public:
-    B_CarAtPlaceWithTentUp(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_CarAtPlaceWithTentUp() = default;
+    B_NextCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_NextCar() = default;
+};
+
+class N_CurrentCar : public NumericalFeature {
+public:
+    N_CurrentCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_CurrentCar() = default;
+};
+
+class N_PreviousCar : public NumericalFeature {
+public:
+    N_PreviousCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_PreviousCar() = default;
 };
 
 class B_AtLeastOneAtInitial : public BooleanFeature {
@@ -48,6 +60,7 @@ public:
     virtual ~SD_RemainingHikes() = default;
 };
 
+// TODO(dominik): Select walked role in a clever way to move couples towards global goal.
 class HikingSketch : public BaseSketch {
 public:
     HikingSketch(const Sketch_STRIPS_Problem *problem);
