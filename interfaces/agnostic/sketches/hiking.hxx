@@ -29,10 +29,10 @@ public:
 /**
  * Car features
  */
-class B_NextCar : public BooleanFeature {
+class B_PreviousCar : public BooleanFeature {
 public:
-    B_NextCar(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_NextCar() = default;
+    B_PreviousCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_PreviousCar() = default;
 };
 
 class B_CurrentCar : public BooleanFeature {
@@ -41,10 +41,10 @@ public:
     virtual ~B_CurrentCar() = default;
 };
 
-class N_CurrentCar : public NumericalFeature {
+class B_NextCar : public BooleanFeature {
 public:
-    N_CurrentCar(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_CurrentCar() = default;
+    B_NextCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_NextCar() = default;
 };
 
 class N_PreviousCar : public NumericalFeature {
@@ -53,27 +53,21 @@ public:
     virtual ~N_PreviousCar() = default;
 };
 
-class N_Test : public NumericalFeature {
+class N_CurrentCar : public NumericalFeature {
 public:
-    N_Test(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_Test() = default;
+    N_CurrentCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_CurrentCar() = default;
+};
+
+class N_NextCar : public NumericalFeature {
+public:
+    N_NextCar(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_NextCar() = default;
 };
 
 /**
  * Person features
  */
-/*class B_AtLeastOneAtInitial : public BooleanFeature {
-public:
-    B_AtLeastOneAtInitial(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_AtLeastOneAtInitial() = default;
-};
-
-class B_BothAtInitial : public BooleanFeature {
-public:
-    B_BothAtInitial(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_BothAtInitial() = default;
-};
-*/
 // whether there is a couple with 1 person at previous and 1 person at current location.
 class N_PreviousCurrentPerson : public NumericalFeature {
 public:
@@ -108,13 +102,23 @@ public:
     virtual ~N_NextPerson() = default;
 };
 
+/**
+ * High level feature
+ */
+// High level features that counts number of remaining hikes.
 class SD_RemainingHikes : public SumDistanceFeature {
 public:
     SD_RemainingHikes(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_RemainingHikes() = default;
 };
 
-// TODO(dominik): Select walked role in a clever way to move couples towards global goal.
+/*class N_Test : public NumericalFeature {
+public:
+    N_Test(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_Test() = default;
+};*/
+
+
 class HikingSketch : public BaseSketch {
 public:
     HikingSketch(const Sketch_STRIPS_Problem *problem);
