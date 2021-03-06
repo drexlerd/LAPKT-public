@@ -53,6 +53,12 @@ public:
     virtual ~N_PreviousCar() = default;
 };
 
+class N_Test : public NumericalFeature {
+public:
+    N_Test(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_Test() = default;
+};
+
 /**
  * Person features
  */

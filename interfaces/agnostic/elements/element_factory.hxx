@@ -22,6 +22,7 @@
 #include "roles/setminus.hxx"
 #include "roles/union.hxx"
 #include "roles/composition.hxx"
+#include "roles/minimal.hxx"
 
 
 namespace aptk {
@@ -91,6 +92,7 @@ private:
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_setminus_cache;
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_union_cache;
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_composition_cache;
+    static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_minimal_cache;
 
     // custom
     static ElementCache<std::string, PredicateElement*> m_predicate_custom_cache;
@@ -120,6 +122,8 @@ public:
     static RoleElement* make_role_setminus(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
     static RoleElement* make_role_union(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
     static RoleElement* make_role_composition(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
+    static RoleElement* make_role_minimal(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
+
 
     static PredicateElement* add_predicate_custom(std::string name, PredicateElement* custom);
     static PredicateElement* get_predicate_custom(std::string name);

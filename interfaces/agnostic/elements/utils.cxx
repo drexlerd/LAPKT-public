@@ -68,8 +68,8 @@ PairwiseDistances compute_pairwise_distances(const AdjacencyList &edges) {
 std::pair<PairwiseDistances, std::vector<unsigned>> compute_pairwise_distances(
     const Sketch_STRIPS_Problem* problem, const Roles& roles) {
     std::pair<Concepts, std::vector<unsigned>> collected = aptk::elements::collect_concepts(problem, roles);
-    Concepts concepts = collected.first;
-    std::vector<unsigned> concept_indices = collected.second;
+    Concepts& concepts = collected.first;
+    std::vector<unsigned>& concept_indices = collected.second;
     // initialize adjacency matrix
     aptk::elements::AdjacencyList edges(concepts.size());
     for (const Role& r : roles) {

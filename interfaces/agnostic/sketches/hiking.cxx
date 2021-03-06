@@ -163,8 +163,20 @@ SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string
         ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)) {
 }
 
+N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::get_role_custom("min_current_walked")) {
+}
+
 HikingSketch::HikingSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
+    // walked minimum
+    ElementFactory::add_role_custom("min_current_walked",
+        ElementFactory::make_role_minimal(
+            problem,
+            false,
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "walked"), 1, 0),
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 0, 1)));
     // walked current
     ElementFactory::add_role_custom("current_walked",
         ElementFactory::make_role_extraction(
@@ -226,6 +238,8 @@ HikingSketch::HikingSketch(
     add_numerical_feature(new N_CurrentNextPerson(this, "current_next_person"));
 
     add_numerical_feature(new SD_RemainingHikes(this, "remaining_hikes"));
+    add_numerical_feature(new N_Test(this, "test"));
+
     // r1
     add_rule(new Rule(this, "down_tent",
         {},

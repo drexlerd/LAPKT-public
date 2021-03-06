@@ -22,6 +22,7 @@ ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> Element
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_setminus_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_union_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_composition_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
+ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_minimal_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 // custom
 ElementCache<std::string, PredicateElement*> ElementFactory::m_predicate_custom_cache = ElementCache<std::string, PredicateElement*>();
 ElementCache<std::string, ConceptElement*> ElementFactory::m_concept_custom_cache = ElementCache<std::string, ConceptElement*>();
@@ -189,6 +190,15 @@ RoleElement* ElementFactory::make_role_composition(const Sketch_STRIPS_Problem* 
         m_role_composition_cache.insert(key, std::move(result));
     }
     return m_role_composition_cache.get(key);
+}
+
+RoleElement* ElementFactory::make_role_minimal(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right) {
+    std::tuple<bool, RoleElement*, RoleElement*> key = std::tuple<bool, RoleElement*, RoleElement*>(goal, left, right);
+    if (!m_role_minimal_cache.exists(key)) {
+        RoleElement* result = new RoleMinimalElement(problem, goal, left, right);
+        m_role_minimal_cache.insert(key, std::move(result));
+    }
+    return m_role_minimal_cache.get(key);
 }
 
 PredicateElement* ElementFactory::add_predicate_custom(std::string name, PredicateElement* custom) {
