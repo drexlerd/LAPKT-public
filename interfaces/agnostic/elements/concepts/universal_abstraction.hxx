@@ -14,19 +14,18 @@ protected:
     RoleElement* m_role;
     ConceptElement* m_concept;
 
-    virtual void compute_result(const State* state) override {
+    virtual void compute_result(const Roles& role_result, const Concepts& concept_result) {
         m_result.clear();
-        m_concept->evaluate(state);
-        Concepts_Set concepts_set(m_concept->evaluate(state).begin(), m_concept->evaluate(state).end());
+        Concepts_Set concepts_set(concept_result.begin(), concept_result.end());
         Concepts_Set result_set;
         // 1. perform existential abstraction to find elements for which some relation to b exists.
-        for (const Role& role : m_role->evaluate(state)) {
+        for (const Role& role : role_result) {
             if (concepts_set.find(role.second) != concepts_set.end()) {
                 result_set.insert(role.first);
             }
         }
         // 2. remove objects for which not all relations contain object from b
-        for (const Role& role : m_role->evaluate(state)) {
+        for (const Role& role : role_result) {
             if (result_set.find(role.first) != result_set.end() &&
                 concepts_set.find(role.second) == concepts_set.end()) {
                 result_set.erase(role.first);
@@ -35,31 +34,17 @@ protected:
         m_result = Concepts(result_set.begin(), result_set.end());
     }
 
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_role->evaluate(state), m_concept->evaluate(state));
+    }
+
 public:
     UniversalAbstractionElement(
         const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept)
         : ConceptElement(problem, goal), m_role(role), m_concept(concept) {
-        if (role == nullptr || concept == nullptr) {
-            std::cout << "UniversalAbstractionElement::UniversalAbstractionElement: nullptr in parameters - " << role << " " << concept << std::endl;
-            exit(1);
-        }
         if (goal) {
-            Concepts_Set concepts_set(concept->result().begin(), concept->result().end());
-            Concepts_Set result_set;
-            // 1. perform existential abstraction to find elements for which some relation to b exists.
-            for (const Role& role : role->result()) {
-                if (concepts_set.find(role.second) != concepts_set.end()) {
-                    result_set.insert(role.first);
-                }
-            }
-            // 2. remove objects for which not all relations contain object from b
-            for (const Role& role : role->result()) {
-                if (result_set.find(role.first) != result_set.end() &&
-                    concepts_set.find(role.second) == concepts_set.end()) {
-                    result_set.erase(role.first);
-                }
-            }
-            m_result = Concepts(result_set.begin(), result_set.end());
+            compute_result(role->result(), concept->result());
         }
     }
     virtual ~UniversalAbstractionElement() = default;

@@ -9,7 +9,7 @@ protected:
     RoleElement* m_left;
     RoleElement* m_right;
 
-    void compute_result(const Roles& left_roles, const Roles& right_roles) {
+    virtual void compute_result(const Roles& left_roles, const Roles& right_roles) {
         // 1. collect right elements of left role O(NlogN)
         std::map<Concept, Roles> left_concept_role = aptk::elements::compute_concept_role_mapping(left_roles, false);
         // 2. collect left elements of right role O(NlogN)

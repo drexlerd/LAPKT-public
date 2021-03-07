@@ -18,12 +18,17 @@ protected:
     const unsigned m_a;
     const unsigned m_b;
 
-    virtual void compute_result(const State* state) override {
+    virtual void compute_result(const Predicates& predicate_result) {
         m_result.clear();
-        for (const Predicate predicate : m_predicate_element->evaluate(state)) {
+        for (const Predicate predicate : predicate_result) {
             const Fluent* fluent = m_problem->total_fluents()[predicate];
             m_result.emplace_back(fluent->pddl_objs_idx()[m_a], fluent->pddl_objs_idx()[m_b]);
         }
+    }
+
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_predicate_element->evaluate(state));
     }
 
 public:
@@ -31,10 +36,7 @@ public:
     : RoleElement(problem, goal),
     m_predicate_element(predicate_element), m_a(a), m_b(b) {
         if (goal) {
-            for (const Predicate predicate : predicate_element->result()) {
-                const Fluent* fluent = problem->total_fluents()[predicate];
-                m_result.emplace_back(fluent->pddl_objs_idx()[m_a], fluent->pddl_objs_idx()[m_b]);
-            }
+            compute_result(m_predicate_element->result());
         }
     }
     virtual ~RoleExtractionElement() = default;

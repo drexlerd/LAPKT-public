@@ -11,10 +11,10 @@ protected:
     PredicateElement* m_left;
     PredicateElement* m_right;
 
-    virtual void compute_result(const State* state) override {
+    virtual void compute_result(const Predicates& left_result, const Predicates& right_result) {
         m_result.clear();
-        Predicates_Set left_set(m_left->evaluate(state).begin(), m_left->evaluate(state).end());
-        Predicates_Set right_set(m_right->evaluate(state).begin(), m_right->evaluate(state).end());
+        Predicates_Set left_set(left_result.begin(), left_result.end());
+        Predicates_Set right_set(right_result.begin(), right_result.end());
         Predicates_Set result_set;
         for (Predicate p : left_set) {
             result_set.insert(p);
@@ -25,20 +25,16 @@ protected:
         m_result = Predicates(result_set.begin(), result_set.end());
     }
 
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_left->evaluate(state), m_right->evaluate(state));
+    }
+
 public:
     PredicateUnionElement(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* left, PredicateElement* right)
     : PredicateElement(problem, goal), m_left(left), m_right(right) {
         if (goal) {
-            Predicates_Set left_set(left->result().begin(), left->result().end());
-            Predicates_Set right_set(right->result().begin(), right->result().end());
-            Predicates_Set result_set;
-            for (Predicate p : left_set) {
-                result_set.insert(p);
-            }
-            for (Predicate p : right_set) {
-                result_set.insert(p);
-            }
-            m_result = Predicates(result_set.begin(), result_set.end());
+            compute_result(m_left->result(), m_right->result());
         }
     }
     virtual ~PredicateUnionElement() = default;

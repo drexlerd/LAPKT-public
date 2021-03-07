@@ -245,20 +245,7 @@ HikingSketch::HikingSketch(
           new UnchangedNumerical(get_numerical_feature("next_person")),
           new DecrementNumerical(get_numerical_feature("current_tent_up")) }
     ));
-    // r2 move first person with tent (assuming both in the couple are at current location)
-    add_rule(new Rule(this, "move_tent",
-        { new NegativeBoolean(get_boolean_feature("next_tent_up")),  // a single tent up at next location is enough
-          new NegativeBoolean(get_boolean_feature("next_tent_available")),  // a single tent up at next location is enough
-          new PositiveBoolean(get_boolean_feature("current_car") )},
-        { new NonzeroNumerical(get_numerical_feature("current_person")), },
-
-        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
-          new UnchangedBoolean(get_boolean_feature("current_car")) },  // we need car to bring back the person that builds up the tent
-        { new DecrementNumerical(get_numerical_feature("current_person")),
-          new IncrementNumerical(get_numerical_feature("current_next_person"))
-        }
-    ));
-    // r3 build up the tent (cannot be used to relocate cars/persons)
+    // r2 build up the tent (cannot be used to relocate cars/persons)
     add_rule(new Rule(this, "up_tent",
         { new PositiveBoolean(get_boolean_feature("next_tent_available")),
           new NegativeBoolean(get_boolean_feature("next_tent_up")) },
@@ -273,7 +260,20 @@ HikingSketch::HikingSketch(
           new UnchangedNumerical(get_numerical_feature("current_person")),
           new UnchangedNumerical(get_numerical_feature("next_person")) }
     ));
-    // r7 place first car at next location (after that, move_second can be applied again)
+    // r3 move first person with tent (assuming both in the couple are at current location)
+    add_rule(new Rule(this, "move_tent",
+        { new NegativeBoolean(get_boolean_feature("next_tent_up")),  // a single tent up at next location is enough
+          new NegativeBoolean(get_boolean_feature("next_tent_available")),  // a single tent up at next location is enough
+          new PositiveBoolean(get_boolean_feature("current_car") )},
+        { new NonzeroNumerical(get_numerical_feature("current_person")), },
+
+        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")) },  // we need car to bring back the person that builds up the tent
+        { new DecrementNumerical(get_numerical_feature("current_person")),
+          new IncrementNumerical(get_numerical_feature("current_next_person"))
+        }
+    ));
+    // r4 place first car at next location (after that, move_second can be applied again)
     add_rule(new Rule(this, "move_first",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new NegativeBoolean(get_boolean_feature("next_car")) },
@@ -287,7 +287,7 @@ HikingSketch::HikingSketch(
           new IncrementNumerical(get_numerical_feature("next_car"))
         }
         ));
-    //r4 move second person
+    //r5 move second person
     add_rule(new Rule(this, "move_second",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new PositiveBoolean(get_boolean_feature("current_car")),  // ensures care availability at both locations
@@ -300,7 +300,7 @@ HikingSketch::HikingSketch(
           new IncrementNumerical(get_numerical_feature("next_person")),
           new IncrementNumerical(get_numerical_feature("next_car"))}
     ));
-    // r5 regroup at initial location, effectively moving a whole couple backwards
+    // r6 regroup at initial location, effectively moving a whole couple backwards
     add_rule(new Rule(this, "regroup",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")) },
         { new NonzeroNumerical(get_numerical_feature("next_person"))},
@@ -309,7 +309,7 @@ HikingSketch::HikingSketch(
         { new DecrementNumerical(get_numerical_feature("next_person")),
           new IncrementNumerical(get_numerical_feature("current_person"))}
     ));
-    // r6 walk to next location
+    // r7 walk to next location
     add_rule(new Rule(this, "walk",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new PositiveBoolean(get_boolean_feature("next_car")),

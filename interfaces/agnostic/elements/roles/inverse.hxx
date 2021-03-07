@@ -10,24 +10,23 @@ class RoleInverseElement : public RoleElement {
 protected:
     RoleElement* m_role;
 
-    virtual void compute_result(const State* state) override {
+    virtual void compute_result(const Roles& role_result) {
         m_result.clear();
-        Roles role_result = m_role->evaluate(state);
-        m_result.clear();
-        for (Role& r : role_result) {
+        for (const Role& r : role_result) {
             m_result.push_back(Role(r.second, r.first));
         }
+    }
+
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_role->evaluate(state));
     }
 
 public:
     RoleInverseElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role)
     : RoleElement(problem, goal), m_role(role) {
         if (goal) {
-            Roles role_result = role->result();
-            m_result.clear();
-            for (Role& r : role_result) {
-                m_result.push_back(Role(r.second, r.first));
-            }
+            compute_result(m_role->result());
         }
     }
     virtual ~RoleInverseElement() = default;

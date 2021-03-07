@@ -13,9 +13,8 @@ protected:
     RoleElement* m_role;
     const unsigned m_position;
 
-    void compute_result(const State* state) {
-        m_result.clear();
-        for (const Role& role : m_role->evaluate(state)) {
+    virtual void compute_result(const Roles& role_result) {
+        for (const Role& role : role_result) {
             if (m_position == 0) {
                 m_result.push_back(role.first);
             } else if (m_position == 1) {
@@ -27,44 +26,43 @@ protected:
         }
     }
 
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_role->evaluate(state));
+    }
+
 public:
     ConceptRoleExtractionElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, unsigned position)
     : ConceptElement(problem, goal), m_role(role), m_position(position) {
         if (goal) {
-            for (const Role& r : role->result()) {
-                if (position == 0) {
-                    m_result.push_back(r.first);
-                } else if (position == 1) {
-                    m_result.push_back(r.second);
-                } else {
-                    std::cout << "ConceptRoleExtractionElement::ConceptRoleExtractionElement: only position 0 or 1 allowed!" << std::endl;
-                    exit(1);
-                }
-            }
+            compute_result(role->result());
         }
     }
     virtual ~ConceptRoleExtractionElement() = default;
 };
+
 
 class ConceptPredicateExtractionElement : public ConceptElement {
 protected:
     PredicateElement* m_predicate;
     const unsigned m_position;
 
-    void compute_result(const State* state) {
-        m_result.clear();
-        for (const Predicate& p : m_predicate->evaluate(state)) {
+    virtual void compute_result(const Predicates& predicate_result) {
+        for (const Predicate& p : predicate_result) {
             m_result.push_back(m_problem->total_fluents()[p]->pddl_objs_idx()[m_position]);
         }
+    }
+
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_predicate->evaluate(state));
     }
 
 public:
     ConceptPredicateExtractionElement(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned position)
     : ConceptElement(problem, goal), m_predicate(predicate), m_position(position) {
         if (goal) {
-            for (const Predicate& p : m_predicate->result()) {
-                m_result.push_back(m_problem->total_fluents()[p]->pddl_objs_idx()[m_position]);
-            }
+            compute_result(m_predicate->result());
         }
     }
     virtual ~ConceptPredicateExtractionElement() = default;

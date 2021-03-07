@@ -12,7 +12,7 @@ private:
     RoleElement* m_left;
     RoleElement* m_right;
 
-    void compute_result(const Roles& left_roles, const Roles& right_roles) {
+    virtual void compute_result(const Roles& left_roles, const Roles& right_roles) {
         Roles_Set left_set(left_roles.begin(), left_roles.end());
         Roles_Set right_set(right_roles.begin(), right_roles.end());
         // 1. Collect all element that occur somewhere at a and b
