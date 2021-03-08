@@ -35,6 +35,7 @@ public:
 	~Fluent();
 
 	unsigned	index() const;
+	bool		negated() const;
 
     unsigned	pddl_predicate_type() const;
 	const Index_Vec&	pddl_objs_idx() const;
@@ -44,6 +45,7 @@ public:
 	const Name_Vec&   pddl_obj_names() const;
 
 	void		set_index( unsigned idx );
+	void		set_negated( bool negated );
 	void		set_signature( std::string signature );
 	void		set_predicate_type( unsigned predicate_type );
 	void		set_objs_idx( Index_Vec &&objs_idx );
@@ -57,6 +59,7 @@ protected:
 
 	// grounded information
 	unsigned			m_index;
+	bool				m_negated;
 
     // fol information
 	unsigned			m_predicate_type;
@@ -71,6 +74,11 @@ protected:
 inline unsigned		Fluent::index() const
 {
 	return m_index;
+}
+
+inline bool		Fluent::negated() const
+{
+	return m_negated;
 }
 
 inline unsigned	Fluent::pddl_predicate_type() const {
@@ -97,6 +105,11 @@ inline const Name_Vec& Fluent::pddl_obj_names() const {
 inline void	Fluent::set_index( unsigned idx )
 {
 	m_index = idx;
+}
+
+inline void	Fluent::set_negated( bool negated )
+{
+	m_negated = negated;
 }
 
 inline void	Fluent::set_signature( std::string sig )

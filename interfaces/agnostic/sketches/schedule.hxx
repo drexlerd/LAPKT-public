@@ -1,5 +1,6 @@
 #include <sketch.hxx>
 #include "../features/numerical_feature.hxx"
+#include "../features/boolean_feature.hxx"
 
 namespace aptk {
 
@@ -20,6 +21,19 @@ public:
     N_Color(const BaseSketch* sketch, const std::string &name);
     virtual ~N_Color() = default;
 };
+
+class B_Scheduled : public BooleanFeature {
+public:
+    B_Scheduled(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_Scheduled() = default;
+};
+
+class B_Busy : public BooleanFeature {
+public:
+    B_Busy(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_Busy() = default;
+};
+
 
 class ScheduleSketch : public BaseSketch {
 public:

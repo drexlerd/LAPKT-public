@@ -75,15 +75,15 @@ public:
 	 */
 	// fluents that are changed by actions
 	static unsigned	add_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-		unsigned predicate_type, std::string predicate_name,
+		unsigned predicate_type, std::string predicate_name, bool negated,
 		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 	// fluents that remain constant during planning
 	static unsigned	add_other_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-		unsigned predicate_type, std::string predicate_name,
+		unsigned predicate_type, std::string predicate_name, bool negated,
 		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 	// fluents that are derived from other fluents during sketch initialization
 	unsigned add_derived_fluent(std::string signature,
-		unsigned predicate_type, std::string predicate_name,
+		unsigned predicate_type, std::string predicate_name, bool negated,
 		Index_Vec &&objs_idx, Name_Vec &&objs_names );
 
     /**

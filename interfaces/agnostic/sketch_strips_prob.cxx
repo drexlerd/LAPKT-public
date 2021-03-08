@@ -42,11 +42,12 @@ namespace aptk
 	}
 
 	unsigned Sketch_STRIPS_Problem::add_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-		unsigned predicate_type, std::string predicate_name, Index_Vec &&objs_idx, Name_Vec &&objs_names )
+		unsigned predicate_type, std::string predicate_name, bool negated, Index_Vec &&objs_idx, Name_Vec &&objs_names )
 	{
 		Fluent* new_fluent = new Fluent( p );
 		new_fluent->set_index( p.fluents().size() );
 		new_fluent->set_signature( signature );
+		new_fluent->set_negated( negated );
 		new_fluent->set_predicate_type(predicate_type);
 		new_fluent->set_predicate_name(predicate_name);
 		new_fluent->set_objs_idx(move(objs_idx));
@@ -71,11 +72,12 @@ namespace aptk
 	}
 
 	unsigned Sketch_STRIPS_Problem::add_other_fluent( Sketch_STRIPS_Problem& p, std::string signature,
-		unsigned predicate_type, std::string predicate_name, Index_Vec &&objs_idx, Name_Vec &&objs_names )
+		unsigned predicate_type, std::string predicate_name, bool negated, Index_Vec &&objs_idx, Name_Vec &&objs_names )
 	{
 		Fluent* new_fluent = new Fluent( p );
 		new_fluent->set_index( p.fluents().size() + p.init_fluents().size() );
 		new_fluent->set_signature( signature );
+		new_fluent->set_negated( negated );
 		new_fluent->set_predicate_type(predicate_type);
 		new_fluent->set_predicate_name(predicate_name);
 		new_fluent->set_objs_idx(move(objs_idx));
@@ -99,9 +101,9 @@ namespace aptk
 	}
 
 	unsigned Sketch_STRIPS_Problem::add_derived_fluent(std::string signature,
-		unsigned predicate_type, std::string predicate_name,
+		unsigned predicate_type, std::string predicate_name, bool negated,
 		Index_Vec &&objs_idx, Name_Vec &&objs_names ) {
-        return this->add_other_fluent(*this, signature, predicate_type, predicate_name, std::move(objs_idx), std::move(objs_names));
+        return this->add_other_fluent(*this, signature, predicate_type, predicate_name, negated, std::move(objs_idx), std::move(objs_names));
 	}
 
 	void Sketch_STRIPS_Problem::print_init_fluents( std::ostream& os ) const {

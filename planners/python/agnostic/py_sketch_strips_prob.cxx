@@ -36,7 +36,7 @@ using namespace boost::python;
 			objs_names.emplace_back(obj_name);
 		}
 		assert(objs_idx.size() == objs_names.size());
-        aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
+        aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), name, predicate_type, predicate_name, false, move(objs_idx), move(objs_names) );
 	}
 
 	void
@@ -53,7 +53,7 @@ using namespace boost::python;
 			objs_names.emplace_back(obj_name);
 		}
 		assert(objs_idx.size() == objs_names.size());
-        aptk::Sketch_STRIPS_Problem::add_other_fluent( *instance(), name, predicate_type, predicate_name, move(objs_idx), move(objs_names) );
+        aptk::Sketch_STRIPS_Problem::add_other_fluent( *instance(), name, predicate_type, predicate_name, false, move(objs_idx), move(objs_names) );
 	}
 
 	void
@@ -66,7 +66,7 @@ using namespace boost::python;
 			std::string negated_signature = "(not " + fl->signature() + ")";
 			std::vector<unsigned> objs_idx = fl->pddl_objs_idx();
 			std::vector<std::string> objs_names = fl->pddl_obj_names();
-			unsigned neg_fl_idx = aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), negated_signature, fl->pddl_predicate_type(), fl->pddl_predicate_name(), move(objs_idx), move(objs_names) );
+			unsigned neg_fl_idx = aptk::Sketch_STRIPS_Problem::add_fluent( *instance(), negated_signature, fl->pddl_predicate_type(), fl->pddl_predicate_name(), true, move(objs_idx), move(objs_names) );
 			m_negated.at( fl_idx ) = instance()->fluents()[neg_fl_idx];
 			count++;
 		}

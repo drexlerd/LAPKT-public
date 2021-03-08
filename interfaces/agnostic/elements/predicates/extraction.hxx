@@ -17,7 +17,7 @@ protected:
         for (unsigned i = 0; i < m_problem->num_total_fluents(); ++i) {
             if (fluents.isset(i)) {
                 const Fluent* fluent = m_problem->total_fluents()[i];
-                if (fluent->pddl_predicate_type() == m_predicate_type) {
+                if (fluent->pddl_predicate_type() == m_predicate_type && !fluent->negated()) {
                     m_result.push_back(fluent->index());
                 }
             }
