@@ -13,8 +13,6 @@ namespace aptk {
  *
  */
 class RoleMinimalElement : public RoleElement {
-private:
-
 protected:
     RoleElement* m_role;
     RoleElement* m_conn;

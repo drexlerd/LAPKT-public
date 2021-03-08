@@ -5,12 +5,6 @@
 
 namespace aptk {
 
-class B_Loadable : public BooleanFeature {
-public:
-    B_Loadable(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_Loadable() = default;
-};
-
 class N_Loaded : public NumericalFeature {
 public:
     N_Loaded(const BaseSketch* sketch, const std::string &name);
@@ -22,6 +16,14 @@ public:
     SD_Remaining(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_Remaining() = default;
 };
+
+
+class N_Test : public NumericalFeature {
+public:
+    N_Test(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_Test() = default;
+};
+
 
 class TppSketch : public BaseSketch {
 public:

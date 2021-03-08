@@ -3,38 +3,17 @@
 
 namespace aptk {
 
-B_Loadable::B_Loadable(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
-    ElementFactory::make_concept_intersection(
-        sketch->problem(),
-        false,
-        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "ready-to-load"), 0),
-        ElementFactory::make_concept_extraction(
-            sketch->problem(),
-            false,
-            ElementFactory::make_predicate_setminus(
-                sketch->problem(),
-                false,
-                ElementFactory::make_predicate_extraction(sketch->problem(), true, "stored"),
-                ElementFactory::make_predicate_extraction(sketch->problem(), false, "stored")),
-            0))) {
-}
-
 N_Loaded::N_Loaded(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
-        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "loaded"), 0),
-        ElementFactory::make_concept_extraction(
+        ElementFactory::get_concept_custom("needed_goods"),
+        ElementFactory::make_concept_existential_abstraction(
             sketch->problem(),
             false,
-            ElementFactory::make_predicate_setminus(
-                sketch->problem(),
-                false,
-                ElementFactory::make_predicate_extraction(sketch->problem(), true, "stored"),
-                ElementFactory::make_predicate_extraction(sketch->problem(), false, "stored")),
-            0))) {
+            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "loaded"), 0, 2),
+            ElementFactory::get_concept_custom("nonempty_levels")))) {
 }
 
 SD_Remaining::SD_Remaining(const BaseSketch* sketch, const std::string &name)
@@ -45,30 +24,52 @@ SD_Remaining::SD_Remaining(const BaseSketch* sketch, const std::string &name)
 }
 
 
+N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::get_concept_custom("nonempty_levels")) {
+}
+
+
 TppSketch::TppSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-    add_boolean_feature(new B_Loadable(this, "loadable"));
+
+    ElementFactory::add_concept_custom("empty_level",
+        ElementFactory::make_concept_minimal(problem, false,
+        ElementFactory::make_concept_extraction(problem , false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)),
+        ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)));
+    ElementFactory::add_concept_custom("nonempty_levels",
+        ElementFactory::make_concept_setminus(problem, false,
+            ElementFactory::make_concept_extraction(problem , false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)),
+            ElementFactory::get_concept_custom("empty_level")));
+    ElementFactory::add_concept_custom("needed_goods",
+        ElementFactory::make_concept_extraction(
+            problem,
+            false,
+            ElementFactory::make_predicate_setminus(
+                problem,
+                false,
+                ElementFactory::make_predicate_extraction(problem, true, "stored"),
+                ElementFactory::make_predicate_extraction(problem, false, "stored")),
+            0));
+
     add_numerical_feature(new N_Loaded(this, "loaded"));
     add_numerical_feature(new SD_Remaining(this, "remaining"));
+    add_numerical_feature(new N_Test(this, "test"));
     // store remaining
     add_rule(new Rule(this, "store_good",
         {},
         { new NonzeroNumerical(get_numerical_feature("loaded")),
           new NonzeroNumerical(get_numerical_feature("remaining")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("remaining")) }
+        { new DecrementNumerical(get_numerical_feature("loaded")),
+          new DecrementNumerical(get_numerical_feature("remaining")) }
     ));
     add_rule(new Rule(this, "load_truck",
-        { new PositiveBoolean(get_boolean_feature("loadable")) },
+        { },
         { new NonzeroNumerical(get_numerical_feature("remaining")), },
         {},
-        { new IncrementNumerical(get_numerical_feature("loaded")) }
-    ));
-    add_rule(new Rule(this, "buy_good",
-        { new NegativeBoolean(get_boolean_feature("loadable")) },
-        { },
-        { new ChangedPositiveBoolean(get_boolean_feature("loadable")) },
-        { }
+        { new IncrementNumerical(get_numerical_feature("loaded")),
+          new UnchangedNumerical(get_numerical_feature("remaining")) }
     ));
 }
 

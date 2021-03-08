@@ -17,6 +17,7 @@
 #include "concepts/universal_abstraction.hxx"
 #include "concepts/role_value_equality.hxx"
 #include "concepts/role_value_subset.hxx"
+#include "concepts/minimal.hxx"
 #include "roles/extraction.hxx"
 #include "roles/intersection.hxx"
 #include "roles/setminus.hxx"
@@ -78,6 +79,7 @@ private:
     static ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateElement*> m_predicate_union_cache;
     // concepts
     static ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*> m_concept_role_extraction_cache;
+    static ElementCache<std::tuple<bool, RoleElement*>, ConceptElement*> m_concept_object_extraction_cache;
     static ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*> m_concept_predicate_extraction_cache;
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_intersection_cache;
     static ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> m_concept_setminus_cache;
@@ -86,6 +88,7 @@ private:
     static ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> m_concept_universal_abstraction_cache;
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> m_concept_role_value_equality_cache;
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> m_concept_role_value_subset_cache;
+    static ElementCache<std::tuple<bool, ConceptElement*, RoleElement*>, ConceptElement*> m_concept_minimal_cache;
 
     // roles
     static ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*> m_role_extraction_cache;
@@ -110,6 +113,7 @@ public:
     static PredicateElement* make_predicate_union(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* left, PredicateElement* right);
 
     static ConceptElement* make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, unsigned position);
+    static ConceptElement* make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
     static ConceptElement* make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned position);
     static ConceptElement* make_concept_intersection(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);
     static ConceptElement* make_concept_setminus(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* left, ConceptElement* right);
@@ -118,6 +122,7 @@ public:
     static ConceptElement* make_concept_universal_abstraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept);
     static ConceptElement* make_concept_role_value_equality(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
     static ConceptElement* make_concept_role_value_subset(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
+    static ConceptElement* make_concept_minimal(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* concept, RoleElement* role);
 
     static RoleElement* make_role_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned a, unsigned b);
     static RoleElement* make_role_intersection(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);

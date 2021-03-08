@@ -16,6 +16,15 @@ std::map<Concept, Roles> compute_concept_role_mapping(const Roles &roles, bool f
     return result;
 }
 
+std::vector<unsigned> concepts_indices(const Sketch_STRIPS_Problem* problem, const Concepts &concepts) {
+    // mapping from concepts to indices for more compact storage.
+    std::vector<unsigned> concept_indices(problem->num_objects(), -1);
+    for (unsigned i = 0; i < concepts.size(); ++i) {
+        concept_indices[concepts[i]] = i;
+    }
+    return concept_indices;
+}
+
 std::pair<Concepts, std::vector<unsigned>> collect_concepts(
     const Sketch_STRIPS_Problem* problem, const Roles &roles) {
     Concepts_Set concepts;
@@ -24,12 +33,7 @@ std::pair<Concepts, std::vector<unsigned>> collect_concepts(
         concepts.insert(r.second);
     }
     Concepts concepts_vec(concepts.begin(), concepts.end());
-    // mapping from concepts to indices for more compact storage.
-    std::vector<unsigned> concept_indices(problem->num_objects(), -1);
-    for (unsigned i = 0; i < concepts_vec.size(); ++i) {
-        concept_indices[concepts_vec[i]] = i;
-    }
-    return std::make_pair(concepts_vec, concept_indices);
+    return std::make_pair(concepts_vec, aptk::elements::concepts_indices(problem, concepts_vec));
 }
 
 Distances compute_distances(const AdjacencyList &edges, unsigned source) {

@@ -8,6 +8,7 @@ ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateEl
 ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateElement*> ElementFactory::m_predicate_union_cache = ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateElement*>();
 // concepts
 ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*> ElementFactory::m_concept_role_extraction_cache = ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*>();
+ElementCache<std::tuple<bool, RoleElement*>, ConceptElement*> ElementFactory::m_concept_object_extraction_cache = ElementCache<std::tuple<bool, RoleElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*> ElementFactory::m_concept_predicate_extraction_cache = ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*>();
 ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_intersection_cache = ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_setminus_cache = ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*>();
@@ -16,6 +17,7 @@ ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> E
 ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_universal_abstraction_cache = ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> ElementFactory::m_concept_role_value_equality_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*> ElementFactory::m_concept_role_value_subset_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, ConceptElement*>();
+ElementCache<std::tuple<bool, ConceptElement*, RoleElement*>, ConceptElement*> ElementFactory::m_concept_minimal_cache = ElementCache<std::tuple<bool, ConceptElement*, RoleElement*>, ConceptElement*>();
 // roles
 ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*> ElementFactory::m_role_extraction_cache = ElementCache<std::tuple<bool, PredicateElement*, unsigned, unsigned>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_intersection_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
@@ -72,6 +74,15 @@ ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Prob
         m_concept_role_extraction_cache.insert(key, std::move(result));
     }
     return m_concept_role_extraction_cache.get(key);
+}
+
+ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role) {
+    std::tuple<bool, RoleElement*> key = std::tuple<bool, RoleElement*>(goal, role);
+    if (!m_concept_object_extraction_cache.exists(key)) {
+        ConceptElement* result = new ConceptObjectExtractionElement(problem, goal, role);
+        m_concept_object_extraction_cache.insert(key, std::move(result));
+    }
+    return m_concept_object_extraction_cache.get(key);
 }
 
 ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned position) {
@@ -145,6 +156,15 @@ ConceptElement* ElementFactory::make_concept_role_value_subset(const Sketch_STRI
         m_concept_role_value_subset_cache.insert(key, std::move(result));
     }
     return m_concept_role_value_subset_cache.get(key);
+}
+
+ConceptElement* ElementFactory::make_concept_minimal(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* concept, RoleElement* role) {
+    std::tuple<bool, ConceptElement*, RoleElement*> key = std::tuple<bool, ConceptElement*, RoleElement*>(goal, concept, role);
+    if (!m_concept_minimal_cache.exists(key)) {
+        ConceptElement* result = new ConceptMinimalElement(problem, goal, concept, role);
+        m_concept_minimal_cache.insert(key, std::move(result));
+    }
+    return m_concept_minimal_cache.get(key);
 }
 
 

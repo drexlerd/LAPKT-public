@@ -4,6 +4,7 @@
 #include "../concept.hxx"
 #include "../role.hxx"
 #include "../predicate.hxx"
+#include "../utils.hxx"
 
 namespace aptk {
 
@@ -39,6 +40,31 @@ public:
         }
     }
     virtual ~ConceptRoleExtractionElement() = default;
+};
+
+
+class ConceptObjectExtractionElement : public ConceptElement {
+protected:
+    RoleElement* m_role;
+
+    virtual void compute_result(const Roles& role_result) {
+        std::pair<Concepts, std::vector<unsigned>> collected = aptk::elements::collect_concepts(m_problem, role_result);
+        m_result = collected.first;
+    }
+
+    virtual void compute_result(const State* state) override {
+        m_result.clear();
+        compute_result(m_role->evaluate(state));
+    }
+
+public:
+    ConceptObjectExtractionElement(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role)
+    : ConceptElement(problem, goal), m_role(role) {
+        if (goal) {
+            compute_result(role->result());
+        }
+    }
+    virtual ~ConceptObjectExtractionElement() = default;
 };
 
 

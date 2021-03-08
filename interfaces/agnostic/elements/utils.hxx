@@ -26,6 +26,9 @@ extern std::map<Concept, Roles> compute_concept_role_mapping(const Roles &roles,
 /**
  * Compute all objects occuring in a role
  */
+extern std::vector<unsigned> concepts_indices(
+    const Sketch_STRIPS_Problem* problem, const Concepts &concepts);
+
 extern std::pair<Concepts, std::vector<unsigned>> collect_concepts(
     const Sketch_STRIPS_Problem* problem, const Roles &roles);
 
