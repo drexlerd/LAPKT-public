@@ -1,3 +1,7 @@
+
+#ifndef __SCHEDULE_SKETCH__
+#define __SCHEDULE_SKETCH__
+
 #include <sketch.hxx>
 #include "../features/numerical_feature.hxx"
 #include "../features/boolean_feature.hxx"
@@ -34,6 +38,12 @@ public:
     virtual ~B_Busy() = default;
 };
 
+class N_Hot : public NumericalFeature {
+public:
+    N_Hot(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_Hot() = default;
+};
+
 
 class ScheduleSketch : public BaseSketch {
 public:
@@ -42,3 +52,5 @@ public:
 };
 
 }
+
+#endif

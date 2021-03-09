@@ -41,6 +41,16 @@ B_Busy::B_Busy(const BaseSketch* sketch, const std::string &name)
 }
 
 
+N_Hot::N_Hot(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(sketch, name,
+    ElementFactory::make_role_restriction(
+        sketch->problem(),
+        false,
+        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "temperature"), 0, 1),
+        ElementFactory::make_concept_extraction(sketch->problem(), "hot"))) {
+}
+
+
 
 ScheduleSketch::ScheduleSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
@@ -48,32 +58,35 @@ ScheduleSketch::ScheduleSketch(
     add_numerical_feature(new N_Shape(this, "shape"));
     add_numerical_feature(new N_Surface(this, "surface"));
     add_numerical_feature(new N_Color(this, "paint"));
+    add_numerical_feature(new N_Hot(this, "hot"));
     add_boolean_feature(new B_Scheduled(this, "scheduled"));
     add_boolean_feature(new B_Busy(this, "busy"));
     add_rule(new Rule(this, "do-time-step1",
       { new PositiveBoolean(get_boolean_feature("scheduled"))},
       {},
       { new ChangedNegativeBoolean(get_boolean_feature("scheduled")) },
-      {}
+      { new UnchangedNumerical(get_numerical_feature("hot")) }
     ));
     add_rule(new Rule(this, "do-time-step2",
       { new PositiveBoolean(get_boolean_feature("busy"))},
       {},
       { new ChangedNegativeBoolean(get_boolean_feature("busy")) },
-      {}
+      { new UnchangedNumerical(get_numerical_feature("hot")) }
     ));
     add_rule(new Rule(this, "shape_obj",
         {},
         { new NonzeroNumerical(get_numerical_feature("shape")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("shape"))}
+        { new DecrementNumerical(get_numerical_feature("shape")),
+          new UnchangedNumerical(get_numerical_feature("hot")) }
     ));
     add_rule(new Rule(this, "surface_obj",
         {},
         { new NonzeroNumerical(get_numerical_feature("surface")),
           new ZeroNumerical(get_numerical_feature("shape")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("surface"))}
+        { new DecrementNumerical(get_numerical_feature("surface")),
+          new UnchangedNumerical(get_numerical_feature("hot")) }
     ));
     add_rule(new Rule(this, "paint_obj",
         {},
@@ -81,7 +94,8 @@ ScheduleSketch::ScheduleSketch(
           new ZeroNumerical(get_numerical_feature("surface")),
           new ZeroNumerical(get_numerical_feature("shape")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("paint"))}
+        { new DecrementNumerical(get_numerical_feature("paint")),
+          new UnchangedNumerical(get_numerical_feature("hot"))}
     ));
 }
 

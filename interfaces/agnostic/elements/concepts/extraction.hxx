@@ -67,6 +67,19 @@ public:
     virtual ~ConceptObjectExtractionElement() = default;
 };
 
+class ConceptConstantExtractionElement : public ConceptElement {
+protected:
+    virtual void compute_result(const State* state) override {
+    }
+
+public:
+    ConceptConstantExtractionElement(const Sketch_STRIPS_Problem* problem, std::string object_name)
+    : ConceptElement(problem, true) {
+        m_result.push_back(problem->object_name_to_object_index().at(object_name));
+    }
+    virtual ~ConceptConstantExtractionElement() = default;
+};
+
 
 class ConceptPredicateExtractionElement : public ConceptElement {
 protected:

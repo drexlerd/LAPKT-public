@@ -152,6 +152,7 @@ class PropositionalDetAction:
                 except KeyError:
                     self.cond_effs[condition] = [
                         (atom_table[lit.text()], False)]
+                print(axioms_changed)
         for cond, lit in dels:
             if len(cond) == 0:
                 effs.append((atom_table[lit.text()], True))
@@ -194,7 +195,7 @@ class PropositionalDetAction:
 
         if len(effs) > 0:
             self.effects.append(effs)
-        # if len(self.cond_effs) > 0 :
+        #if len(self.cond_effs) > 0 :
         # 	print( "Conditional effects: \n" )
         # 	for cond, eff in self.cond_effs.items() :
         # 		print( "Condition: %s %s\n"%(cond,eff) )
@@ -273,7 +274,6 @@ def fodet(domain_file, problem_file, output_task):
         nd_action.add_effect(
             action.add_effects, action.del_effects, atom_table, atom_names, axioms)
         nd_actions.append((nd_action.name, nd_action))
-
     for name, _ in nd_actions.items():
         output_task.add_action(name)
 
@@ -446,6 +446,7 @@ def sketch(domain_file, problem_file, sketch_name, output_task):
         if len(nd_action.negated_conditions) > 0:
             output_task.notify_negated_conditions(nd_action.negated_conditions)
         nd_actions.append((nd_action.name, nd_action))
+        action.dump()
 
     output_task.create_negated_fluents()
 

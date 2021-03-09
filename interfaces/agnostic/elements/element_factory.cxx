@@ -9,6 +9,7 @@ ElementCache<std::tuple<bool, PredicateElement*, PredicateElement*>, PredicateEl
 // concepts
 ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*> ElementFactory::m_concept_role_extraction_cache = ElementCache<std::tuple<bool, RoleElement*, unsigned>, ConceptElement*>();
 ElementCache<std::tuple<bool, RoleElement*>, ConceptElement*> ElementFactory::m_concept_object_extraction_cache = ElementCache<std::tuple<bool, RoleElement*>, ConceptElement*>();
+ElementCache<std::tuple<std::string>, ConceptElement*> ElementFactory::m_concept_constant_extraction_cache = ElementCache<std::tuple<std::string>, ConceptElement*>();
 ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*> ElementFactory::m_concept_predicate_extraction_cache = ElementCache<std::tuple<bool, PredicateElement*, unsigned>, ConceptElement*>();
 ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_intersection_cache = ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*>();
 ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*> ElementFactory::m_concept_setminus_cache = ElementCache<std::tuple<bool, ConceptElement*, ConceptElement*>, ConceptElement*>();
@@ -25,6 +26,7 @@ ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> Element
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_union_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_composition_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_minimal_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
+ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*> ElementFactory::m_role_restriction_cache = ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_inverse_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
 // custom
 ElementCache<std::string, PredicateElement*> ElementFactory::m_predicate_custom_cache = ElementCache<std::string, PredicateElement*>();
@@ -83,6 +85,15 @@ ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Prob
         m_concept_object_extraction_cache.insert(key, std::move(result));
     }
     return m_concept_object_extraction_cache.get(key);
+}
+
+ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Problem* problem, std::string constant_name) {
+    std::tuple<std::string> key = std::tuple<std::string>(constant_name);
+    if (!m_concept_constant_extraction_cache.exists(key)) {
+        ConceptElement* result = new ConceptConstantExtractionElement(problem, constant_name);
+        m_concept_constant_extraction_cache.insert(key, std::move(result));
+    }
+    return m_concept_constant_extraction_cache.get(key);
 }
 
 ConceptElement* ElementFactory::make_concept_extraction(const Sketch_STRIPS_Problem* problem, bool goal, PredicateElement* predicate, unsigned position) {
@@ -220,6 +231,15 @@ RoleElement* ElementFactory::make_role_minimal(const Sketch_STRIPS_Problem* prob
         m_role_minimal_cache.insert(key, std::move(result));
     }
     return m_role_minimal_cache.get(key);
+}
+
+RoleElement* ElementFactory::make_role_restriction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept) {
+    std::tuple<bool, RoleElement*, ConceptElement*> key = std::tuple<bool, RoleElement*, ConceptElement*>(goal, role, concept);
+    if (!m_role_restriction_cache.exists(key)) {
+        RoleElement* result = new RoleRestrictionElement(problem, goal, role, concept);
+        m_role_restriction_cache.insert(key, std::move(result));
+    }
+    return m_role_restriction_cache.get(key);
 }
 
 RoleElement* ElementFactory::make_role_inverse(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role) {

@@ -1,0 +1,6 @@
+do-punch d0 one front (1)
+do-lathe b0 (1)
+do-time-step  (1)
+do-polish b0 (1)
+do-immersion-paint d0 black (1)
+Plan length: 5 step(s).
