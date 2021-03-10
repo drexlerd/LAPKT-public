@@ -6,6 +6,7 @@
 #include <limits>
 #include <queue>
 #include <utility>
+#include <tuple>
 #include "role.hxx"
 
 namespace aptk {
@@ -26,10 +27,10 @@ extern std::map<Concept, Roles> compute_concept_role_mapping(const Roles &roles,
 /**
  * Compute all objects occuring in a role
  */
-extern std::vector<unsigned> concepts_indices(
+extern Index_Vec concepts_indices(
     const Sketch_STRIPS_Problem* problem, const Concepts &concepts);
 
-extern std::pair<Concepts, std::vector<unsigned>> collect_concepts(
+extern std::pair<Concepts, Index_Vec> collect_concepts(
     const Sketch_STRIPS_Problem* problem, const Roles &roles);
 
 /**
@@ -45,7 +46,7 @@ extern PairwiseDistances compute_pairwise_distances(const AdjacencyList &edges);
 /**
  * Compute all pairwise distances between objects occuring in a given role.
  */
-extern std::pair<PairwiseDistances, std::vector<unsigned>> compute_pairwise_distances(
+extern std::tuple<PairwiseDistances, Concepts, Index_Vec> compute_pairwise_distances(
     const Sketch_STRIPS_Problem* problem, const Roles &roles);
 
 }

@@ -44,9 +44,9 @@ public:
         m_role2->print();
         */
         // compute pairwise distances over role.
-        std::pair<aptk::elements::PairwiseDistances, Index_Vec> result = aptk::elements::compute_pairwise_distances(m_sketch->problem(), result_conn);
-        aptk::elements::PairwiseDistances pairwise_distances = result.first;
-        std::vector<unsigned> conn_concept_indices = result.second;
+        std::tuple<aptk::elements::PairwiseDistances, Concepts, Index_Vec> result = aptk::elements::compute_pairwise_distances(m_sketch->problem(), result_conn);
+        aptk::elements::PairwiseDistances pairwise_distances = std::get<0>(result);
+        Index_Vec conn_concept_indices = std::get<2>(result);
 
         // collect elements of role O(NlogN)
         std::map<Concept, Roles> left_concept_role = aptk::elements::compute_concept_role_mapping(result_role1, true);
