@@ -103,7 +103,7 @@ GridSketch::GridSketch(
       { new NonzeroNumerical(get_numerical_feature("locked_places")), },
 
       { new ChangedPositiveBoolean(get_boolean_feature("holding_opening_key")) },
-      { new UnchangedNumerical(get_numerical_feature("keys_not_at_target"))}
+      { }
     ));
 }
 
