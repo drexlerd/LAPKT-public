@@ -167,10 +167,10 @@ SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string
         ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)) {
 }
 
-/*N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
+N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::get_role_custom("current_walked")) {
-}*/
+    ElementFactory::get_role_custom("next_walked")) {
+}
 
 HikingSketch::HikingSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
@@ -222,11 +222,11 @@ HikingSketch::HikingSketch(
     add_numerical_feature(new N_CurrentPerson(this, "current_person"));
     add_numerical_feature(new N_NextPerson(this, "next_person"));
 
-    add_numerical_feature(new N_PreviousCurrentPerson(this, "previous_current_person"));
+    // add_numerical_feature(new N_PreviousCurrentPerson(this, "previous_current_person"));
     add_numerical_feature(new N_CurrentNextPerson(this, "current_next_person"));
 
     add_numerical_feature(new SD_RemainingHikes(this, "remaining_hikes"));
-    // add_numerical_feature(new N_Test(this, "test"));
+    add_numerical_feature(new N_Test(this, "test"));
 
     // r1 down tent at current place (cannot be used to relocate cars/persons)
     add_rule(new Rule(this, "down_tent",
@@ -290,7 +290,7 @@ HikingSketch::HikingSketch(
 
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
           new UnchangedBoolean(get_boolean_feature("next_car"))},
-        { new DecrementNumerical(get_numerical_feature("current_next_person")),
+        { // new DecrementNumerical(get_numerical_feature("current_next_person")),
           new IncrementNumerical(get_numerical_feature("next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
           new IncrementNumerical(get_numerical_feature("next_car"))}

@@ -28,6 +28,49 @@ N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
             )) {
 }
 
+N_DirtyShakers::N_DirtyShakers(const BaseSketch* sketch, const std::string &name)
+    : NumericalFeature(
+        sketch,
+        name,
+        ElementFactory::make_concept_union(
+            sketch->problem(),
+            false,
+            ElementFactory::make_concept_intersection(
+                sketch->problem(),
+                false,
+                ElementFactory::make_concept_extraction(
+                    sketch->problem(),
+                    false,
+                    ElementFactory::make_role_restriction(
+                        sketch->problem(),
+                        false,
+                        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "shaker-level"), 0, 1),
+                        ElementFactory::make_concept_extraction(sketch->problem(), "l1")),
+                    0),
+                ElementFactory::make_concept_extraction(
+                    sketch->problem(),
+                    false,
+                    ElementFactory::make_role_restriction(
+                        sketch->problem(),
+                        false,
+                        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "contains"), 0, 1),
+                        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "cocktail-part1"), 0)),
+                    0)),
+            ElementFactory::make_concept_setminus(
+                sketch->problem(),
+                false,
+                ElementFactory::make_concept_extraction(
+                    sketch->problem(),
+                    false,
+                    ElementFactory::make_role_restriction(
+                        sketch->problem(),
+                        false,
+                        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "shaker-level"), 0, 1),
+                        ElementFactory::make_concept_extraction(sketch->problem(), "l0")),
+                    0),
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "clean"), 0)))) {
+}
+
 B_CocktailsConsistentWithPart1::B_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(
         sketch,
@@ -106,21 +149,23 @@ BarmanSketch::BarmanSketch(
             0,
             1));
 
+    /**
+     * Features & rules for width <= 2
+     */
     add_numerical_feature(new N_UnachievedGoalAtoms(this, "unachieved_goal_atoms"));
     add_boolean_feature(new B_CocktailsConsistentWithPart1(this, "cocktails_consistent_with_part_1"));
     add_boolean_feature(new B_CocktailsConsistentWithPart2(this, "cocktails_consistent_with_part_2"));
     add_numerical_feature(new N_DirtyShots(this, "dirty_shots"));
     add_rule(new Rule(this, "fill_first_ingredient",
         { new NegativeBoolean(get_boolean_feature("cocktails_consistent_with_part_1")), },
-        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")),
-          },
+        { },
         { new ChangedPositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_1")), },
         { }
     ));
     add_rule(new Rule(this, "fill_second_ingredient",
         { new PositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_1")),
           new NegativeBoolean(get_boolean_feature("cocktails_consistent_with_part_2")) },
-        { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")), },
+        { },
         { new ChangedPositiveBoolean(get_boolean_feature("cocktails_consistent_with_part_2")), },
         { }
     ));
@@ -136,6 +181,17 @@ BarmanSketch::BarmanSketch(
         { new NonzeroNumerical(get_numerical_feature("unachieved_goal_atoms")) },
         {},
         { new DecrementNumerical(get_numerical_feature("unachieved_goal_atoms")) }
+    ));
+    /**
+     * Additional features & rules for width = 1
+     */
+    // cocktail in shaker and level = 1 => clean shaker
+    add_numerical_feature(new N_DirtyShakers(this, "dirty_shakers"));
+    add_rule(new Rule(this, "clean_shaker",
+        {},
+        { new NonzeroNumerical(get_numerical_feature("dirty_shakers")) },
+        {},
+        { new DecrementNumerical(get_numerical_feature("dirty_shakers")) }
     ));
 }
 

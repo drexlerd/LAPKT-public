@@ -65,7 +65,8 @@ public:
                 // compose roles
                 for (const Role &r1 : it1->second) {
                     for (const Role &r2 : it2->second) {
-                        assert(r1.second == r2.first);
+                        // std::cout << r1.first << " " << r1.second << " " << r2.first << " " << r2.second << std::endl;
+                        assert(r1.first == r2.first);
                         minimum_distances[role1_a] = std::min(
                             minimum_distances[role1_a],
                             pairwise_distances[conn_concept_indices[r1.second]][conn_concept_indices[r2.second]]);

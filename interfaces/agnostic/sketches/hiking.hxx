@@ -112,11 +112,11 @@ public:
     virtual ~SD_RemainingHikes() = default;
 };
 
-/*class N_Test : public NumericalFeature {
+class N_Test : public NumericalFeature {
 public:
     N_Test(const BaseSketch* sketch, const std::string &name);
     virtual ~N_Test() = default;
-};*/
+};
 
 
 class HikingSketch : public BaseSketch {

@@ -24,10 +24,10 @@ SD_Remaining::SD_Remaining(const BaseSketch* sketch, const std::string &name)
 }
 
 
-N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
+/*N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
     ElementFactory::get_concept_custom("nonempty_levels")) {
-}
+}*/
 
 
 TppSketch::TppSketch(
@@ -54,7 +54,7 @@ TppSketch::TppSketch(
 
     add_numerical_feature(new N_Loaded(this, "loaded"));
     add_numerical_feature(new SD_Remaining(this, "remaining"));
-    add_numerical_feature(new N_Test(this, "test"));
+    // add_numerical_feature(new N_Test(this, "test"));
     // store remaining
     add_rule(new Rule(this, "store_good",
         {},
