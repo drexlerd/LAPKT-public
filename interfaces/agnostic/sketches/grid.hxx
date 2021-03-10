@@ -19,11 +19,21 @@ public:
 /**
  * Whether the agent is holding a key that is not at its target location
  */
-class B_Holding : public BooleanFeature {
+class B_HoldingTargetKey : public BooleanFeature {
 public:
-    B_Holding(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_Holding() = default;
+    B_HoldingTargetKey(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_HoldingTargetKey() = default;
 };
+
+/**
+ * Whether the agent is holding a key that can be used to open a reachable door
+ */
+class B_HoldingOpeningKey : public BooleanFeature {
+public:
+    B_HoldingOpeningKey(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_HoldingOpeningKey() = default;
+};
+
 
 class GridSketch : public BaseSketch {
 public:

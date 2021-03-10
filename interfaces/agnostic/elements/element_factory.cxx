@@ -28,6 +28,8 @@ ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> Element
 ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> ElementFactory::m_role_minimal_cache = ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*> ElementFactory::m_role_restriction_cache = ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_inverse_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
+ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_transitive_closure_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
+ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_reflexive_transitive_closure_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
 // custom
 ElementCache<std::string, PredicateElement*> ElementFactory::m_predicate_custom_cache = ElementCache<std::string, PredicateElement*>();
 ElementCache<std::string, ConceptElement*> ElementFactory::m_concept_custom_cache = ElementCache<std::string, ConceptElement*>();
@@ -249,6 +251,24 @@ RoleElement* ElementFactory::make_role_inverse(const Sketch_STRIPS_Problem* prob
         m_role_inverse_cache.insert(key, std::move(result));
     }
     return m_role_inverse_cache.get(key);
+}
+
+RoleElement* ElementFactory::make_role_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role) {
+    std::tuple<bool, RoleElement*> key = std::tuple<bool, RoleElement*>(goal, role);
+    if (!m_role_transitive_closure_cache.exists(key)) {
+        RoleElement* result = new RoleTransitiveClosureElement(problem, goal, role);
+        m_role_transitive_closure_cache.insert(key, std::move(result));
+    }
+    return m_role_transitive_closure_cache.get(key);
+}
+
+RoleElement* ElementFactory::make_role_reflexive_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role) {
+    std::tuple<bool, RoleElement*> key = std::tuple<bool, RoleElement*>(goal, role);
+    if (!m_role_reflexive_transitive_closure_cache.exists(key)) {
+        RoleElement* result = new RoleReflexiveTransitiveClosureElement(problem, goal, role);
+        m_role_reflexive_transitive_closure_cache.insert(key, std::move(result));
+    }
+    return m_role_reflexive_transitive_closure_cache.get(key);
 }
 
 PredicateElement* ElementFactory::add_predicate_custom(std::string name, PredicateElement* custom) {

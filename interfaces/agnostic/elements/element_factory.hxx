@@ -26,6 +26,8 @@
 #include "roles/minimal.hxx"
 #include "roles/inverse.hxx"
 #include "roles/restriction.hxx"
+#include "roles/transitive_closure.hxx"
+#include "roles/reflexive_transitive_closure.hxx"
 
 
 namespace aptk {
@@ -101,6 +103,8 @@ private:
     static ElementCache<std::tuple<bool, RoleElement*, RoleElement*>, RoleElement*> m_role_minimal_cache;
     static ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*> m_role_restriction_cache;
     static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_inverse_cache;
+    static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_transitive_closure_cache;
+    static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_reflexive_transitive_closure_cache;
 
     // custom
     static ElementCache<std::string, PredicateElement*> m_predicate_custom_cache;
@@ -135,8 +139,9 @@ public:
     static RoleElement* make_role_composition(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
     static RoleElement* make_role_minimal(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left, RoleElement* right);
     static RoleElement* make_role_restriction(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role, ConceptElement* concept);
-    static RoleElement* make_role_inverse(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* left);
-
+    static RoleElement* make_role_inverse(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
+    static RoleElement* make_role_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
+    static RoleElement* make_role_reflexive_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
 
     static PredicateElement* add_predicate_custom(std::string name, PredicateElement* custom);
     static PredicateElement* get_predicate_custom(std::string name);

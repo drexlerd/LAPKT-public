@@ -14,11 +14,13 @@ protected:
     virtual void compute_result(const Roles& role_result, const Concepts& concept_result) {
         m_result.clear();
         Concepts_Set concepts_set(concept_result.begin(), concept_result.end());
+        Concepts_Set result_set;
         for (const Role& role : role_result) {
             if (concepts_set.find(role.second) != concepts_set.end()) {
-                m_result.push_back(role.first);
+                result_set.insert(role.first);
             }
         }
+        m_result = Concepts(result_set.begin(), result_set.end());
     }
 
     virtual void compute_result(const State* state) override {
