@@ -66,6 +66,9 @@ Sketch_SIW_Planner::do_search( Sketch_SIW_Fwd& engine ) {
 	engine.set_max_bound(m_iw_bound-1);
 	engine.start();
 
+    std::vector< std::string > sketch_plan;
+    std::vector< std::vector<aptk::Action_Idx> > partial_plans;
+	std::vector< unsigned > subproblem_widths;
 	std::vector< aptk::Action_Idx > plan;
 	float				cost;
 
@@ -77,7 +80,30 @@ Sketch_SIW_Planner::do_search( Sketch_SIW_Fwd& engine ) {
 
 	std::ofstream	plan_stream( m_plan_filename.c_str() );
 
-	if ( engine.find_solution( cost, plan ) ) {
+	if ( engine.find_solution( cost, plan, partial_plans, sketch_plan, subproblem_widths ) ) {
+		std::cout << std::endl;
+		std::cout << "Interleaved plan and sketch plan" << std::endl;
+		unsigned k = 0;
+		for ( unsigned i = 0; i < partial_plans.size(); ++i) {
+			std::cout << i+1 << ". ";
+			std::cout << "width = " << subproblem_widths[i] << ", ";
+			std::cout << "rule = " << sketch_plan[i] << std::endl;
+			for (unsigned j = 0; j < partial_plans[i].size(); ++j) {
+                std::cout << "\t" << k+1 << ". ";
+				const aptk::Action& a = *(instance()->actions()[ partial_plans[i][j] ]);
+				std::cout << a.signature();
+				std::cout << std::endl;
+				++k;
+			}
+		}
+		std::cout << std::endl;
+		std::cout << "Sketch plan found" << std::endl;
+		for (unsigned k = 0; k < sketch_plan.size(); ++k) {
+			std::cout << k+1 << ". ";
+			std::cout << "width = " << subproblem_widths[k] << ", ";
+			std::cout << "rule = " << sketch_plan[k] << std::endl;
+		}
+		std::cout << std::endl;
 		std::cout << "Plan found with cost: " << cost << std::endl;
 		for ( unsigned k = 0; k < plan.size(); k++ ) {
 			std::cout << k+1 << ". ";
@@ -86,6 +112,7 @@ Sketch_SIW_Planner::do_search( Sketch_SIW_Fwd& engine ) {
 			std::cout << std::endl;
 			plan_stream << a.signature() << std::endl;
 		}
+		std::cout << std::endl;
 		float tf = aptk::time_used();
 		unsigned expanded_f = engine.expanded();
 		unsigned generated_f = engine.generated();

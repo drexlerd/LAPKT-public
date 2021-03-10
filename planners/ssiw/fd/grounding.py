@@ -152,7 +152,6 @@ class PropositionalDetAction:
                 except KeyError:
                     self.cond_effs[condition] = [
                         (atom_table[lit.text()], False)]
-                print(axioms_changed)
         for cond, lit in dels:
             if len(cond) == 0:
                 effs.append((atom_table[lit.text()], True))
@@ -446,7 +445,6 @@ def sketch(domain_file, problem_file, sketch_name, output_task):
         if len(nd_action.negated_conditions) > 0:
             output_task.notify_negated_conditions(nd_action.negated_conditions)
         nd_actions.append((nd_action.name, nd_action))
-        action.dump()
 
     output_task.create_negated_fluents()
 

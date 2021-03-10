@@ -153,10 +153,12 @@ void BaseSketch::initialize_first_subproblem(const State* state) {
     // 3. recompute applicable rules for the generated state, and
     compute_applicable_rules_for_init();
     // debug print
-    print_applied_rules();
-    print_feature_evaluations();
-    print_applicable_rules();
-    state->print(std::cout);
+    if (m_verbose) {
+        print_applied_rules();
+        print_feature_evaluations();
+        print_applicable_rules();
+        state->print(std::cout);
+    }
 }
 
 bool BaseSketch::process_state(const State* state) {
@@ -174,12 +176,14 @@ bool BaseSketch::process_state(const State* state) {
         // (ii) recompute applicable rules for the generated state, and
         compute_applicable_rules_for_init();
         // print debug information
-        print_applied_rules();
-        print_feature_evaluations();
-        print_applicable_rules();
-        state->print(std::cout);
-        ++m_count;
-        // if (m_count == 15) exit(1);
+        if (m_verbose) {
+            print_applied_rules();
+            print_feature_evaluations();
+            print_applicable_rules();
+            state->print(std::cout);
+            ++m_count;
+            // if (m_count == 15) exit(1);
+        }
         // (iii) return true to indicate SIW that a new subproblem was found
         return true;
     }

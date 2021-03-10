@@ -176,7 +176,7 @@ protected:
     // the rules applied until termination
     mutable std::vector<const Rule*> m_applied_rules;
 
-    const bool m_verbose = true;
+    const bool m_verbose = false;
     int m_count = 0;
 protected:
     /**

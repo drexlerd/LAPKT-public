@@ -14,8 +14,8 @@ namespace aptk {
 			std::string	name;
 			unsigned	index;
 			float		cost;
-			
-			Atom( const std::string& _name, unsigned i = 0 ) 
+
+			Atom( const std::string& _name, unsigned i = 0 )
 			: name( _name ), index(i) {
 			}
 
@@ -59,10 +59,10 @@ namespace aptk {
 			Effect_Vec			effects;
 			float				cost;
 
-			Action( const std::string& _name, size_t i = 0 ) 
+			Action( const std::string& _name, size_t i = 0 )
 			: name( _name ), index(i), cost( 1.0f ) {
 			}
-			
+
 			Action( const Action& a ) {
 				name = a.name;
 				index = a.index;
@@ -78,7 +78,7 @@ namespace aptk {
 				effects = a.effects;
 				cost = a.cost;
 				return *this;
-			} 
+			}
 
 
 			bool operator==( const Action& a ) { return index == a.index; }
@@ -100,7 +100,7 @@ namespace aptk {
 		{
 			Clause	body;
 			Clause	head;
-			
+
 			void		print( std::ostream& os, const FOD_Problem& model ) const;
 		};
 
@@ -117,11 +117,11 @@ namespace aptk {
 		std::vector<Clause>		invariants;
 		size_t				max_precondition_size;
 
-		FOD_Problem( ) 
+		FOD_Problem( )
 			: max_precondition_size(0) {
 		}
 
-		FOD_Problem( const std::string& dom, const std::string& prob ) 
+		FOD_Problem( const std::string& dom, const std::string& prob )
 			: domain_name( dom ), problem_name( prob ), max_precondition_size(0) {
 		}
 
@@ -135,7 +135,7 @@ namespace aptk {
 
 		Atom&		new_atom( const std::string& name );
 		Action&		new_action( const std::string& name );
-		
+
 		void		add_invariant( const Clause& inv );
 
 		void		add_axiom( const Clause& body, const Clause& head );
