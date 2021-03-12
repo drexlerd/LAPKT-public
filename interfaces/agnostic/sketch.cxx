@@ -26,12 +26,12 @@ bool NegativeBoolean::evaluate() const {
 
 ChangedPositiveBoolean::ChangedPositiveBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
 bool ChangedPositiveBoolean::evaluate() const {
-    return !m_feature->get_old_eval() && m_feature->get_new_eval();
+    return m_feature->get_new_eval();
 }
 
 ChangedNegativeBoolean::ChangedNegativeBoolean(const BooleanFeature* feature) : BooleanFeatureEvalProxy(feature) { }
 bool ChangedNegativeBoolean::evaluate() const {
-    return m_feature->get_old_eval() && !m_feature->get_new_eval();
+    return !m_feature->get_new_eval();
 }
 
 

@@ -26,17 +26,12 @@ public:
     virtual ~N_Color() = default;
 };
 
-class B_Scheduled : public BooleanFeature {
+class B_ScheduledOrBusy : public BooleanFeature {
 public:
-    B_Scheduled(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_Scheduled() = default;
+    B_ScheduledOrBusy(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_ScheduledOrBusy() = default;
 };
 
-class B_Busy : public BooleanFeature {
-public:
-    B_Busy(const BaseSketch* sketch, const std::string &name);
-    virtual ~B_Busy() = default;
-};
 
 class N_Hot : public NumericalFeature {
 public:
