@@ -48,18 +48,7 @@ B_HoldingOpeningKey::B_HoldingOpeningKey(const BaseSketch* sketch, const std::st
                 sketch->problem(),
                 false,
                 ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "lock-shape"), 1, 0),
-                ElementFactory::make_concept_extraction(
-                    sketch->problem(),
-                    false,
-                    ElementFactory::make_role_restriction(
-                        sketch->problem(),
-                        false,
-                        ElementFactory::make_role_transitive_closure(
-                            sketch->problem(),
-                            false,
-                            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "conn"), 1, 0)),
-                        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at-robot"), 0)),
-                    0))))) {
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "locked"), 0))))) {
 }
 
 
@@ -75,7 +64,8 @@ GridSketch::GridSketch(
         { new NonzeroNumerical(get_numerical_feature("locked_places")) },
 
         {},
-        { new DecrementNumerical(get_numerical_feature("locked_places")) }
+        { new DecrementNumerical(get_numerical_feature("locked_places")),
+          new UnchangedNumerical(get_numerical_feature("keys_not_at_target")) }
     ));
     add_rule(new Rule(this, "move_key_to_target",
         {},
@@ -83,7 +73,8 @@ GridSketch::GridSketch(
           new NonzeroNumerical(get_numerical_feature("keys_not_at_target"))},
 
         {},
-        { new DecrementNumerical(get_numerical_feature("keys_not_at_target")) }
+        { new UnchangedNumerical(get_numerical_feature("locked_places")),
+          new DecrementNumerical(get_numerical_feature("keys_not_at_target")) }
     ));
     /**
      * Additional features & rules for width = 1
@@ -96,14 +87,16 @@ GridSketch::GridSketch(
         new NonzeroNumerical(get_numerical_feature("keys_not_at_target")) },
 
       { new ChangedPositiveBoolean(get_boolean_feature("holding_target_key")) },
-      { new UnchangedNumerical(get_numerical_feature("keys_not_at_target"))}
+      { new UnchangedNumerical(get_numerical_feature("locked_places")),
+        new UnchangedNumerical(get_numerical_feature("keys_not_at_target"))}
     ));
     add_rule(new Rule(this, "pick_opening_key",
       { new NegativeBoolean(get_boolean_feature("holding_opening_key")) },
       { new NonzeroNumerical(get_numerical_feature("locked_places")), },
 
       { new ChangedPositiveBoolean(get_boolean_feature("holding_opening_key")) },
-      { }
+      { new UnchangedNumerical(get_numerical_feature("locked_places")),
+        new UnchangedNumerical(get_numerical_feature("keys_not_at_target")) }
     ));
 }
 
