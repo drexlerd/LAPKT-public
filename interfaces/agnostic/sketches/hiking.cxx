@@ -366,22 +366,8 @@ HikingSketch::HikingSketch(
         { new NonzeroNumerical(get_numerical_feature("remaining_hikes")),
           new NonzeroNumerical(get_numerical_feature("current_person")) },  // some couple has to be available
 
-        { new UnchangedBoolean(get_boolean_feature("current_car")) },  // afterward current can be set to next location
+        { new UnchangedBoolean(get_boolean_feature("current_car")), },  // afterward current can be set to next location
         { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
-
-        /*
-        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
-          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
-          new UnchangedBoolean(get_boolean_feature("current_car")),
-          new UnchangedBoolean(get_boolean_feature("next_car")), },
-        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
-          new UnchangedNumerical(get_numerical_feature("current_car")),
-          new UnchangedNumerical(get_numerical_feature("next_car")),
-          new UnchangedNumerical(get_numerical_feature("current_person")),
-          new UnchangedNumerical(get_numerical_feature("next_person")),
-          new UnchangedNumerical(get_numerical_feature("current_next_person")),
-          new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
-        */
     ));
 }
 
