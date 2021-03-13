@@ -167,10 +167,10 @@ SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string
         ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)) {
 }
 
-N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
+/*N_Test::N_Test(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::get_role_custom("next_walked")) {
-}
+    ElementFactory::get_role_custom("current_walked")) {
+}*/
 
 HikingSketch::HikingSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
@@ -221,25 +221,28 @@ HikingSketch::HikingSketch(
 
     add_numerical_feature(new N_CurrentPerson(this, "current_person"));
     add_numerical_feature(new N_NextPerson(this, "next_person"));
-
-    // add_numerical_feature(new N_PreviousCurrentPerson(this, "previous_current_person"));
     add_numerical_feature(new N_CurrentNextPerson(this, "current_next_person"));
 
     add_numerical_feature(new SD_RemainingHikes(this, "remaining_hikes"));
-    add_numerical_feature(new N_Test(this, "test"));
+
+    // add_numerical_feature(new N_Test(this, "test"));
 
     // r1 down tent at current place (cannot be used to relocate cars/persons)
     add_rule(new Rule(this, "down_tent",
         {},
         { new NonzeroNumerical(get_numerical_feature("current_tent_up")) },
 
-        { },
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new UnchangedBoolean(get_boolean_feature("next_car")), },
         { new UnchangedNumerical(get_numerical_feature("current_car")),
           new UnchangedNumerical(get_numerical_feature("next_car")),
           new UnchangedNumerical(get_numerical_feature("current_next_person")),  // dont move any persons
           new UnchangedNumerical(get_numerical_feature("current_person")),
           new UnchangedNumerical(get_numerical_feature("next_person")),
-          new DecrementNumerical(get_numerical_feature("current_tent_up")) }
+          new DecrementNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
     ));
     // r2 build up the tent (cannot be used to relocate cars/persons)
     add_rule(new Rule(this, "up_tent",
@@ -260,7 +263,7 @@ HikingSketch::HikingSketch(
         { new NegativeBoolean(get_boolean_feature("next_tent_up")),  // a single tent up at next location is enough
           new NegativeBoolean(get_boolean_feature("next_tent_available")),  // a single tent up at next location is enough
           new PositiveBoolean(get_boolean_feature("current_car") )},
-        { new NonzeroNumerical(get_numerical_feature("current_person")) },
+        { new NonzeroNumerical(get_numerical_feature("current_person")), },
 
         { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
           new UnchangedBoolean(get_boolean_feature("current_car")) },  // we need car to bring back the person that builds up the tent
@@ -285,12 +288,12 @@ HikingSketch::HikingSketch(
     add_rule(new Rule(this, "move_second",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new PositiveBoolean(get_boolean_feature("current_car")),  // ensures care availability at both locations
-          new PositiveBoolean(get_boolean_feature("next_car")), },
-        { new NonzeroNumerical(get_numerical_feature("current_next_person")) },
+        },
+        { new NonzeroNumerical(get_numerical_feature("next_car")),
+          new NonzeroNumerical(get_numerical_feature("current_next_person")) },
 
-        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
-          new UnchangedBoolean(get_boolean_feature("next_car"))},
-        { // new DecrementNumerical(get_numerical_feature("current_next_person")),
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")) },
+        { new DecrementNumerical(get_numerical_feature("current_next_person")),
           new IncrementNumerical(get_numerical_feature("next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
           new IncrementNumerical(get_numerical_feature("next_car"))}
