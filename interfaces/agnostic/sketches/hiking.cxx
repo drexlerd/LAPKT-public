@@ -338,6 +338,36 @@ HikingSketch::HikingSketch(
           new DecrementNumerical(get_numerical_feature("current_next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
         }
+    ));
+    // r6 regroup at initial location, effectively moving a whole couple backwards
+    add_rule(new Rule(this, "regroup",
+        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
+          new PositiveBoolean(get_boolean_feature("next_car")) },
+        { new NonzeroNumerical(get_numerical_feature("next_person"))},
+
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new ChangedPositiveBoolean(get_boolean_feature("current_car")),
+        },
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new IncrementNumerical(get_numerical_feature("current_car")),
+          new DecrementNumerical(get_numerical_feature("next_car")),
+          new IncrementNumerical(get_numerical_feature("current_person")),
+          new DecrementNumerical(get_numerical_feature("next_person")),
+          new UnchangedNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes"))
+        }
+    ));
+    // r7 walk to next location
+    add_rule(new Rule(this, "walk",
+        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
+          new PositiveBoolean(get_boolean_feature("next_car")),
+          new PositiveBoolean(get_boolean_feature("current_car")) },
+        { new NonzeroNumerical(get_numerical_feature("remaining_hikes")),
+          new NonzeroNumerical(get_numerical_feature("current_person")) },  // some couple has to be available
+
+        { new UnchangedBoolean(get_boolean_feature("current_car")) },  // afterward current can be set to next location
+        { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
 
         /*
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
@@ -352,27 +382,6 @@ HikingSketch::HikingSketch(
           new UnchangedNumerical(get_numerical_feature("current_next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
         */
-    ));
-    // r6 regroup at initial location, effectively moving a whole couple backwards
-    add_rule(new Rule(this, "regroup",
-        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
-          new PositiveBoolean(get_boolean_feature("next_car")) },
-        { new NonzeroNumerical(get_numerical_feature("next_person"))},
-
-        { new UnchangedBoolean(get_boolean_feature("next_tent_up")) },
-        { new DecrementNumerical(get_numerical_feature("next_person")),
-          new IncrementNumerical(get_numerical_feature("current_person"))}
-    ));
-    // r7 walk to next location
-    add_rule(new Rule(this, "walk",
-        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
-          new PositiveBoolean(get_boolean_feature("next_car")),
-          new PositiveBoolean(get_boolean_feature("current_car")) },
-        { new NonzeroNumerical(get_numerical_feature("remaining_hikes")),
-          new NonzeroNumerical(get_numerical_feature("current_person")) },  // some couple has to be available
-
-        { new UnchangedBoolean(get_boolean_feature("current_car")) },  // afterward current can be set to next location
-        { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
     ));
 }
 
