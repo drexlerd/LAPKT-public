@@ -227,6 +227,20 @@ HikingSketch::HikingSketch(
 
     // add_numerical_feature(new N_Test(this, "test"));
 
+    /*
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new UnchangedBoolean(get_boolean_feature("next_car")), },
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("current_car")),
+          new UnchangedNumerical(get_numerical_feature("next_car")),
+          new UnchangedNumerical(get_numerical_feature("current_person")),
+          new UnchangedNumerical(get_numerical_feature("next_person")),
+          new UnchangedNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
+    */
+
     // r1 down tent at current place (cannot be used to relocate cars/persons)
     add_rule(new Rule(this, "down_tent",
         {},
@@ -236,12 +250,12 @@ HikingSketch::HikingSketch(
           new UnchangedBoolean(get_boolean_feature("next_tent_available")),
           new UnchangedBoolean(get_boolean_feature("current_car")),
           new UnchangedBoolean(get_boolean_feature("next_car")), },
-        { new UnchangedNumerical(get_numerical_feature("current_car")),
+        { new DecrementNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("current_car")),
           new UnchangedNumerical(get_numerical_feature("next_car")),
-          new UnchangedNumerical(get_numerical_feature("current_next_person")),  // dont move any persons
           new UnchangedNumerical(get_numerical_feature("current_person")),
           new UnchangedNumerical(get_numerical_feature("next_person")),
-          new DecrementNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("current_next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
     ));
     // r2 build up the tent (cannot be used to relocate cars/persons)
@@ -250,13 +264,17 @@ HikingSketch::HikingSketch(
           new NegativeBoolean(get_boolean_feature("next_tent_up")) },
         { new NonzeroNumerical(get_numerical_feature("current_next_person")) },
 
-        { new UnchangedBoolean(get_boolean_feature("next_tent_available")),
-          new ChangedPositiveBoolean(get_boolean_feature("next_tent_up")), },
-        { new UnchangedNumerical(get_numerical_feature("current_car")),
+        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new UnchangedBoolean(get_boolean_feature("next_car")), },
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("current_car")),
           new UnchangedNumerical(get_numerical_feature("next_car")),
-          new UnchangedNumerical(get_numerical_feature("current_next_person")),  // dont move any persons
           new UnchangedNumerical(get_numerical_feature("current_person")),
-          new UnchangedNumerical(get_numerical_feature("next_person")) }
+          new UnchangedNumerical(get_numerical_feature("next_person")),
+          new UnchangedNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
     ));
     // r3 move first person with tent (assuming both in the couple are at current location)
     add_rule(new Rule(this, "move_tent",
@@ -265,13 +283,20 @@ HikingSketch::HikingSketch(
           new PositiveBoolean(get_boolean_feature("current_car") )},
         { new NonzeroNumerical(get_numerical_feature("current_person")), },
 
-        { new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
-          new UnchangedBoolean(get_boolean_feature("current_car")) },  // we need car to bring back the person that builds up the tent
-        { new DecrementNumerical(get_numerical_feature("current_person")),
-          new IncrementNumerical(get_numerical_feature("current_next_person"))
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new ChangedPositiveBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new ChangedPositiveBoolean(get_boolean_feature("next_car")) },  // we need car to bring back the person that builds up the tent, possibly take care from other location
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new IncrementNumerical(get_numerical_feature("next_car")),
+          new DecrementNumerical(get_numerical_feature("current_person")),
+          new UnchangedNumerical(get_numerical_feature("next_person")),
+          new IncrementNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes"))
         }
     ));
     // r4 place first car at next location (after that, move_second can be applied again)
+    /*
     add_rule(new Rule(this, "move_first",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")) },
         { new NonzeroNumerical(get_numerical_feature("current_person")),
@@ -283,6 +308,43 @@ HikingSketch::HikingSketch(
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
           new IncrementNumerical(get_numerical_feature("next_car"))
         }
+        ));
+        */
+    // r4 place first car at next location (after that, move_second can be applied again)
+    add_rule(new Rule(this, "move_first",
+        { new PositiveBoolean(get_boolean_feature("next_tent_up")),
+          new PositiveBoolean(get_boolean_feature("current_car")),
+          new NegativeBoolean(get_boolean_feature("next_car")), // optional, captured by its numerical counterpart
+        },
+        { new NonzeroNumerical(get_numerical_feature("current_car")),
+          new ZeroNumerical(get_numerical_feature("next_car")),
+          new NonzeroNumerical(get_numerical_feature("current_person")), },
+
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new ChangedPositiveBoolean(get_boolean_feature("next_car")) },
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new DecrementNumerical(get_numerical_feature("current_car")),
+          new IncrementNumerical(get_numerical_feature("next_car")),
+          new DecrementNumerical(get_numerical_feature("current_person")),
+          new UnchangedNumerical(get_numerical_feature("next_person")),
+          new IncrementNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
+        }
+        /*
+        { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
+          new UnchangedBoolean(get_boolean_feature("next_tent_available")),
+          new UnchangedBoolean(get_boolean_feature("current_car")),
+          new UnchangedBoolean(get_boolean_feature("next_car")), },
+        { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
+          new UnchangedNumerical(get_numerical_feature("current_car")),
+          new UnchangedNumerical(get_numerical_feature("next_car")),
+          new UnchangedNumerical(get_numerical_feature("current_person")),
+          new UnchangedNumerical(get_numerical_feature("next_person")),
+          new UnchangedNumerical(get_numerical_feature("current_next_person")),
+          new UnchangedNumerical(get_numerical_feature("remaining_hikes")) }
+        */
         ));
     //r5 move second person
     add_rule(new Rule(this, "move_second",
