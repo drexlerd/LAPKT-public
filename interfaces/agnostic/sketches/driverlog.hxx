@@ -5,6 +5,7 @@
 #include <sketch.hxx>
 #include "../features/boolean_feature.hxx"
 #include "../features/numerical_feature.hxx"
+#include "../features/numerical/sum_distance.hxx"
 
 namespace aptk {
 class BaseElement;
@@ -25,6 +26,18 @@ class N_DriversNotAtGoalLocation : public NumericalFeature {
 public:
     N_DriversNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
     virtual ~N_DriversNotAtGoalLocation() = default;
+};
+
+class N_Driving : public NumericalFeature {
+public:
+    N_Driving(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_Driving() = default;
+};
+
+class SD_DriversSumDistance : public SumDistanceFeature {
+public:
+    SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
+    virtual ~SD_DriversSumDistance() = default;
 };
 
 class DriverlogSketch : public BaseSketch {
