@@ -1,3 +1,4 @@
+
 #ifndef __SKETCH_DRIVERLOG__
 #define __SKETCH_DRIVERLOG__
 
@@ -13,34 +14,58 @@
 namespace aptk {
 class BaseElement;
 
-class SD_PackagesSumDistance : public SumDistanceFeature {
+class N_PackagesNotAtGoalLocation : public NumericalFeature {
 public:
-    SD_PackagesSumDistance(const BaseSketch* sketch, const std::string &name);
-    virtual ~SD_PackagesSumDistance() = default;
+    N_PackagesNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_PackagesNotAtGoalLocation() = default;
 };
 
-class SD_TrucksSumDistance : public SumDistanceFeature {
+class N_TrucksNotAtGoalLocation : public NumericalFeature {
 public:
-    SD_TrucksSumDistance(const BaseSketch* sketch, const std::string &name);
-    virtual ~SD_TrucksSumDistance() = default;
+    N_TrucksNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_TrucksNotAtGoalLocation() = default;
 };
 
-class SD_DriversSumDistance : public SumDistanceFeature {
+class N_DriversNotAtGoalLocation : public NumericalFeature {
 public:
-    SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
-    virtual ~SD_DriversSumDistance() = default;
+    N_DriversNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_DriversNotAtGoalLocation() = default;
 };
 
-class N_LoadedPackages : public NumericalFeature {
+class B_Loaded : public BooleanFeature {
 public:
-    N_LoadedPackages(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_LoadedPackages() = default;
+    B_Loaded(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_Loaded() = default;
 };
 
 class N_Driving : public NumericalFeature {
 public:
     N_Driving(const BaseSketch* sketch, const std::string &name);
     virtual ~N_Driving() = default;
+};
+
+class N_DrivingGoalTruck : public NumericalFeature {
+public:
+    N_DrivingGoalTruck(const BaseSketch* sketch, const std::string &name);
+    virtual ~N_DrivingGoalTruck() = default;
+};
+
+class MCD_DriverTruckDistance : public MinConceptDistanceFeature {
+public:
+    MCD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name);
+    virtual ~MCD_DriverTruckDistance() = default;
+};
+
+class MRD_DriverGoalDistance : public MinRoleDistanceFeature {
+public:
+    MRD_DriverGoalDistance(const BaseSketch* sketch, const std::string &name);
+    virtual ~MRD_DriverGoalDistance() = default;
+};
+
+class SD_DriversSumDistance : public SumDistanceFeature {
+public:
+    SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
+    virtual ~SD_DriversSumDistance() = default;
 };
 
 class DriverlogSketch : public BaseSketch {
