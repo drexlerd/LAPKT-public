@@ -34,7 +34,6 @@ public:
     virtual ~SumDistanceFeature() = default;
 
     virtual void evaluate(const State* state) override {
-        // std::cout << "SumDistanceFeature::evaluate" << std::endl;
         Roles result_role1 = m_role1->evaluate(state);
         Roles result_conn = m_conn->evaluate(state);
         Roles result_role2 = m_role2->evaluate(state);
@@ -43,6 +42,7 @@ public:
         m_conn->print();
         m_role2->print();
         */
+
         // compute pairwise distances over role.
         std::tuple<aptk::elements::PairwiseDistances, Concepts, Index_Vec> result = aptk::elements::compute_pairwise_distances(m_sketch->problem(), result_conn);
         aptk::elements::PairwiseDistances& pairwise_distances = std::get<0>(result);
@@ -56,16 +56,18 @@ public:
         auto it2 = right_concept_role.begin();
         int role1_a = 0;
         while (it1 != left_concept_role.end() && it2 != right_concept_role.end()) {
+            // std::cout << it1->second.size() << " - " << it2->second.size() << " | " << it1->first << " - " << it2->first << std::endl;
             if (it1->first < it2->first) {
                 ++it1;
                 ++role1_a;
-            } else if (it1->first < it2->first) {
+            } else if (it1->first > it2->first) {
                 ++it2;
             } else {
+                // std::cout << it1->second.size() << " - " << it2->second.size() << " | " << it1->first << " - " << it2->first << std::endl;
                 // compose roles
                 for (const Role &r1 : it1->second) {
                     for (const Role &r2 : it2->second) {
-                        // std::cout << r1.first << " " << r1.second << " " << r2.first << " " << r2.second << std::endl;
+                        // std::cout << r1.second << " " << r2.second << " " << pairwise_distances[conn_concept_indices[r1.second]][conn_concept_indices[r2.second]] << std::endl;
                         assert(r1.first == r2.first);
                         minimum_distances[role1_a] = std::min(
                             minimum_distances[role1_a],
@@ -77,7 +79,6 @@ public:
                 ++it2;
             }
         }
-
         new_eval = 0;
         for (int distance : minimum_distances) {
             new_eval += distance;
