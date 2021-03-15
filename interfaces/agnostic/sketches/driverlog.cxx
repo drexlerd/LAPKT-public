@@ -24,16 +24,6 @@ N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
             ElementFactory::get_concept_custom("not_at_goal"))) {
 }
 
-N_DriversNotAtGoalLocation::N_DriversNotAtGoalLocation(
-    const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
-        ElementFactory::make_concept_intersection(
-            sketch->problem(),
-            false,
-            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driver"), 0),
-            ElementFactory::get_concept_custom("not_at_goal"))) {
-}
-
 B_Loaded::B_Loaded(const BaseSketch* sketch, const std::string &name)
     : BooleanFeature(sketch, name,
         ElementFactory::make_concept_intersection(
@@ -117,13 +107,12 @@ DriverlogSketch::DriverlogSketch(
             0));
     add_numerical_feature(new N_PackagesNotAtGoalLocation(this, "packages_not_at_goal"));
     add_numerical_feature(new N_TrucksNotAtGoalLocation(this, "trucks_not_at_goal"));
-    add_numerical_feature(new N_DriversNotAtGoalLocation(this, "drivers_not_at_goal"));
     add_numerical_feature(new N_Driving(this, "driving"));
     add_numerical_feature(new N_DrivingGoalTruck(this, "driving_goal_truck"));
     add_boolean_feature(new B_Loaded(this, "loaded"));
     add_numerical_feature(new SD_DriversSumDistance(this, "drivers_sum_distance"));
 
-    // board someone
+    // r_1: board someone
     add_rule(new Rule(this, "board_someone",
         { },
         { new ZeroNumerical(get_numerical_feature("driving")),
@@ -132,19 +121,18 @@ DriverlogSketch::DriverlogSketch(
         { new UnchangedBoolean(get_boolean_feature("loaded")) },
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new UnchangedNumerical(get_numerical_feature("drivers_not_at_goal")),
           new IncrementNumerical(get_numerical_feature("driving")), }
     ));
-    // r_0: load package
+    // r_2: load package
     add_rule(new Rule(this, "load_package",
         { new NegativeBoolean(get_boolean_feature("loaded")) },
         { new NonzeroNumerical(get_numerical_feature("packages_not_at_goal")) },
 
         { new ChangedPositiveBoolean(get_boolean_feature("loaded")) },
-        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")) // do not pick package that is at respective goal
+        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
         }
     ));
-    // r_1: move package to goal
+    // r_3: move package to goal
     add_rule(new Rule(this, "move_packages",
         { new PositiveBoolean(get_boolean_feature("loaded")) },
         { new NonzeroNumerical(get_numerical_feature("packages_not_at_goal")) },
@@ -152,97 +140,58 @@ DriverlogSketch::DriverlogSketch(
         { new ChangedNegativeBoolean(get_boolean_feature("loaded"))},
         { new DecrementNumerical(get_numerical_feature("packages_not_at_goal")), }
     ));
-    // board driver into truck not at goal location
+    // r_4: board driver into truck not at goal location
     add_rule(new Rule(this, "board_truck",
         { },
-        { new ZeroNumerical(get_numerical_feature("driving_goal_truck")),
-          new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
+        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
+          new ZeroNumerical(get_numerical_feature("driving_goal_truck")),
           new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),},
 
-        { },
+        { new UnchangedBoolean(get_boolean_feature("loaded"))},
         { new IncrementNumerical(get_numerical_feature("driving_goal_truck")),
           new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new UnchangedNumerical(get_numerical_feature("drivers_not_at_goal")),
         }
     ));
+    // r_5: move truck to target location
     add_rule(new Rule(this, "move_trucks",
         { },
-        { new NonzeroNumerical(get_numerical_feature("driving_goal_truck")),
-          new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),},
-        { },
+        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
+          new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),
+          new NonzeroNumerical(get_numerical_feature("driving_goal_truck")), },
+
+        { new UnchangedBoolean(get_boolean_feature("loaded"))},
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new DecrementNumerical(get_numerical_feature("trucks_not_at_goal")) }
     ));
+    // r_6: unboard all drivers
     add_rule(new Rule(this, "unboard_drivers",
         { },
         { new NonzeroNumerical(get_numerical_feature("driving")),
           new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
           new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),},
 
-        { },
-        { new DecrementNumerical(get_numerical_feature("driving")),
-          new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
+        { new UnchangedBoolean(get_boolean_feature("loaded")) },
+        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new UnchangedNumerical(get_numerical_feature("drivers_not_at_goal")),
+          new DecrementNumerical(get_numerical_feature("driving")),
         }
     ));
-
+    // r_7: move drivers stepwise
     add_rule(new Rule(this, "move_drivers_step",
         { },
         { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
           new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
           new ZeroNumerical(get_numerical_feature("driving")),
           new NonzeroNumerical(get_numerical_feature("drivers_sum_distance")) },
-        {},
-        { new DecrementNumerical(get_numerical_feature("drivers_sum_distance")),
-          new UnchangedNumerical(get_numerical_feature("driving")) }
-    ));
 
-    // move truck to goal location
-    /*
-    // r_2: move driver to truck without moving any trucks
-    add_rule(new Rule(this, "move_driver_for_moving_truck",
-        {},
-        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("driver_truck_distance")) },
-        {},
+        { new UnchangedBoolean(get_boolean_feature("loaded")) },
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new DecrementNumerical(get_numerical_feature("driver_truck_distance")) }
+          new DecrementNumerical(get_numerical_feature("drivers_sum_distance")),
+          new UnchangedNumerical(get_numerical_feature("driving")),
+          new UnchangedNumerical(get_numerical_feature("driving_goal_truck")) }
     ));
-    add_rule(new Rule(this, "board_driver",
-        { },
-        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("driver_truck_distance")),
-          new ZeroNumerical(get_numerical_feature("driving"))},
-        {},
-        { new IncrementNumerical(get_numerical_feature("driving")) }
-    ));
-    // r_3: move truck
-    add_rule(new Rule(this, "move_trucks",
-        {},
-        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("driving")) },
-        {},
-        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
-          new DecrementNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new DecrementNumerical(get_numerical_feature("driving")) }
-    ));
-    add_rule(new Rule(this, "move_drivers_step",
-        { },
-        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("driving")),
-          new NonzeroNumerical(get_numerical_feature("drivers_sum_distance")) },
-        {},
-        { new DecrementNumerical(get_numerical_feature("drivers_sum_distance")),
-          new UnchangedNumerical(get_numerical_feature("driving")) }
-    ));*/
 }
 
 }

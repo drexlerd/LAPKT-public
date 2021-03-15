@@ -26,12 +26,6 @@ public:
     virtual ~N_TrucksNotAtGoalLocation() = default;
 };
 
-class N_DriversNotAtGoalLocation : public NumericalFeature {
-public:
-    N_DriversNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_DriversNotAtGoalLocation() = default;
-};
-
 class B_Loaded : public BooleanFeature {
 public:
     B_Loaded(const BaseSketch* sketch, const std::string &name);
