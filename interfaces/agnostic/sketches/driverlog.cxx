@@ -192,7 +192,8 @@ DriverlogSketch::DriverlogSketch(
     // board someone
     add_rule(new Rule(this, "board_someone",
         { },
-        { new ZeroNumerical(get_numerical_feature("driving")) },
+        { new ZeroNumerical(get_numerical_feature("driving")),
+          new NonzeroNumerical(get_numerical_feature("packages_not_at_goal")) },
 
         { },
         { new IncrementNumerical(get_numerical_feature("driving")),
@@ -240,17 +241,30 @@ DriverlogSketch::DriverlogSketch(
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new DecrementNumerical(get_numerical_feature("trucks_not_at_goal")) }
     ));
-    /*add_rule(new Rule(this, "unboard_truck",
-        { new PositiveBoolean(get_boolean_feature("driving_goal_truck")) },
-        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
+    add_rule(new Rule(this, "unboard_drivers",
+        { },
+        { new NonzeroNumerical(get_numerical_feature("driving")),
+          new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
           new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),},
 
-        { new ChangedNegativeBoolean(get_boolean_feature("driving_goal_truck")) },
-        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
+        { },
+        { new DecrementNumerical(get_numerical_feature("driving")),
+          new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("drivers_not_at_goal")),
         }
-    ));*/
+    ));
+
+    add_rule(new Rule(this, "move_drivers_step",
+        { },
+        { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
+          new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
+          new ZeroNumerical(get_numerical_feature("driving")),
+          new NonzeroNumerical(get_numerical_feature("drivers_sum_distance")) },
+        {},
+        { new DecrementNumerical(get_numerical_feature("drivers_sum_distance")),
+          new UnchangedNumerical(get_numerical_feature("driving")) }
+    ));
 
     // move truck to goal location
     /*
