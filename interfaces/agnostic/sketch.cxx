@@ -182,7 +182,7 @@ bool BaseSketch::process_state(const State* state) {
             print_applicable_rules();
             state->print(std::cout);
             ++m_count;
-            if (m_count == 50) exit(1);
+            // if (m_count == 50) exit(1);
         }
         // (iii) return true to indicate SIW that a new subproblem was found
         return true;
