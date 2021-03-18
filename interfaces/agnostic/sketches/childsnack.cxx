@@ -154,7 +154,6 @@ ChildsnackSketch::ChildsnackSketch(
         { new DecrementNumerical(get_numerical_feature("gluten_allergic_children_to_be_served")),
           new UnchangedNumerical(get_numerical_feature("regular_children_to_be_served")) }
     ));
-
     // r_6: serve regular sandwich
     add_rule(new Rule(this, "serve_regular_sandwich",
         { new PositiveBoolean(get_boolean_feature("sandwiches_on_tray")), },

@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <algorithm>
 #include <iostream>
 
+#include "../../interfaces/agnostic/sketches/goal_counter_dec.hxx"
 #include "../../interfaces/agnostic/sketches/goal_counter.hxx"
 #include "../../interfaces/agnostic/sketches/childsnack.hxx"
 #include "../../interfaces/agnostic/sketches/driverlog.hxx"
@@ -78,7 +79,7 @@ public:
             m_sketch = new aptk::PhilosophersSketch(sketch_problem);
 		} else {
 			// default is goal sketch.
-			m_sketch = new aptk::GoalCounterSketch(sketch_problem);
+			m_sketch = new aptk::GoalCounterDecSketch(sketch_problem);
 		}
 	}
 
