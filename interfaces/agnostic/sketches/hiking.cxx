@@ -347,7 +347,7 @@ HikingSketch::HikingSketch(
         },  // some couple has to be available
 
         { new UnchangedBoolean(get_boolean_feature("current_car")), },  // afterward current can be set to next location
-        { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
+        { new DecrementNumerical(get_numerical_feature("remaining_hikes")), }
     ));
 }
 

@@ -44,6 +44,12 @@ public:
     virtual ~B_RegularSandwichOnTray() = default;
 };
 
+class B_SandwichOnTray : public BooleanFeature {
+public:
+    B_SandwichOnTray(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_SandwichOnTray() = default;
+};
+
 
 class ChildsnackSketch : public BaseSketch {
 public:
