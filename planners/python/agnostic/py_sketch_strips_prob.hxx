@@ -13,7 +13,7 @@
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
 public:
 	Sketch_STRIPS_Problem(  );
-	Sketch_STRIPS_Problem( std::string, std::string, std::string );
+	Sketch_STRIPS_Problem( std::string, std::string, std::string, bool );
 	virtual ~Sketch_STRIPS_Problem();
 
 	aptk::Sketch_STRIPS_Problem*	instance() {
@@ -32,6 +32,7 @@ public:
 	void create_negated_fluents_ext();
 
 	void set_sketch_name( std::string sketch_name );
+	void set_use_goal_counter( bool use_goal_counter );
 };
 
 #endif // py_sketch_strips_problem.hxx

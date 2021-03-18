@@ -61,25 +61,29 @@ public:
 		: brfs::IW<Search_Model, aptk::agnostic::Novelty<Search_Model, Search_Node>>( search_problem ), m_pruned_sum_B_count(0), m_sum_B_count(0), m_max_B_count(0), m_iw_calls(0), m_max_bound( std::numeric_limits<unsigned>::max() ), m_closed_goal_states( NULL ) {
 		m_goal_agenda = NULL;
 		const Sketch_STRIPS_Problem* sketch_problem = static_cast<const Sketch_STRIPS_Problem*>(&search_problem.task());
-		if (sketch_problem->domain_name() == "child-snack") {
-            m_sketch = new aptk::ChildsnackSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "driverlog") {
-            m_sketch = new aptk::DriverlogSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "barman") {
-			m_sketch = new aptk::BarmanSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "hiking") {
-            m_sketch = new aptk::HikingSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "schedule") {
-            m_sketch = new aptk::ScheduleSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "tpp-propositional") {
-            m_sketch = new aptk::TppSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "grid") {
-            m_sketch = new aptk::GridSketch(sketch_problem);
-		} else if (sketch_problem->domain_name() == "protocol") {
-            m_sketch = new aptk::PhilosophersSketch(sketch_problem);
-		} else {
-			// default is goal sketch.
+		if (sketch_problem->use_goal_counter()) {
 			m_sketch = new aptk::GoalCounterDecSketch(sketch_problem);
+		} else {
+			if (sketch_problem->domain_name() == "child-snack") {
+				m_sketch = new aptk::ChildsnackSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "driverlog") {
+				m_sketch = new aptk::DriverlogSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "barman") {
+				m_sketch = new aptk::BarmanSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "hiking") {
+				m_sketch = new aptk::HikingSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "schedule") {
+				m_sketch = new aptk::ScheduleSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "tpp-propositional") {
+				m_sketch = new aptk::TppSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "grid") {
+				m_sketch = new aptk::GridSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "protocol") {
+				m_sketch = new aptk::PhilosophersSketch(sketch_problem);
+			} else {
+				// default is goal sketch.
+				m_sketch = new aptk::GoalCounterDecSketch(sketch_problem);
+			}
 		}
 	}
 

@@ -28,9 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace aptk
 {
-	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string dom_name, std::string prob_name, std::string sketch_name )
+	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string dom_name, std::string prob_name, std::string sketch_name, bool use_goal_counter )
 		: STRIPS_Problem(dom_name, prob_name),
 		m_sketch_name(sketch_name),
+		m_use_goal_counter(use_goal_counter),
 		m_num_init_fluents(0),
 		m_num_total_fluents(0),
 		m_num_predicates(0),

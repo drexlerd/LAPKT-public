@@ -13,7 +13,7 @@ class	Sketch_SIW_Planner : public Sketch_STRIPS_Problem
 public:
 
 	Sketch_SIW_Planner( );
-	Sketch_SIW_Planner( std::string, std::string, std::string );
+	Sketch_SIW_Planner( std::string, std::string, std::string, bool );
 	virtual ~Sketch_SIW_Planner();
 
 

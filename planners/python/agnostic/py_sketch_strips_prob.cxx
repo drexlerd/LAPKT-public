@@ -12,10 +12,10 @@ using namespace boost::python;
 
 	}
 
-	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string domain, std::string instance, std::string sketch ) {
+	Sketch_STRIPS_Problem::Sketch_STRIPS_Problem( std::string domain, std::string instance, std::string sketch, bool use_goal_counter ) {
 		m_parsing_time = 0.0f;
 		m_ignore_action_costs = false;
-		m_problem = new aptk::Sketch_STRIPS_Problem( domain, instance, sketch );
+		m_problem = new aptk::Sketch_STRIPS_Problem( domain, instance, sketch, use_goal_counter );
 
 	}
 
@@ -76,4 +76,9 @@ using namespace boost::python;
 	void
 	Sketch_STRIPS_Problem::set_sketch_name( std::string sketch_name ) {
 		instance()->set_sketch_name( sketch_name );
+	}
+
+	void
+	Sketch_STRIPS_Problem::set_use_goal_counter( bool use_goal_counter ) {
+        instance()->set_use_goal_counter( use_goal_counter );
 	}

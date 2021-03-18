@@ -33,8 +33,8 @@ Sketch_SIW_Planner::Sketch_SIW_Planner()
 	: Sketch_STRIPS_Problem( ), m_iw_bound(2), m_log_filename( "iw.log"), m_plan_filename( "plan.ipc" ) {
 }
 
-Sketch_SIW_Planner::Sketch_SIW_Planner( std::string domain_file, std::string instance_file, std::string sketch_file )
-	: Sketch_STRIPS_Problem( domain_file, instance_file, sketch_file ), m_iw_bound(2), m_log_filename( "iw.log" ), m_plan_filename( "plan.ipc" ) {
+Sketch_SIW_Planner::Sketch_SIW_Planner( std::string domain_file, std::string instance_file, std::string sketch_file, bool use_goal_counter )
+	: Sketch_STRIPS_Problem( domain_file, instance_file, sketch_file, use_goal_counter ), m_iw_bound(2), m_log_filename( "iw.log" ), m_plan_filename( "plan.ipc" ) {
 }
 
 Sketch_SIW_Planner::~Sketch_SIW_Planner() {

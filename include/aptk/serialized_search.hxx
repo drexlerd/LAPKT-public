@@ -149,7 +149,32 @@ public:
 
 	}
 
+    /*
 	virtual bool  is_goal( Search_Node* n ){
+		State* s = n->has_state() ? n->state() : n->parent()->state();
+		if( is_goal_state_closed( n ) )
+			return false;
+
+        unsigned previously_achieved = m_goals_achieved.size();
+        m_goals_achieved.clear();
+		for(Fluent_Vec::iterator it = m_goal_candidates.begin(); it != m_goal_candidates.end(); it++){
+			if(  s->entails( *it ) )
+			{
+				m_goals_achieved.push_back( *it );
+			}
+		}
+		if (previously_achieved < m_goals_achieved.size()) {
+			close_goal_state( n );
+			return true;
+		}
+        return false;
+
+	}
+	*/
+
+
+
+    virtual bool  is_goal( Search_Node* n ){
 
 		const bool has_state = n->has_state();
 		static Fluent_Vec added_fluents;
@@ -227,6 +252,7 @@ public:
 			return false;
 
 	}
+
 
 	virtual bool	find_solution( float& cost, std::vector<Action_Idx>& plan ) {
 

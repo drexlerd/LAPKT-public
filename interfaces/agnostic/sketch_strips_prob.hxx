@@ -45,6 +45,7 @@ struct StateData {
 class Sketch_STRIPS_Problem : public STRIPS_Problem {
 protected:
     std::string m_sketch_name;
+	bool m_use_goal_counter;
     // init_fluents, we assume they are added after fluents
 	Fluent_Ptr_Vec m_init_fluents;
 	std::vector<const Fluent*> m_init_const_fluents;
@@ -67,7 +68,7 @@ protected:
 	std::unordered_map<unsigned, std::string> m_object_index_to_object_name;
 
 public:
-	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ");
+	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ", bool use_goal_counter=false);
 	virtual ~Sketch_STRIPS_Problem();
 
     /**
@@ -119,6 +120,7 @@ public:
 	 * Setters
 	 */
     void set_sketch_name( std::string sketch_name ) { m_sketch_name = sketch_name; }
+	void set_use_goal_counter( bool use_goal_counter ) { m_use_goal_counter = use_goal_counter; }
 
     /**
 	 * Getters.
@@ -129,6 +131,7 @@ public:
 	Fluent_Ptr_Vec& total_fluents() { return m_total_fluents; }
 	const std::vector< const Fluent*>& total_fluents() const { return m_total_const_fluents; }
 
+    bool use_goal_counter() const { return m_use_goal_counter; }
     unsigned num_total_fluents() const { return m_num_total_fluents; }
     unsigned num_predicates() const { return m_num_predicates; }
 	unsigned num_objects() const { return m_num_objects; }

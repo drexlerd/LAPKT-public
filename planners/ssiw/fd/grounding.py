@@ -377,7 +377,7 @@ def default(domain_file, problem_file, output_task):
     output_task.parsing_time = parsing_timer.report()
 
 
-def sketch(domain_file, problem_file, sketch_name, output_task):
+def sketch(domain_file, problem_file, sketch_name, use_goal_counter, output_task):
     parsing_timer = timers.Timer()
     print("Domain: %s Problem: %s Sketch: %s" % (domain_file, problem_file, sketch_name))
 
@@ -508,6 +508,7 @@ def sketch(domain_file, problem_file, sketch_name, output_task):
 
     # Sketch: parse file
     output_task.set_sketch_name(sketch_name)
+    output_task.set_use_goal_counter(bool(int(use_goal_counter)))
     #with timers.timing("Parsing", True):
     #    sketch = pddl_sketch.open(
     #        sketch_filename=sketch_file)
