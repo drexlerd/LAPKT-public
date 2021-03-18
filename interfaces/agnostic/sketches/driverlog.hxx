@@ -44,6 +44,12 @@ public:
     virtual ~N_DrivingGoalTruck() = default;
 };
 
+class MRD_DriverTruckDistance : public MinRoleDistanceFeature {
+public:
+    MRD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name);
+    virtual ~MRD_DriverTruckDistance() = default;
+};
+
 class SD_DriversSumDistance : public SumDistanceFeature {
 public:
     SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
