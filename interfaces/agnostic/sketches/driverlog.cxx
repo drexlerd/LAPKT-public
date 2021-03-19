@@ -177,7 +177,8 @@ DriverlogSketch::DriverlogSketch(
         { },
         { new NonzeroNumerical(get_numerical_feature("driving")),
           new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),},
+          new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
+          new ZeroNumerical(get_numerical_feature("drivers_sum_distance"))},
 
         { new UnchangedBoolean(get_boolean_feature("loaded")) },
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),

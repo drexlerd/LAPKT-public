@@ -81,7 +81,7 @@ public:
         }
         new_eval = 0;
         for (int distance : minimum_distances) {
-            new_eval += distance;
+            new_eval = aptk::features::addition(new_eval, distance);
         }
         // std::cout << new_eval << std::endl;
     }

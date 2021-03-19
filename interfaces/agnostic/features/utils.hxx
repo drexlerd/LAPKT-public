@@ -10,6 +10,8 @@ const int INF = std::numeric_limits<int>::max();
 namespace aptk {
 namespace features {
 
+extern int addition(int a, int b);
+
 }
 }
 

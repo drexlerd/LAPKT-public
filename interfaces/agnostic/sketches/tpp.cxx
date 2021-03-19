@@ -5,7 +5,7 @@ namespace aptk {
 
 N_Loaded::N_Loaded(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_concept_intersection(
+    ElementFactory::make_concept_setminus(
         sketch->problem(),
         false,
         ElementFactory::get_concept_custom("needed_goods"),
@@ -58,18 +58,15 @@ TppSketch::TppSketch(
     // store remaining
     add_rule(new Rule(this, "store_good",
         {},
-        { new NonzeroNumerical(get_numerical_feature("loaded")),
-          new NonzeroNumerical(get_numerical_feature("remaining")) },
+        { new NonzeroNumerical(get_numerical_feature("remaining")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("loaded")),
-          new DecrementNumerical(get_numerical_feature("remaining")) }
+        { new DecrementNumerical(get_numerical_feature("remaining")) }
     ));
     add_rule(new Rule(this, "load_truck",
         { },
         { new NonzeroNumerical(get_numerical_feature("remaining")), },
         {},
-        { new IncrementNumerical(get_numerical_feature("loaded")),
-          new UnchangedNumerical(get_numerical_feature("remaining")) }
+        { new DecrementNumerical(get_numerical_feature("loaded")) }
     ));
 }
 
