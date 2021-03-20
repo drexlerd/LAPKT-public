@@ -37,16 +37,23 @@ public:
         Concepts result_concept1 = m_concept1->evaluate(state);
         Roles result_conn = m_conn->evaluate(state);
         Concepts result_concept2 = m_concept2->evaluate(state);
-        /*
+/*
         m_concept1->print();
         m_conn->print();
         m_concept2->print();
-        */
+*/
 
         // compute pairwise distances over role.
         std::tuple<aptk::elements::PairwiseDistances, Concepts, Index_Vec> result = aptk::elements::compute_pairwise_distances(m_sketch->problem(), result_conn);
         aptk::elements::PairwiseDistances& pairwise_distances = std::get<0>(result);
         Index_Vec& conn_concept_indices = std::get<2>(result);
+/*
+        std::cout << result_concept1.size() << std::endl;
+        std::cout << result_conn.size() << std::endl;
+        std::cout << result_concept2.size() << std::endl;
+        std::cout << pairwise_distances.size() << std::endl;
+        std::cout << conn_concept_indices.size() << std::endl;
+        */
 
         if (result_concept1.empty() || result_concept2.empty()) {
             // empty source or target trivially evaluates to 0.
@@ -55,6 +62,7 @@ public:
             new_eval = INF;
             for (Concept c1 : result_concept1) {
                 for (Concept c2 : result_concept2) {
+                    // std::cout << c1 << " " << conn_concept_indices[c1] << " " << c2 << " " << conn_concept_indices[c2] << " " << pairwise_distances.size() << std::endl;
                     new_eval = std::min(new_eval, static_cast<int>(pairwise_distances[conn_concept_indices[c1]][conn_concept_indices[c2]]));
                 }
             }
