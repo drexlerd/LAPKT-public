@@ -8,8 +8,6 @@
 #include "../features/numerical_feature.hxx"
 #include "../features/numerical/sum_distance.hxx"
 #include "../features/numerical/min_concept_distance.hxx"
-#include "../features/numerical/min_role_distance.hxx"
-
 
 namespace aptk {
 class BaseElement;
@@ -44,7 +42,7 @@ public:
     virtual ~N_DrivingGoalTruck() = default;
 };
 
-class MRD_DriverTruckDistance : public MinRoleDistanceFeature {
+class MRD_DriverTruckDistance : public MinConceptDistanceFeature {
 public:
     MRD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name);
     virtual ~MRD_DriverTruckDistance() = default;
@@ -54,12 +52,6 @@ class SD_DriversSumDistance : public SumDistanceFeature {
 public:
     SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_DriversSumDistance() = default;
-};
-
-class SD_DriversSumDistance2 : public SumDistanceFeature {
-public:
-    SD_DriversSumDistance2(const BaseSketch* sketch, const std::string &name);
-    virtual ~SD_DriversSumDistance2() = default;
 };
 
 class DriverlogSketch : public BaseSketch {

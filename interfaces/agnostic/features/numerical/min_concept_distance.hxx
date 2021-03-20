@@ -48,10 +48,15 @@ public:
         aptk::elements::PairwiseDistances& pairwise_distances = std::get<0>(result);
         Index_Vec& conn_concept_indices = std::get<2>(result);
 
-        new_eval = INF;
-        for (Concept c1 : result_concept1) {
-            for (Concept c2 : result_concept2) {
-                new_eval = std::min(new_eval, static_cast<int>(pairwise_distances[conn_concept_indices[c1]][conn_concept_indices[c2]]));
+        if (result_concept1.empty() || result_concept2.empty()) {
+            // empty source or target trivially evaluates to 0.
+            new_eval = 0;
+        } else {
+            new_eval = INF;
+            for (Concept c1 : result_concept1) {
+                for (Concept c2 : result_concept2) {
+                    new_eval = std::min(new_eval, static_cast<int>(pairwise_distances[conn_concept_indices[c1]][conn_concept_indices[c2]]));
+                }
             }
         }
         /*if (new_eval == INF) {

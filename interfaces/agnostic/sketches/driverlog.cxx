@@ -70,39 +70,14 @@ N_DrivingGoalTruck::N_DrivingGoalTruck(const BaseSketch* sketch, const std::stri
 
 /*
 MRD_DriverTruckDistance::MRD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name)
-    : MinRoleDistanceFeature(sketch, name,
+    : MinConceptDistanceFeature(sketch, name,
+    ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driver"), 0),
+
     ) {
 }
 */
 
 SD_DriversSumDistance::SD_DriversSumDistance(
-    const BaseSketch* sketch, const std::string &name)
-    : SumDistanceFeature(sketch, name,
-        ElementFactory::make_role_union(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role_composition(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driving"), 0, 1),
-                ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 0, 1)),
-            ElementFactory::make_role_inverse(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role_restriction(
-                    sketch->problem(),
-                    false,
-                    ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 1, 0),
-                    ElementFactory::make_concept_intersection(
-                        sketch->problem(),
-                        false,
-                        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driver"), 0),
-                        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0))))),
-        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "path"), 0, 1),
-        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0, 1)) {
-}
-
-SD_DriversSumDistance2::SD_DriversSumDistance2(
     const BaseSketch* sketch, const std::string &name)
     : SumDistanceFeature(sketch, name,
         ElementFactory::make_role_inverse(
@@ -121,15 +96,7 @@ SD_DriversSumDistance2::SD_DriversSumDistance2(
                     false,
                     ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driver"), 0),
                     ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0)))),
-        ElementFactory::make_role_union(
-            sketch->problem(),
-            false,
-            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 0, 1),
-            ElementFactory::make_role_union(
-                sketch->problem(),
-                false,
-                ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"), 1, 0),
-                ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "path"), 0, 1))),
+        ElementFactory::get_role_custom("driver_graph"),
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"), 0, 1)) {
 }
 
@@ -146,13 +113,22 @@ DriverlogSketch::DriverlogSketch(
                 ElementFactory::make_predicate_extraction(problem, true, "at"),
                 ElementFactory::make_predicate_extraction(problem, false, "at")),
             0));
+    ElementFactory::add_role_custom("driver_graph",
+        ElementFactory::make_role_union(
+            problem,
+            false,
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "at"), 0, 1),
+            ElementFactory::make_role_union(
+                problem,
+                false,
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "at"), 1, 0),
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "path"), 0, 1))));
     add_numerical_feature(new N_PackagesNotAtGoalLocation(this, "packages_not_at_goal"));
     add_numerical_feature(new N_TrucksNotAtGoalLocation(this, "trucks_not_at_goal"));
     add_numerical_feature(new N_Driving(this, "driving"));
     add_numerical_feature(new N_DrivingGoalTruck(this, "driving_goal_truck"));
     add_boolean_feature(new B_Loaded(this, "loaded"));
     add_numerical_feature(new SD_DriversSumDistance(this, "drivers_sum_distance"));
-    add_numerical_feature(new SD_DriversSumDistance2(this, "drivers_sum_distance2"));
 
     // r_1: board someone
     add_rule(new Rule(this, "board_someone",
@@ -206,31 +182,17 @@ DriverlogSketch::DriverlogSketch(
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new DecrementNumerical(get_numerical_feature("trucks_not_at_goal")) }
     ));
-    // r_6: unboard all drivers
-    /*add_rule(new Rule(this, "unboard_drivers",
-        { },
-        { new NonzeroNumerical(get_numerical_feature("driving")),
-          new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new ZeroNumerical(get_numerical_feature("drivers_sum_distance"))},
-
-        { new UnchangedBoolean(get_boolean_feature("loaded")) },
-        { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
-          new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new DecrementNumerical(get_numerical_feature("driving")),
-        }
-    ));*/
     // r_7: move drivers stepwise
     add_rule(new Rule(this, "move_drivers_step",
         { },
         { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
           new ZeroNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new NonzeroNumerical(get_numerical_feature("drivers_sum_distance2")) },
+          new NonzeroNumerical(get_numerical_feature("drivers_sum_distance")) },
 
         { new UnchangedBoolean(get_boolean_feature("loaded")) },
         { new UnchangedNumerical(get_numerical_feature("packages_not_at_goal")),
           new UnchangedNumerical(get_numerical_feature("trucks_not_at_goal")),
-          new DecrementNumerical(get_numerical_feature("drivers_sum_distance2")), }
+          new DecrementNumerical(get_numerical_feature("drivers_sum_distance")), }
     ));
 }
 
