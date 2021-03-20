@@ -56,6 +56,12 @@ public:
     virtual ~SD_DriversSumDistance() = default;
 };
 
+class SD_DriversSumDistance2 : public SumDistanceFeature {
+public:
+    SD_DriversSumDistance2(const BaseSketch* sketch, const std::string &name);
+    virtual ~SD_DriversSumDistance2() = default;
+};
+
 class DriverlogSketch : public BaseSketch {
 public:
     DriverlogSketch(const Sketch_STRIPS_Problem *problem);
