@@ -160,6 +160,7 @@ N_CurrentNextPerson::N_CurrentNextPerson(const BaseSketch* sketch, const std::st
             ElementFactory::get_role_custom("next_walked")))) {
 }
 
+// TODO(dominik): Use sum of minimum distances to goal or current location.
 SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string &name)
     : SumDistanceFeature(sketch, name,
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "walked"), 0, 1),
@@ -288,6 +289,7 @@ HikingSketch::HikingSketch(
         }
     ));
     // r4 place first car at next location (after that, move_second can be applied again)
+
     add_rule(new Rule(this, "move_first",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new PositiveBoolean(get_boolean_feature("current_car")),
@@ -305,6 +307,7 @@ HikingSketch::HikingSketch(
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
         }
     ));
+
     //r5 move second person
     add_rule(new Rule(this, "move_second",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
@@ -340,6 +343,12 @@ HikingSketch::HikingSketch(
         }
     ));
     // r7 walk to next location
+    // We need the car requirement because the current location can increment
+    // This should be fine because we need two cars anyways.
+    // Alternative 1: require car at position with tent up
+    // but this is less general because tents can be up at any position
+    // Alternative 2: split the walk action into two cases, the increment case and the stays same case
+    // but this adds an additional rule.
     add_rule(new Rule(this, "walk",
         { new PositiveBoolean(get_boolean_feature("next_car")),
           new PositiveBoolean(get_boolean_feature("current_car")) },
@@ -347,7 +356,7 @@ HikingSketch::HikingSketch(
         },  // some couple has to be available
 
         { new UnchangedBoolean(get_boolean_feature("current_car")), },  // afterward current can be set to next location
-        { new DecrementNumerical(get_numerical_feature("remaining_hikes")), }
+        { new DecrementNumerical(get_numerical_feature("remaining_hikes")) }
     ));
 }
 

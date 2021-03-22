@@ -35,6 +35,12 @@ protected:
             }
         }
         m_result = Roles(result_set.begin(), result_set.end());
+        /*
+        std::cout << "composition: " << std::endl;
+        m_left->print();
+        m_right->print();
+        print();
+        */
     }
 
     virtual void compute_result(const State* state) override {

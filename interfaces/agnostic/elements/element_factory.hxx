@@ -28,6 +28,7 @@
 #include "roles/restriction.hxx"
 #include "roles/transitive_closure.hxx"
 #include "roles/reflexive_transitive_closure.hxx"
+#include "roles/identity.hxx"
 
 
 namespace aptk {
@@ -105,6 +106,7 @@ private:
     static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_inverse_cache;
     static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_transitive_closure_cache;
     static ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> m_role_reflexive_transitive_closure_cache;
+    static ElementCache<std::tuple<bool, ConceptElement*>, RoleElement*> m_role_identity_cache;
 
     // custom
     static ElementCache<std::string, PredicateElement*> m_predicate_custom_cache;
@@ -142,6 +144,7 @@ public:
     static RoleElement* make_role_inverse(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
     static RoleElement* make_role_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
     static RoleElement* make_role_reflexive_transitive_closure(const Sketch_STRIPS_Problem* problem, bool goal, RoleElement* role);
+    static RoleElement* make_role_identity(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* concept);
 
     static PredicateElement* add_predicate_custom(std::string name, PredicateElement* custom);
     static PredicateElement* get_predicate_custom(std::string name);

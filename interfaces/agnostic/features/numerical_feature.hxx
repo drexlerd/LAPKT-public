@@ -26,6 +26,7 @@ public:
 
     virtual void evaluate(const State* state) override {
         new_eval = m_element->get_result_size(state);
+        // std::cout << "n: " << new_eval << std::endl;
     }
 
     virtual void backup_evaluation() const override {

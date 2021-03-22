@@ -21,6 +21,10 @@ protected:
         aptk::elements::PairwiseDistances& pairwise_distances = std::get<0>(result);
         Concepts& concepts = std::get<1>(result);
         Index_Vec& conn_concept_indices = std::get<2>(result);
+        // add reflexive elements (a, a)
+        for (Concept c1 : concepts) {
+            m_result.emplace_back(c1, c1);
+        }
         for (Concept c1 : concepts) {
             for (Concept c2 : concepts) {
                 if (pairwise_distances[conn_concept_indices[c1]][conn_concept_indices[c2]] != aptk::elements::INF) {
@@ -29,6 +33,10 @@ protected:
                 }
             }
         }
+        /*
+        std::cout << "closure: " << std::endl;
+        print();
+        */
     }
 
 protected:

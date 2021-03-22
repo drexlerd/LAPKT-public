@@ -162,6 +162,8 @@ void BaseSketch::initialize_first_subproblem(const State* state) {
 }
 
 bool BaseSketch::process_state(const State* state) {
+    //std::cout << std::endl;
+    //state->print(std::cout);
     // 1. Evaluate features f(s').
     // TODO: we assume that state are never checked twice
     // because it would not be novel anyways.
@@ -182,7 +184,8 @@ bool BaseSketch::process_state(const State* state) {
             print_applicable_rules();
             state->print(std::cout);
             ++m_count;
-            // if (m_count == 50) exit(1);
+            if (m_count == 500) exit(1);
+            std::cout << "======================================================================" << std::endl;
         }
         // (iii) return true to indicate SIW that a new subproblem was found
         return true;

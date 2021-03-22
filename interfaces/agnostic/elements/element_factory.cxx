@@ -30,6 +30,7 @@ ElementCache<std::tuple<bool, RoleElement*, ConceptElement*>, RoleElement*> Elem
 ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_inverse_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_transitive_closure_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
 ElementCache<std::tuple<bool, RoleElement*>, RoleElement*> ElementFactory::m_role_reflexive_transitive_closure_cache = ElementCache<std::tuple<bool, RoleElement*>, RoleElement*>();
+ElementCache<std::tuple<bool, ConceptElement*>, RoleElement*> ElementFactory::m_role_identity_cache = ElementCache<std::tuple<bool, ConceptElement*>, RoleElement*>();
 // custom
 ElementCache<std::string, PredicateElement*> ElementFactory::m_predicate_custom_cache = ElementCache<std::string, PredicateElement*>();
 ElementCache<std::string, ConceptElement*> ElementFactory::m_concept_custom_cache = ElementCache<std::string, ConceptElement*>();
@@ -271,6 +272,15 @@ RoleElement* ElementFactory::make_role_reflexive_transitive_closure(const Sketch
     return m_role_reflexive_transitive_closure_cache.get(key);
 }
 
+RoleElement* ElementFactory::make_role_identity(const Sketch_STRIPS_Problem* problem, bool goal, ConceptElement* concept) {
+    std::tuple<bool, ConceptElement*> key = std::tuple<bool, ConceptElement*>(goal, concept);
+    if (!m_role_identity_cache.exists(key)) {
+        RoleElement* result = new RoleIdentityElement(problem, goal, concept);
+        m_role_identity_cache.insert(key, std::move(result));
+    }
+    return m_role_identity_cache.get(key);
+}
+
 PredicateElement* ElementFactory::add_predicate_custom(std::string name, PredicateElement* custom) {
     if (m_predicate_custom_cache.exists(name)) {
         std::cout << "ElementFactory::add_predicate_custom: key already exists!\n";
@@ -282,7 +292,7 @@ PredicateElement* ElementFactory::add_predicate_custom(std::string name, Predica
 
 PredicateElement* ElementFactory::get_predicate_custom(std::string name) {
     if (!m_predicate_custom_cache.exists(name)) {
-        std::cout << "ElementFactory::get_predicate_custom: key does not exists!\n";
+        std::cout << "ElementFactory::get_predicate_custom: key " << name << " does not exists!\n";
         exit(1);
     }
     return m_predicate_custom_cache.get(name);
@@ -299,7 +309,7 @@ ConceptElement* ElementFactory::add_concept_custom(std::string name, ConceptElem
 
 ConceptElement* ElementFactory::get_concept_custom(std::string name) {
     if (!m_concept_custom_cache.exists(name)) {
-        std::cout << "ElementFactory::get_concept_custom: key does not exists!\n";
+        std::cout << "ElementFactory::get_concept_custom: key " << name << " does not exists!\n";
         exit(1);
     }
     return m_concept_custom_cache.get(name);
@@ -316,7 +326,7 @@ RoleElement* ElementFactory::add_role_custom(std::string name, RoleElement* cust
 
 RoleElement* ElementFactory::get_role_custom(std::string name) {
     if (!m_role_custom_cache.exists(name)) {
-        std::cout << "ElementFactory::get_role_custom: key does not exists!\n";
+        std::cout << "ElementFactory::get_role_custom: key " << name << " does not exists!\n";
         exit(1);
     }
     return m_role_custom_cache.get(name);

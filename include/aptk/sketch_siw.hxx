@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../interfaces/agnostic/sketches/tpp.hxx"
 #include "../../interfaces/agnostic/sketches/grid.hxx"
 #include "../../interfaces/agnostic/sketches/philosophers.hxx"
+#include "../../interfaces/agnostic/sketches/floortile.hxx"
 
 namespace aptk {
 
@@ -80,6 +81,8 @@ public:
 				m_sketch = new aptk::GridSketch(sketch_problem);
 			} else if (sketch_problem->domain_name() == "protocol") {
 				m_sketch = new aptk::PhilosophersSketch(sketch_problem);
+			} else if (sketch_problem->domain_name() == "floor-tile") {
+				m_sketch = new aptk::FloortileSketch(sketch_problem);
 			} else {
 				// default is goal sketch.
 				m_sketch = new aptk::GoalCounterDecSketch(sketch_problem);

@@ -30,16 +30,10 @@ public:
     virtual ~B_Loaded() = default;
 };
 
-class N_Driving : public NumericalFeature {
+class B_Driving : public BooleanFeature {
 public:
-    N_Driving(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_Driving() = default;
-};
-
-class N_DrivingGoalTruck : public NumericalFeature {
-public:
-    N_DrivingGoalTruck(const BaseSketch* sketch, const std::string &name);
-    virtual ~N_DrivingGoalTruck() = default;
+    B_Driving(const BaseSketch* sketch, const std::string &name);
+    virtual ~B_Driving() = default;
 };
 
 class MRD_DriverTruckDistance : public MinConceptDistanceFeature {
