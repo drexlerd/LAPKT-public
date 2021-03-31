@@ -58,15 +58,16 @@ TppSketch::TppSketch(
     // store remaining
     add_rule(new Rule(this, "store_good",
         {},
-        { new NonzeroNumerical(get_numerical_feature("remaining")) },
+        { new NonzeroNumerical(get_numerical_feature("remaining")),},
         {},
-        { new DecrementNumerical(get_numerical_feature("remaining")) }
+        { new DecrementNumerical(get_numerical_feature("remaining")), }
     ));
     add_rule(new Rule(this, "load_truck",
         { },
-        { new NonzeroNumerical(get_numerical_feature("remaining")), },
+        { new NonzeroNumerical(get_numerical_feature("loaded")) },
         {},
-        { new DecrementNumerical(get_numerical_feature("loaded")) }
+        { new DecrementNumerical(get_numerical_feature("loaded")),
+          new UnchangedNumerical(get_numerical_feature("remaining")) }
     ));
 }
 

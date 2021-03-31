@@ -163,7 +163,7 @@ DriverlogSketch::DriverlogSketch(
     ));
     // r_5: move truck to target location
     add_rule(new Rule(this, "move_truck",
-        { new PositiveBoolean(get_boolean_feature("driving")) },
+        { },
         { new ZeroNumerical(get_numerical_feature("packages_not_at_goal")),
           new NonzeroNumerical(get_numerical_feature("trucks_not_at_goal")) },
 

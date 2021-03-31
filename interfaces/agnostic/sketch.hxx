@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 #include <iostream>
 #include <cassert>
 
@@ -146,6 +147,8 @@ public:
      */
     const BaseSketch* sketch() const { return m_sketch; }
     const std::string &name() const { return m_name; }
+    const std::vector<const BooleanFeatureEvalProxy*> boolean_effects() const { return m_boolean_effects; }
+    const std::vector<const NumericalFeatureEvalProxy*> numerical_effects() const { return m_numerical_effects; }
 };
 
 /**
@@ -172,6 +175,8 @@ protected:
     std::vector<const Rule*> m_rules;
     // rules applicable in the subproblem's initial state.
     std::vector<const Rule*> m_init_applicable_rules;
+    std::unordered_set<NumericalFeature*> m_init_numerical_features;
+    std::unordered_set<BooleanFeature*> m_init_boolean_features;
 
     // the rules applied until termination
     mutable std::vector<const Rule*> m_applied_rules;
@@ -196,6 +201,7 @@ protected:
      * Evaluate features for a given state.
      */
     void evaluate_features(const State* state);
+    void evaluate_init_features(const State* state);
 
     /**
      * Return true iff there exists an applicable rule

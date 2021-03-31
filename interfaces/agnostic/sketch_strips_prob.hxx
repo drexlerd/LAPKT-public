@@ -67,6 +67,9 @@ protected:
 	std::unordered_map<unsigned, std::string> m_predicate_index_to_predicate_signature;
 	std::unordered_map<unsigned, std::string> m_object_index_to_object_name;
 
+	mutable Fluent_Set m_state_fluents_set;
+	mutable const State* m_state;
+
 public:
 	Sketch_STRIPS_Problem( std::string dom_name = "Unnamed", std::string prob_name = "Unnamed ", std::string sketch_name = "Unnamed ", bool use_goal_counter=false);
 	virtual ~Sketch_STRIPS_Problem();
@@ -94,25 +97,28 @@ public:
 	 * compute this only once for each problem instance or state.
 	 */
 	Fluent_Set init_fluents_set() const {
-        Bit_Set init_fluents_set(m_num_total_fluents);
+        Fluent_Set init_fluents_set(m_num_total_fluents);
 		for (const Fluent* fluent : m_init_const_fluents) {
 			init_fluents_set.set(fluent->index());
 		}
 		return init_fluents_set;
 	}
 	Fluent_Set goal_fluents_set() const {
-        Bit_Set goal_fluents_set = init_fluents_set();
+        Fluent_Set goal_fluents_set = init_fluents_set();
 		for (unsigned i : m_goal) {
 			goal_fluents_set.set(i);
 		}
 		return goal_fluents_set;
 	}
 	Fluent_Set state_fluents_set(const State* state) const {
-        Bit_Set state_fluents_set = init_fluents_set();
-		for (unsigned i : state->fluent_vec()) {
-			state_fluents_set.set(i);
+		if (m_state != state) {
+			m_state = state;
+			m_state_fluents_set = init_fluents_set();
+			for (unsigned i : state->fluent_vec()) {
+				m_state_fluents_set.set(i);
+			}
 		}
-		return state_fluents_set;
+		return m_state_fluents_set;
 	}
 
 

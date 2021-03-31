@@ -145,6 +145,30 @@ BarmanSketch::BarmanSketch(
                 ElementFactory::make_predicate_extraction(problem, false, "contains")),
             0,
             1));
+    ElementFactory::add_role_custom(
+        "contains_shaker_ingredient",
+        ElementFactory::make_role_inverse(
+            problem,
+            false,
+            ElementFactory::make_role_restriction(
+                problem,
+                false,
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 1, 0),
+                ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0))));
+    ElementFactory::add_role_custom(
+        "part1_needed_cocktail",
+        ElementFactory::make_role_restriction(
+            problem,
+            false,
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "cocktail-part1"), 1, 0),
+            ElementFactory::make_concept_extraction(problem, false, ElementFactory::get_role_custom("p"), 1)));
+    ElementFactory::add_role_custom(
+        "part2_needed_cocktail",
+        ElementFactory::make_role_restriction(
+            problem,
+            false,
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "cocktail-part2"), 1, 0),
+            ElementFactory::make_concept_extraction(problem, false, ElementFactory::get_role_custom("p"), 1)));
 
     /**
      * Features & rules for width <= 2

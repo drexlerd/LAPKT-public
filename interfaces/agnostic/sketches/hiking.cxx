@@ -110,7 +110,11 @@ N_PreviousPerson::N_PreviousPerson(const BaseSketch* sketch, const std::string &
 
 N_CurrentPerson::N_CurrentPerson(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_concept_role_value_equality(
+    ElementFactory::make_concept_setminus(
+      sketch->problem(),
+      false,
+      ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("current_walked"), 0),
+      ElementFactory::make_concept_role_value_equality(
         sketch->problem(),
         false,
         ElementFactory::get_role_custom("couple_place"),
@@ -118,20 +122,25 @@ N_CurrentPerson::N_CurrentPerson(const BaseSketch* sketch, const std::string &na
             sketch->problem(),
             false,
             ElementFactory::get_role_custom("current_walked"),
-            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)))) {
+            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)))
+    )) {
 }
 
 N_NextPerson::N_NextPerson(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_concept_role_value_equality(
-        sketch->problem(),
-        false,
-        ElementFactory::get_role_custom("couple_place"),
-        ElementFactory::make_role_setminus(  // should not consider couples that reached next subgoal
-            sketch->problem(),
-            false,
-            ElementFactory::get_role_custom("next_walked"),
-            ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)))) {
+    ElementFactory::make_concept_setminus(
+      sketch->problem(),
+      false,
+      ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("next_walked"), 0),
+      ElementFactory::make_concept_role_value_equality(
+          sketch->problem(),
+          false,
+          ElementFactory::get_role_custom("couple_place"),
+          ElementFactory::make_role_setminus(  // should not consider couples that reached next subgoal
+              sketch->problem(),
+              false,
+              ElementFactory::get_role_custom("next_walked"),
+              ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1))))) {
 }
 
 N_PreviousCurrentPerson::N_PreviousCurrentPerson(const BaseSketch* sketch, const std::string &name)
@@ -220,7 +229,7 @@ HikingSketch::HikingSketch(
     //add_numerical_feature(new N_CurrentCar(this, "current_car"));
     //add_numerical_feature(new N_NextCar(this, "next_car"));
 
-    // add_numerical_feature(new N_CurrentPerson(this, "current_person"));
+    add_numerical_feature(new N_CurrentPerson(this, "current_person"));
     add_numerical_feature(new N_NextPerson(this, "next_person"));
     add_numerical_feature(new N_CurrentNextPerson(this, "current_next_person"));
 
@@ -314,14 +323,15 @@ HikingSketch::HikingSketch(
           new PositiveBoolean(get_boolean_feature("current_car")),
           new PositiveBoolean(get_boolean_feature("next_car")),  // ensures care availability at both locations
         },
-        { new NonzeroNumerical(get_numerical_feature("current_next_person")) },
+        { new NonzeroNumerical(get_numerical_feature("current_next_person")),
+          new NonzeroNumerical(get_numerical_feature("next_person")) },
 
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
           new UnchangedBoolean(get_boolean_feature("next_tent_available")),
           new UnchangedBoolean(get_boolean_feature("next_car")),
         },
         { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
-          new IncrementNumerical(get_numerical_feature("next_person")),
+          new DecrementNumerical(get_numerical_feature("next_person")),
           new DecrementNumerical(get_numerical_feature("current_next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes")),
         }
@@ -330,14 +340,14 @@ HikingSketch::HikingSketch(
     add_rule(new Rule(this, "regroup",
         { new PositiveBoolean(get_boolean_feature("next_tent_up")),
           new PositiveBoolean(get_boolean_feature("next_car")) },
-        { new NonzeroNumerical(get_numerical_feature("next_person"))},
+        { new NonzeroNumerical(get_numerical_feature("current_person"))},
 
         { new UnchangedBoolean(get_boolean_feature("next_tent_up")),
           new UnchangedBoolean(get_boolean_feature("next_tent_available")),
           new ChangedPositiveBoolean(get_boolean_feature("current_car")),
         },
         { new UnchangedNumerical(get_numerical_feature("current_tent_up")),
-          new DecrementNumerical(get_numerical_feature("next_person")),
+          new DecrementNumerical(get_numerical_feature("current_person")),
           new UnchangedNumerical(get_numerical_feature("current_next_person")),
           new UnchangedNumerical(get_numerical_feature("remaining_hikes"))
         }
