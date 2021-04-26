@@ -33,11 +33,11 @@ FloortileSketch::FloortileSketch(
         ElementFactory::make_concept_extraction(
             problem,
             false,
-            ElementFactory::make_predicate_setminus(
+            ElementFactory::make_role_setminus(
                 problem,
                 false,
-                ElementFactory::make_predicate_extraction(problem, true, "painted"),
-                ElementFactory::make_predicate_extraction(problem, false, "painted")),
+                ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "painted"), 0, 1),
+                ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "painted"), 0, 1)),
             0));
     ElementFactory::add_concept_custom("normal_tiles",
         ElementFactory::make_concept_setminus(
@@ -46,16 +46,11 @@ FloortileSketch::FloortileSketch(
             ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "left"), 0, 1)),
             ElementFactory::make_concept_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "painted"), 0)));
     ElementFactory::add_role_custom("up_or_down",
-        ElementFactory::make_role_extraction(
+        ElementFactory::make_role_union(
             problem,
             false,
-            ElementFactory::make_predicate_union(
-                problem,
-                false,
-                ElementFactory::make_predicate_extraction(problem, false, "up"),
-                ElementFactory::make_predicate_extraction(problem, false, "down")),
-            0,
-            1));
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "up"), 0, 1),
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "down"), 0, 1)));
     ElementFactory::add_role_custom("up_or_down_or_same",
         ElementFactory::make_role_union(
             problem,
