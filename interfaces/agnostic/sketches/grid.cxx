@@ -10,11 +10,7 @@ N_LockedPlaces::N_LockedPlaces(const BaseSketch* sketch, const std::string &name
 
 N_KeysNotAtTarget::N_KeysNotAtTarget(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_predicate_setminus(
-        sketch->problem(),
-        false,
-        ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"),
-        ElementFactory::make_predicate_extraction(sketch->problem(), false, "at"))) {
+    ElementFactory::get_role_custom("locked_places")) {
 }
 
 B_HoldingTargetKey::B_HoldingTargetKey(const BaseSketch* sketch, const std::string &name)
@@ -26,11 +22,7 @@ B_HoldingTargetKey::B_HoldingTargetKey(const BaseSketch* sketch, const std::stri
         ElementFactory::make_concept_extraction(
             sketch->problem(),
             false,
-            ElementFactory::make_predicate_setminus(
-                sketch->problem(),
-                false,
-                ElementFactory::make_predicate_extraction(sketch->problem(), true, "at"),
-                ElementFactory::make_predicate_extraction(sketch->problem(), false, "at")),
+            ElementFactory::get_role_custom("locked_places"),
         0))) {
 }
 
@@ -54,6 +46,14 @@ B_HoldingOpeningKey::B_HoldingOpeningKey(const BaseSketch* sketch, const std::st
 
 GridSketch::GridSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
+    ElementFactory::add_role_custom(
+      "locked_places",
+      ElementFactory::make_role_setminus(
+        problem,
+        false,
+        ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "at"), 0, 1),
+        ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "at"), 0, 1)));
+
     /**
      * Features & rules for width <= 2
      */

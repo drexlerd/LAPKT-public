@@ -32,15 +32,8 @@ SD_Remaining::SD_Remaining(const BaseSketch* sketch, const std::string &name)
 
 TppSketch::TppSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-
-    ElementFactory::add_concept_custom("empty_level",
-        ElementFactory::make_concept_minimal(problem, false,
-        ElementFactory::make_concept_extraction(problem , false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)),
-        ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)));
     ElementFactory::add_concept_custom("nonempty_levels",
-        ElementFactory::make_concept_setminus(problem, false,
-            ElementFactory::make_concept_extraction(problem , false, ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "next"), 1, 0)),
-            ElementFactory::get_concept_custom("empty_level")));
+        ElementFactory::make_concept_extraction(problem , false, ElementFactory::make_predicate_extraction(problem, false, "next"), 0));
     ElementFactory::add_concept_custom("needed_goods",
         ElementFactory::make_concept_extraction(
             problem,

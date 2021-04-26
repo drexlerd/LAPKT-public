@@ -135,16 +135,11 @@ BarmanSketch::BarmanSketch(
                 ElementFactory::make_concept_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "shaker-level"), 0))));
     ElementFactory::add_role_custom(
         "p",
-        ElementFactory::make_role_extraction(
+        ElementFactory::make_role_setminus(
             problem,
             false,
-            ElementFactory::make_predicate_setminus(
-                problem,
-                false,
-                ElementFactory::make_predicate_extraction(problem, true, "contains"),
-                ElementFactory::make_predicate_extraction(problem, false, "contains")),
-            0,
-            1));
+            ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "contains"), 0, 1),
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "contains"), 0, 1)));
     ElementFactory::add_role_custom(
         "contains_shaker_ingredient",
         ElementFactory::make_role_inverse(
