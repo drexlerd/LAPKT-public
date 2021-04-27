@@ -5,29 +5,29 @@ namespace aptk {
 
 N_Shape::N_Shape(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_predicate_setminus(
+    ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
-        ElementFactory::make_predicate_extraction(sketch->problem(), true, "shape"),
-        ElementFactory::make_predicate_extraction(sketch->problem(), false, "shape"))) {
+        ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "shape"), 0, 1),
+        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "shape"), 0, 1))) {
 }
 
 N_Surface::N_Surface(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_predicate_setminus(
+    ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
-        ElementFactory::make_predicate_extraction(sketch->problem(), true, "surface-condition"),
-        ElementFactory::make_predicate_extraction(sketch->problem(), false, "surface-condition"))) {
+        ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "surface-condition"), 0, 1),
+        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "surface-condition"), 0, 1))) {
 }
 
 N_Color::N_Color(const BaseSketch* sketch, const std::string &name)
     : NumericalFeature(sketch, name,
-    ElementFactory::make_predicate_setminus(
+    ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
-        ElementFactory::make_predicate_extraction(sketch->problem(), true, "painted"),
-        ElementFactory::make_predicate_extraction(sketch->problem(), false, "painted"))) {
+        ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "painted"), 0, 1),
+        ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "painted"), 0, 1))) {
 }
 
 B_ScheduledOrBusy::B_ScheduledOrBusy(const BaseSketch* sketch, const std::string &name)
@@ -47,8 +47,6 @@ N_Hot::N_Hot(const BaseSketch* sketch, const std::string &name)
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "temperature"), 0, 1),
         ElementFactory::make_concept_extraction(sketch->problem(), "hot"))) {
 }
-
-
 
 ScheduleSketch::ScheduleSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {

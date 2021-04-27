@@ -175,8 +175,6 @@ protected:
     std::vector<const Rule*> m_rules;
     // rules applicable in the subproblem's initial state.
     std::vector<const Rule*> m_init_applicable_rules;
-    std::unordered_set<NumericalFeature*> m_init_numerical_features;
-    std::unordered_set<BooleanFeature*> m_init_boolean_features;
 
     // the rules applied until termination
     mutable std::vector<const Rule*> m_applied_rules;
@@ -201,7 +199,6 @@ protected:
      * Evaluate features for a given state.
      */
     void evaluate_features(const State* state);
-    void evaluate_init_features(const State* state);
 
     /**
      * Return true iff there exists an applicable rule

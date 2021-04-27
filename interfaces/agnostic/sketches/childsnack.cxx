@@ -11,13 +11,11 @@ N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
             sketch->problem(),
             false,
             ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "allergic_gluten"), 0),
-            ElementFactory::make_concept_extraction(
+            ElementFactory::make_concept_setminus(
                 sketch->problem(),
                 false,
-                ElementFactory::make_predicate_setminus(sketch->problem(), false,
-                    ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"),
-                    ElementFactory::make_predicate_extraction(sketch->problem(), false, "served")),
-                0))) {
+                ElementFactory::make_concept_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"), 0),
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "served"), 0)))) {
 }
 
 
@@ -28,13 +26,11 @@ N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
             sketch->problem(),
             false,
             ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "not_allergic_gluten"), 0),
-            ElementFactory::make_concept_extraction(
+            ElementFactory::make_concept_setminus(
                 sketch->problem(),
                 false,
-                ElementFactory::make_predicate_setminus(sketch->problem(), false,
-                    ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"),
-                    ElementFactory::make_predicate_extraction(sketch->problem(), false, "served")),
-                0))) {
+                ElementFactory::make_concept_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "served"), 0),
+                ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "served"), 0)))) {
 }
 
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(

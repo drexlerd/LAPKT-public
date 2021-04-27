@@ -106,14 +106,6 @@ void BaseSketch::evaluate_features(const State* state) {
     }
 }
 
-void BaseSketch::evaluate_init_features(const State* state) {
-    for (NumericalFeature* nf : m_init_numerical_features) {
-        nf->evaluate(state);
-    }
-    for (BooleanFeature* bf : m_init_boolean_features) {
-        bf->evaluate(state);
-    }
-}
 
 bool BaseSketch::exists_compatible_rule() const {
     for (const Rule* rule : m_init_applicable_rules) {
@@ -127,17 +119,9 @@ bool BaseSketch::exists_compatible_rule() const {
 
 void BaseSketch::compute_applicable_rules_for_init() {
     m_init_applicable_rules.clear();
-    m_init_boolean_features.clear();
-    m_init_numerical_features.clear();
     for (const Rule* rule : m_rules) {
         if (rule->is_applicable()) {
             m_init_applicable_rules.push_back(rule);
-            for (const BooleanFeatureEvalProxy* bp : rule->boolean_effects()) {
-                m_init_boolean_features.insert(const_cast<BooleanFeature*>(bp->feature()));
-            }
-            for (const NumericalFeatureEvalProxy* np : rule->numerical_effects()) {
-                m_init_numerical_features.insert(const_cast<NumericalFeature*>(np->feature()));
-            }
         }
     }
     /*if (m_init_applicable_rules.size() == 0) {
@@ -184,7 +168,7 @@ bool BaseSketch::process_state(const State* state) {
     // 1. Evaluate features f(s').
     // TODO: we assume that state are never checked twice
     // because it would not be novel anyways.
-    evaluate_init_features(state);
+    evaluate_features(state);
     //print_feature_evaluations();
     //get_boolean_feature("one_at_initial")->print();
     //state->print(std::cout);

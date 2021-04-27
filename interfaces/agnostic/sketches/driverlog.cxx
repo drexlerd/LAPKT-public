@@ -1,4 +1,3 @@
-
 #include "driverlog.hxx"
 #include "elements/element_factory.hxx"
 
@@ -11,7 +10,7 @@ N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
             sketch->problem(),
             false,
             ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "obj"), 0),
-            ElementFactory::get_concept_custom("not_at_goal"))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("not_at_goal")))) {
 }
 
 N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
@@ -21,7 +20,7 @@ N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
             sketch->problem(),
             false,
             ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "truck"), 0),
-            ElementFactory::get_concept_custom("not_at_goal"))) {
+            ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("not_at_goal")))) {
 }
 
 B_Loaded::B_Loaded(const BaseSketch* sketch, const std::string &name)
@@ -61,7 +60,7 @@ MRD_DriverTruckDistance::MRD_DriverTruckDistance(const BaseSketch* sketch, const
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
-        ElementFactory::get_concept_custom("not_at_goal"),
+        ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::get_role_custom("not_at_goal"), 0),
         ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "truck"), 0))) {
 }
 
@@ -91,14 +90,6 @@ SD_DriversSumDistance::SD_DriversSumDistance(
 
 DriverlogSketch::DriverlogSketch(
     const Sketch_STRIPS_Problem *problem) : BaseSketch(problem) {
-    ElementFactory::add_concept_custom("not_at_goal",
-        ElementFactory::make_concept_extraction(problem, false,
-            ElementFactory::make_predicate_setminus(
-                problem,
-                false,
-                ElementFactory::make_predicate_extraction(problem, true, "at"),
-                ElementFactory::make_predicate_extraction(problem, false, "at")),
-            0));
     ElementFactory::add_role_custom("driver_graph",
         ElementFactory::make_role_union(
             problem,
@@ -109,6 +100,12 @@ DriverlogSketch::DriverlogSketch(
                 false,
                 ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "at"), 1, 0),
                 ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "path"), 0, 1))));
+    ElementFactory::add_role_custom("not_at_goal",
+        ElementFactory::make_role_setminus(
+            problem,
+            false,
+            ElementFactory::make_role_extraction(problem, true, ElementFactory::make_predicate_extraction(problem, true, "at"), 0, 1),
+            ElementFactory::make_role_extraction(problem, false, ElementFactory::make_predicate_extraction(problem, false, "at"), 0, 1)));
 
     add_numerical_feature(new N_PackagesNotAtGoalLocation(this, "packages_not_at_goal"));
     add_numerical_feature(new N_TrucksNotAtGoalLocation(this, "trucks_not_at_goal"));
