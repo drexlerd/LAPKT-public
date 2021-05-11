@@ -4,33 +4,33 @@
 
 
 #include <sketch.hxx>
-#include "../features/boolean_feature.hxx"
-#include "../features/numerical_feature.hxx"
-#include "../features/sum_role_distance.hxx"
-#include "../features/concept_distance.hxx"
+#include "../features/boolean_features/nonempty.hxx"
+#include "../features/numerical_features/count.hxx"
+#include "../features/numerical_features/sum_role_distance.hxx"
+#include "../features/numerical_features/concept_distance.hxx"
 
 namespace aptk {
 class BaseElement;
 
-class N_PackagesNotAtGoalLocation : public NumericalFeature {
+class N_PackagesNotAtGoalLocation : public CountFeature {
 public:
     N_PackagesNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
     virtual ~N_PackagesNotAtGoalLocation() = default;
 };
 
-class N_TrucksNotAtGoalLocation : public NumericalFeature {
+class N_TrucksNotAtGoalLocation : public CountFeature {
 public:
     N_TrucksNotAtGoalLocation(const BaseSketch* sketch, const std::string &name);
     virtual ~N_TrucksNotAtGoalLocation() = default;
 };
 
-class B_Loaded : public BooleanFeature {
+class B_Loaded : public NonemptyFeature {
 public:
     B_Loaded(const BaseSketch* sketch, const std::string &name);
     virtual ~B_Loaded() = default;
 };
 
-class B_Driving : public BooleanFeature {
+class B_Driving : public NonemptyFeature {
 public:
     B_Driving(const BaseSketch* sketch, const std::string &name);
     virtual ~B_Driving() = default;

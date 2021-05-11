@@ -1,5 +1,8 @@
+#ifndef __COUNT_FEATURE__
+#define __COUNT_FEATURE__
 
-#include "numerical_feature.hxx"
+
+#include "../numerical_feature.hxx"
 
 namespace aptk {
 
@@ -15,7 +18,6 @@ public:
 
     virtual void evaluate(const State* state) override {
         new_eval = m_element->get_result_size(state);
-        // std::cout << "n: " << new_eval << std::endl;
     }
 
     virtual ~CountFeature() = default;
@@ -23,3 +25,5 @@ public:
 };
 
 }
+
+#endif

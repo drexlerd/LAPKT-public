@@ -4,7 +4,7 @@
 namespace aptk {
 
 N_NotInState3::N_NotInState3(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_role_setminus(
         sketch->problem(),
         false,

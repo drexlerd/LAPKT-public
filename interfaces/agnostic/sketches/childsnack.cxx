@@ -6,7 +6,7 @@ namespace aptk {
 N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
     const BaseSketch* sketch,
     const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -21,7 +21,7 @@ N_GlutenAllergicChildrenToBeServed::N_GlutenAllergicChildrenToBeServed(
 
 N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -35,7 +35,7 @@ N_RegularChildrenToBeServed::N_RegularChildrenToBeServed(
 
 B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
@@ -45,7 +45,7 @@ B_GlutenFreeSandwichAtKitchen::B_GlutenFreeSandwichAtKitchen(
 
 B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_setminus(
         sketch->problem(),
         false,
@@ -55,7 +55,7 @@ B_RegularSandwichAtKitchen::B_RegularSandwichAtKitchen(
 
 B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -65,7 +65,7 @@ B_GlutenFreeSandwichOnTray::B_GlutenFreeSandwichOnTray(
 
 B_RegularSandwichOnTray::B_RegularSandwichOnTray(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,
@@ -75,7 +75,7 @@ B_RegularSandwichOnTray::B_RegularSandwichOnTray(
 
 B_SandwichOnTray::B_SandwichOnTray(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "ontray"), 0)) {
 }
 

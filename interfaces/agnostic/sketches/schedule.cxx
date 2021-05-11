@@ -4,7 +4,7 @@
 namespace aptk {
 
 N_Shape::N_Shape(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
@@ -13,7 +13,7 @@ N_Shape::N_Shape(const BaseSketch* sketch, const std::string &name)
 }
 
 N_Surface::N_Surface(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
@@ -22,7 +22,7 @@ N_Surface::N_Surface(const BaseSketch* sketch, const std::string &name)
 }
 
 N_Color::N_Color(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_role_setminus(
         sketch->problem(),
         false,
@@ -31,7 +31,7 @@ N_Color::N_Color(const BaseSketch* sketch, const std::string &name)
 }
 
 B_ScheduledOrBusy::B_ScheduledOrBusy(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_union(
       sketch->problem(),
       false,
@@ -40,7 +40,7 @@ B_ScheduledOrBusy::B_ScheduledOrBusy(const BaseSketch* sketch, const std::string
 }
 
 N_Hot::N_Hot(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_role_restriction(
         sketch->problem(),
         false,

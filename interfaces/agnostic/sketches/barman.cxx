@@ -6,14 +6,14 @@ namespace aptk {
 
 N_UnachievedGoalAtoms::N_UnachievedGoalAtoms(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
+    : CountFeature(
         sketch,
         name,
         ElementFactory::get_role_custom("p")) {
 }
 
 N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(
+    : CountFeature(
         sketch,
         name,
         ElementFactory::make_concept_setminus(
@@ -30,7 +30,7 @@ N_DirtyShots::N_DirtyShots(const BaseSketch* sketch, const std::string &name)
 }
 
 B_CocktailsConsistentWithPart1::B_CocktailsConsistentWithPart1(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(
+    : NonemptyFeature(
         sketch,
         name,
         ElementFactory::make_concept_intersection(
@@ -45,7 +45,7 @@ B_CocktailsConsistentWithPart1::B_CocktailsConsistentWithPart1(const BaseSketch*
 }
 
 B_CocktailsConsistentWithPart2::B_CocktailsConsistentWithPart2(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(
+    : NonemptyFeature(
         sketch,
         name,
         ElementFactory::make_concept_intersection(

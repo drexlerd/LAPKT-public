@@ -1,11 +1,11 @@
 #include <sketch.hxx>
-#include "../features/numerical_feature.hxx"
-#include "../features/boolean_feature.hxx"
-#include "../features/sum_role_distance.hxx"
+#include "../features/numerical_features/count.hxx"
+#include "../features/boolean_features/nonempty.hxx"
+#include "../features/numerical_features/sum_role_distance.hxx"
 
 namespace aptk {
 
-class N_Loaded : public NumericalFeature {
+class N_Loaded : public CountFeature {
 public:
     N_Loaded(const BaseSketch* sketch, const std::string &name);
     virtual ~N_Loaded() = default;

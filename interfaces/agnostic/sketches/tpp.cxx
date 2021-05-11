@@ -4,7 +4,7 @@
 namespace aptk {
 
 N_Loaded::N_Loaded(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_setminus(
         sketch->problem(),
         false,

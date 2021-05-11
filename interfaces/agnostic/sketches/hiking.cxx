@@ -5,7 +5,7 @@ namespace aptk {
 
 B_NextTentUp::B_NextTentUp(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
@@ -19,7 +19,7 @@ B_NextTentUp::B_NextTentUp(
 
 B_NextTentAvailable::B_NextTentAvailable(
     const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_existential_abstraction(
             sketch->problem(),
             false,
@@ -29,7 +29,7 @@ B_NextTentAvailable::B_NextTentAvailable(
 
 N_CurrentTentUp::N_CurrentTentUp(
     const BaseSketch* sketch, const std::string &name) :
-    NumericalFeature(sketch, name,
+    CountFeature(sketch, name,
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
@@ -42,7 +42,7 @@ N_CurrentTentUp::N_CurrentTentUp(
 }
 
 B_PreviousCar::B_PreviousCar(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -51,7 +51,7 @@ B_PreviousCar::B_PreviousCar(const BaseSketch* sketch, const std::string &name)
 }
 
 B_CurrentCar::B_CurrentCar(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -60,7 +60,7 @@ B_CurrentCar::B_CurrentCar(const BaseSketch* sketch, const std::string &name)
 }
 
 B_NextCar::B_NextCar(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -69,7 +69,7 @@ B_NextCar::B_NextCar(const BaseSketch* sketch, const std::string &name)
 }
 
 N_PreviousCar::N_PreviousCar(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -78,7 +78,7 @@ N_PreviousCar::N_PreviousCar(const BaseSketch* sketch, const std::string &name)
 }
 
 N_CurrentCar::N_CurrentCar(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -87,7 +87,7 @@ N_CurrentCar::N_CurrentCar(const BaseSketch* sketch, const std::string &name)
 }
 
 N_NextCar::N_NextCar(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_existential_abstraction(
         sketch->problem(),
         false,
@@ -96,7 +96,7 @@ N_NextCar::N_NextCar(const BaseSketch* sketch, const std::string &name)
 }
 
 N_PreviousPerson::N_PreviousPerson(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_role_value_equality(
         sketch->problem(),
         false,
@@ -109,7 +109,7 @@ N_PreviousPerson::N_PreviousPerson(const BaseSketch* sketch, const std::string &
 }
 
 N_CurrentPerson::N_CurrentPerson(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_setminus(
       sketch->problem(),
       false,
@@ -127,7 +127,7 @@ N_CurrentPerson::N_CurrentPerson(const BaseSketch* sketch, const std::string &na
 }
 
 N_NextPerson::N_NextPerson(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_setminus(
       sketch->problem(),
       false,
@@ -144,7 +144,7 @@ N_NextPerson::N_NextPerson(const BaseSketch* sketch, const std::string &name)
 }
 
 N_PreviousCurrentPerson::N_PreviousCurrentPerson(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_role_value_equality(
         sketch->problem(),
         false,
@@ -157,7 +157,7 @@ N_PreviousCurrentPerson::N_PreviousCurrentPerson(const BaseSketch* sketch, const
 }
 
 N_CurrentNextPerson::N_CurrentNextPerson(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_concept_role_value_equality(
         sketch->problem(),
         false,

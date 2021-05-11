@@ -22,10 +22,11 @@ public:
         BaseElement* const element) : BaseFeature(sketch, name), m_element(element), old_eval(false), new_eval(false) { }
     virtual ~BooleanFeature() = default;
 
+    /*
     virtual void evaluate(const State* state) override {
         new_eval = (m_element->get_result_size(state) > 0) ? true : false;
         // std::cout << "b: " << new_eval << std::endl;
-    }
+    }*/
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;

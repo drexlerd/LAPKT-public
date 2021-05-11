@@ -5,7 +5,7 @@ namespace aptk {
 
 N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -15,7 +15,7 @@ N_PackagesNotAtGoalLocation::N_PackagesNotAtGoalLocation(
 
 N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
     const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -24,7 +24,7 @@ N_TrucksNotAtGoalLocation::N_TrucksNotAtGoalLocation(
 }
 
 B_Loaded::B_Loaded(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_intersection(
             sketch->problem(),
             false,
@@ -37,7 +37,7 @@ B_Loaded::B_Loaded(const BaseSketch* sketch, const std::string &name)
 }
 
 B_Driving::B_Driving(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "driving"), 0)) {
 }
 

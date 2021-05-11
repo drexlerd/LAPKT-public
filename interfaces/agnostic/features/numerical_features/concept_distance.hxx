@@ -1,13 +1,13 @@
 #ifndef __MIN_CONCEPT_DISTANCE_FEATURE__
 #define __MIN_CONCEPT_DISTANCE_FEATURE__
 
-#include "numerical_feature.hxx"
-#include "../elements/role.hxx"
-#include "../elements/concept.hxx"
-#include "../elements/predicate.hxx"
-#include "../sketch.hxx"
-#include "utils.hxx"
-#include "../elements/utils.hxx"
+#include "../numerical_feature.hxx"
+#include "../../elements/role.hxx"
+#include "../../elements/concept.hxx"
+#include "../../elements/predicate.hxx"
+#include "../../sketch.hxx"
+#include "../utils.hxx"
+#include "../../elements/utils.hxx"
 #include <iostream>
 #include <vector>
 #include <numeric>

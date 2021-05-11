@@ -3,11 +3,11 @@
 #define __PHILOSOPHERS_SKETCH__
 
 #include <sketch.hxx>
-#include "../features/numerical_feature.hxx"
+#include "../features/numerical_features/count.hxx"
 
 namespace aptk {
 
-class N_NotInState3 : public NumericalFeature {
+class N_NotInState3 : public CountFeature {
 public:
     N_NotInState3(const BaseSketch* sketch, const std::string &name);
     virtual ~N_NotInState3() = default;

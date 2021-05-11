@@ -5,12 +5,12 @@ namespace aptk {
 
 
 N_Unpainted::N_Unpainted(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::get_concept_custom("unpainted_tiles")) {
 }
 
 B_InvariantPaintable::B_InvariantPaintable(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
         ElementFactory::make_concept_setminus(
             sketch->problem(),
             false,

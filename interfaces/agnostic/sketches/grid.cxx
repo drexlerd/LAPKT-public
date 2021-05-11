@@ -4,17 +4,17 @@
 namespace aptk {
 
 N_LockedPlaces::N_LockedPlaces(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::make_predicate_extraction(sketch->problem(), false, "locked")) {
 }
 
 N_KeysNotAtTarget::N_KeysNotAtTarget(const BaseSketch* sketch, const std::string &name)
-    : NumericalFeature(sketch, name,
+    : CountFeature(sketch, name,
     ElementFactory::get_role_custom("locked_places")) {
 }
 
 B_HoldingTargetKey::B_HoldingTargetKey(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,
@@ -27,7 +27,7 @@ B_HoldingTargetKey::B_HoldingTargetKey(const BaseSketch* sketch, const std::stri
 }
 
 B_HoldingOpeningKey::B_HoldingOpeningKey(const BaseSketch* sketch, const std::string &name)
-    : BooleanFeature(sketch, name,
+    : NonemptyFeature(sketch, name,
     ElementFactory::make_concept_intersection(
         sketch->problem(),
         false,

@@ -5,9 +5,6 @@
 
 namespace aptk {
 
-/**
- * The NumericalFeature implements counting of objects in the result.
- */
 class NumericalFeature : public BaseFeature {
 protected:
     // the compositional algorithm used during evaluation
@@ -23,10 +20,12 @@ public:
     }
     virtual ~NumericalFeature() = default;
 
+    /*
     virtual void evaluate(const State* state) override {
         new_eval = m_element->get_result_size(state);
         // std::cout << "n: " << new_eval << std::endl;
     }
+    */
 
     virtual void backup_evaluation() const override {
         old_eval = new_eval;
