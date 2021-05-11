@@ -1,7 +1,7 @@
 #include <sketch.hxx>
 #include "../features/numerical_feature.hxx"
 #include "../features/boolean_feature.hxx"
-#include "../features/numerical/sum_distance.hxx"
+#include "../features/sum_role_distance.hxx"
 
 namespace aptk {
 
@@ -11,7 +11,7 @@ public:
     virtual ~N_Loaded() = default;
 };
 
-class SD_Remaining : public SumDistanceFeature {
+class SD_Remaining : public SumRoleDistanceFeature {
 public:
     SD_Remaining(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_Remaining() = default;

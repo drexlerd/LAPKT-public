@@ -1,7 +1,7 @@
 #include <sketch.hxx>
 #include "../features/boolean_feature.hxx"
 #include "../features/numerical_feature.hxx"
-#include "../features/numerical/sum_distance.hxx"
+#include "../features/sum_role_distance.hxx"
 
 namespace aptk {
 
@@ -106,7 +106,7 @@ public:
  * High level feature
  */
 // High level features that counts number of remaining hikes.
-class SD_RemainingHikes : public SumDistanceFeature {
+class SD_RemainingHikes : public SumRoleDistanceFeature {
 public:
     SD_RemainingHikes(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_RemainingHikes() = default;

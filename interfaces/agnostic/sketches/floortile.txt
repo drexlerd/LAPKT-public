@@ -1,0 +1,11 @@
+
+(:state clear_tile_0-2 clear_tile_0-3 painted_tile_4-1_black painted_tile_4-3_black painted_tile_3-1_white painted_tile_4-2_white robot-has_robot2_white painted_tile_3-3_white robot-has_robot1_black painted_tile_3-2_black clear_tile_2-2 clear_tile_2-1 robot-at_robot1_tile_1-3 clear_tile_1-2 painted_tile_2-3_black robot-at_robot2_tile_0-1 clear_tile_1-1 )
+n: 5
+closure:
+{ (6:tile_2-1, 6:tile_2-1), (3:tile_1-1, 3:tile_1-1), (4:tile_1-2, 4:tile_1-2), (7:tile_2-2, 7:tile_2-2), (6:tile_2-1, 6:tile_2-1), (6:tile_2-1, 3:tile_1-1), (3:tile_1-1, 6:tile_2-1), (3:tile_1-1, 3:tile_1-1), (4:tile_1-2, 4:tile_1-2), (4:tile_1-2, 7:tile_2-2), (7:tile_2-2, 4:tile_1-2), (7:tile_2-2, 7:tile_2-2), }
+composition:
+{ (7:tile_2-2, 1:tile_0-2), (4:tile_1-2, 1:tile_0-2), (3:tile_1-1, 0:tile_0-1), (6:tile_2-1, 0:tile_0-1), }
+b: 1
+
+missing:
+(3:tile_1-3, 0:tile_0-3)

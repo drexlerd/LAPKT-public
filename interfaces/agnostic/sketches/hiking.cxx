@@ -171,7 +171,7 @@ N_CurrentNextPerson::N_CurrentNextPerson(const BaseSketch* sketch, const std::st
 
 // TODO(dominik): Use sum of minimum distances to goal or current location.
 SD_RemainingHikes::SD_RemainingHikes(const BaseSketch* sketch, const std::string &name)
-    : SumDistanceFeature(sketch, name,
+    : SumRoleDistanceFeature(sketch, name,
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "walked"), 0, 1),
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "next"), 0, 1),
         ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "walked"), 0, 1)) {

@@ -1,13 +1,13 @@
 #ifndef __MIN_ROLE_DISTANCE_FEATURE__
 #define __MIN_ROLE_DISTANCE_FEATURE__
 
-#include "../numerical_feature.hxx"
-#include "../../elements/role.hxx"
-#include "../../elements/concept.hxx"
-#include "../../elements/predicate.hxx"
-#include "../../sketch.hxx"
-#include "../utils.hxx"
-#include "../../elements/utils.hxx"
+#include "numerical_feature.hxx"
+#include "../elements/role.hxx"
+#include "../elements/concept.hxx"
+#include "../elements/predicate.hxx"
+#include "../sketch.hxx"
+#include "utils.hxx"
+#include "../elements/utils.hxx"
 #include <iostream>
 #include <vector>
 #include <numeric>
@@ -21,17 +21,17 @@ namespace aptk {
  * of roles that are connected over some other role.
  * The evaluation throws an error if there is no connection for some relevant concepts.
  */
-class MinRoleDistanceFeature : public NumericalFeature {
+class RoleDistanceFeature : public NumericalFeature {
 protected:
     RoleElement* m_role1;
     RoleElement* m_conn;
     RoleElement* m_role2;
 public:
-    MinRoleDistanceFeature(const BaseSketch* sketch, const std::string &name,
+    RoleDistanceFeature(const BaseSketch* sketch, const std::string &name,
         RoleElement* role1, RoleElement* conn, RoleElement* role2) : NumericalFeature(sketch, name, nullptr),
         m_role1(role1), m_conn(conn), m_role2(role2) {
     }
-    virtual ~MinRoleDistanceFeature() = default;
+    virtual ~RoleDistanceFeature() = default;
 
     virtual void evaluate(const State* state) override {
         Roles result_role1 = m_role1->evaluate(state);
@@ -58,7 +58,7 @@ public:
             if (it1->first < it2->first) {
                 ++it1;
                 ++role1_a;
-            } else if (it1->first < it2->first) {
+            } else if (it1->first > it2->first) {
                 ++it2;
             } else {
                 // compose roles

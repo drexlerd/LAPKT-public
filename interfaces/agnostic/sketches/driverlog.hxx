@@ -6,8 +6,8 @@
 #include <sketch.hxx>
 #include "../features/boolean_feature.hxx"
 #include "../features/numerical_feature.hxx"
-#include "../features/numerical/sum_distance.hxx"
-#include "../features/numerical/min_concept_distance.hxx"
+#include "../features/sum_role_distance.hxx"
+#include "../features/concept_distance.hxx"
 
 namespace aptk {
 class BaseElement;
@@ -36,13 +36,14 @@ public:
     virtual ~B_Driving() = default;
 };
 
-class MRD_DriverTruckDistance : public MinConceptDistanceFeature {
+class MRD_DriverTruckDistance : public ConceptDistanceFeature {
 public:
     MRD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name);
     virtual ~MRD_DriverTruckDistance() = default;
 };
 
-class SD_DriversSumDistance : public SumDistanceFeature {
+
+class SD_DriversSumDistance : public SumRoleDistanceFeature {
 public:
     SD_DriversSumDistance(const BaseSketch* sketch, const std::string &name);
     virtual ~SD_DriversSumDistance() = default;

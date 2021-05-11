@@ -42,7 +42,7 @@ B_Driving::B_Driving(const BaseSketch* sketch, const std::string &name)
 }
 
 MRD_DriverTruckDistance::MRD_DriverTruckDistance(const BaseSketch* sketch, const std::string &name)
-    : MinConceptDistanceFeature(sketch, name,
+    : ConceptDistanceFeature(sketch, name,
     ElementFactory::make_concept_union(
         sketch->problem(),
         false,
@@ -66,7 +66,7 @@ MRD_DriverTruckDistance::MRD_DriverTruckDistance(const BaseSketch* sketch, const
 
 SD_DriversSumDistance::SD_DriversSumDistance(
     const BaseSketch* sketch, const std::string &name)
-    : SumDistanceFeature(sketch, name,
+    : SumRoleDistanceFeature(sketch, name,
         ElementFactory::make_role_inverse(
             sketch->problem(),
             false,

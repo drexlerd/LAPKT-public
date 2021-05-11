@@ -1,13 +1,13 @@
 #ifndef __MIN_CONCEPT_DISTANCE_FEATURE__
 #define __MIN_CONCEPT_DISTANCE_FEATURE__
 
-#include "../numerical_feature.hxx"
-#include "../../elements/role.hxx"
-#include "../../elements/concept.hxx"
-#include "../../elements/predicate.hxx"
-#include "../../sketch.hxx"
-#include "../utils.hxx"
-#include "../../elements/utils.hxx"
+#include "numerical_feature.hxx"
+#include "../elements/role.hxx"
+#include "../elements/concept.hxx"
+#include "../elements/predicate.hxx"
+#include "../sketch.hxx"
+#include "utils.hxx"
+#include "../elements/utils.hxx"
 #include <iostream>
 #include <vector>
 #include <numeric>
@@ -21,17 +21,17 @@ namespace aptk {
  * of roles that are connected over some other role.
  * The evaluation throws an error if there is no connection for some relevant concepts.
  */
-class MinConceptDistanceFeature : public NumericalFeature {
+class ConceptDistanceFeature : public NumericalFeature {
 protected:
     ConceptElement* m_concept1;
     RoleElement* m_conn;
     ConceptElement* m_concept2;
 public:
-    MinConceptDistanceFeature(const BaseSketch* sketch, const std::string &name,
+    ConceptDistanceFeature(const BaseSketch* sketch, const std::string &name,
         ConceptElement* concept1, RoleElement* conn, ConceptElement* concept2) : NumericalFeature(sketch, name, nullptr),
         m_concept1(concept1), m_conn(conn), m_concept2(concept2) {
     }
-    virtual ~MinConceptDistanceFeature() = default;
+    virtual ~ConceptDistanceFeature() = default;
 
     virtual void evaluate(const State* state) override {
         Concepts result_concept1 = m_concept1->evaluate(state);

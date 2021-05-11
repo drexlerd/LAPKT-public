@@ -1,7 +1,6 @@
 #ifndef __NUMERICAL_FEATURE__
 #define __NUMERICAL_FEATURE__
 
-
 #include "feature.hxx"
 
 namespace aptk {

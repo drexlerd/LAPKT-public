@@ -1,13 +1,13 @@
 #ifndef __SUM_DISTANCE_FEATURE__
 #define __SUM_DISTANCE_FEATURE__
 
-#include "../numerical_feature.hxx"
-#include "../../elements/role.hxx"
-#include "../../elements/concept.hxx"
-#include "../../elements/predicate.hxx"
-#include "../../sketch.hxx"
-#include "../utils.hxx"
-#include "../../elements/utils.hxx"
+#include "numerical_feature.hxx"
+#include "../elements/role.hxx"
+#include "../elements/concept.hxx"
+#include "../elements/predicate.hxx"
+#include "../sketch.hxx"
+#include "utils.hxx"
+#include "../elements/utils.hxx"
 #include <iostream>
 #include <vector>
 #include <numeric>
@@ -17,21 +17,21 @@
 namespace aptk {
 
 /**
- * The SumDistanceFeature implements the summation over shortest pairwise distances
+ * The SumRoleDistanceFeature implements the summation over shortest pairwise distances
  * of roles that are connected over some other role.
  * The evaluation throws an error if there is no connection for some relevant concepts.
  */
-class SumDistanceFeature : public NumericalFeature {
+class SumRoleDistanceFeature : public NumericalFeature {
 protected:
     RoleElement* m_role1;
     RoleElement* m_conn;
     RoleElement* m_role2;
 public:
-    SumDistanceFeature(const BaseSketch* sketch, const std::string &name,
+    SumRoleDistanceFeature(const BaseSketch* sketch, const std::string &name,
         RoleElement* role1, RoleElement* conn, RoleElement* role2) : NumericalFeature(sketch, name, nullptr),
         m_role1(role1), m_conn(conn), m_role2(role2) {
     }
-    virtual ~SumDistanceFeature() = default;
+    virtual ~SumRoleDistanceFeature() = default;
 
     virtual void evaluate(const State* state) override {
         Roles result_role1 = m_role1->evaluate(state);

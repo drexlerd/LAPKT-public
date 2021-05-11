@@ -17,7 +17,7 @@ N_Loaded::N_Loaded(const BaseSketch* sketch, const std::string &name)
 }
 
 SD_Remaining::SD_Remaining(const BaseSketch* sketch, const std::string &name)
-    : SumDistanceFeature(sketch, name,
+    : SumRoleDistanceFeature(sketch, name,
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "stored"), 0, 1),
         ElementFactory::make_role_extraction(sketch->problem(), false, ElementFactory::make_predicate_extraction(sketch->problem(), false, "next"), 1, 0),
         ElementFactory::make_role_extraction(sketch->problem(), true, ElementFactory::make_predicate_extraction(sketch->problem(), true, "stored"), 0, 1)) {
